@@ -26,19 +26,12 @@ class Subtitles():
             sub_content = line.strip().split("\n")[1:]
             if len(sub_content) == 0:
                 continue
-            subtitle = self.Subtitle(sub_content[0], sub_content[1:], offset, offset_is_negative)
+            subtitle = Subtitle(sub_content[0], sub_content[1:], offset, offset_is_negative)
             if subtitle.has_content(sterilize):
                 self.subtitles.append(subtitle)
 
         self.subtitles = self.merge_sentences()
 
-    def find_pairs(self, target):
-        pairs = []
-        for sub in target:
-            found = self.find(sub)
-            if found is not None:
-                pairs.append((found, sub))
-        return pairs
 
     def merge_sentences(self):
         """
@@ -65,6 +58,40 @@ class Subtitles():
 
         return [s for s in self.subtitles if s not in to_delete]
 
+    def find_pairs(self, target):
+        pairs = []
+        for sub in self:
+            options = target.find(sub)
+            pairs.append(SubPair(sub, options))
+
+        if len(pairs) < 2:
+            return pairs
+
+        # Resolve overlaps
+        resolved = []
+        subsequent = pairs.pop(0)
+        while len(pairs) > 0:
+            current = subsequent
+            subsequent = pairs.pop(0)
+            commonality = current.commonality_with(subsequent)
+            if len(commonality) > 0:
+                for opt in commonality:
+                    with_current = current.source.overlap(opt)
+                    with_subsequent = subsequent.source.overlap(opt)
+                    if with_current > with_subsequent:
+                        subsequent.remove_option(opt)
+                    else:
+                        current.remove_option(opt)
+
+            resolved.append(current)
+        resolved.append(subsequent)
+
+        # Merge suboptions
+        for pair in resolved:
+            pair.merge_options()
+
+        return resolved
+
     def find(self, other):
         """
         Find the counterpart to a subtitle provided from another language in the current set
@@ -80,21 +107,18 @@ class Subtitles():
                 break
             else:
                 options.append(current)
+        return SubOptions(options)
 
+    def _find_best(self, sub, options):
         # If more than one subtitle was found, select the one with the largest overlap
-        if len(options) > 1:
-            overlap = 0
-            best = None
-            for option in options:
-                _overlap = other.overlap(option)
-                if _overlap > overlap:
-                    overlap = _overlap
-                    best = option
-            return best
-        elif len(options):
-            return options[0]
-        else:
-            return None
+        overlap = 0
+        best = None
+        for option in options:
+            _overlap = sub.overlap(option)
+            if _overlap > overlap:
+                overlap = _overlap
+                best = option
+        return best
 
     def __iter__(self):
         self.index = -1
@@ -109,83 +133,157 @@ class Subtitles():
         else:
             raise StopIteration
 
-    class Subtitle():
-        def __init__(self, timestring, text, offset, offset_is_negative):
-            # join multiple lines of text into one line.
-            self.text = " ".join(text).strip()
+class SubOptions():
+    def __init__(self, options:[]):
+        self.options = options
+        self.index = 0
 
-            # Used to display subtitle timecodes
-            self.timestring = timestring
+    def find_common(self, other):
+        common = []
+        for opt in self.options:
+            if opt in other.options:
+                common.append(opt)
+        return common
 
-            # Used to compare subtitle timecodes
-            self.start = 0
-            self.end = 0
+    def merge(self):
+        merged = []
+        if len(self.options) > 1:
+            first = self.options[0]
+            for other in self.options[1:]:
+                first.merge(other)
+            merged.append(first)
+        elif len(self.options):
+            merged.append(self.options[0])
+        self.options = merged
 
-            # Parse the time code into a number of milliseconds since the start
-            self.parsetimecodes(offset, offset_is_negative)
+    def remove(self, item):
+        self.options.remove(item)
 
-            # remember if we have sterilized so we don't do it again
-            self.sterilized = False
+    def __len__(self):
+        return len(self.options)
 
-        def has_content(self, sterilize=False):
-            if sterilize and not self.sterilized:
-                # Remove content surrounded by parenthesis
-                self.text = re.sub(PARENTHESES_REGEX, "", self.text)
+    def __str__(self):
+        return "--".join(str(s) for s in self.options)
 
-                # Remove HTML content
-                self.text = re.sub(HTML_REGEX, '', self.text).strip()
+    def __iter__(self):
+        self.index = -1
+        self.current = self.options[self.index]
+        return self
 
-                # Remove content surrounded by curly brackets
-                self.text = re.sub(CURLY_BRACKET_REGEX, '', self.text).strip()
+    def __next__(self):
+        self.index += 1
+        if self.index < len(self.options):
+            self.current = self.options[self.index]
+            return self.current
+        else:
+            raise StopIteration
 
-                # Remove leading hyphens
-                self.text = re.sub(LEADING_HYPHENS_REGEX, '', self.text).strip()
+class Subtitle():
+    def __init__(self, timestring, text, offset, offset_is_negative):
+        # join multiple lines of text into one line.
+        self.text = " ".join(text).strip()
 
-            return len(self.text) > 0
+        # Used to display subtitle timecodes
+        self.timestring = timestring
 
-        def parsetimecodes(self, offset, offset_is_negative):
-            """
-            Turn timestrings like '01:23:45,678' into an integer offset milliseconds since movie start
-            """
-            def _parse(timestring):
-                pt = datetime.strptime(timestring, SRT_TIME_FORMAT)
-                if offset_is_negative:
-                    microsecond = pt.microsecond - offset.microsecond
-                    second = pt.second - offset.second
-                    minute = pt.minute - offset.minute
-                    hour = pt.hour - offset.hour
-                else:
-                    microsecond = pt.microsecond + offset.microsecond
-                    second = pt.second + offset.second
-                    minute = pt.minute + offset.minute
-                    hour = pt.hour + offset.hour
-                return microsecond + (second + minute * 60 + hour * 3600) * 1000000
+        # Used to compare subtitle timecodes
+        self.start = 0
+        self.end = 0
 
-            parts = self.timestring.split(TIMECODE_SEPARATOR)
-            self.start = _parse(parts[0])
-            self.end = _parse(parts[1])
+        # Parse the time code into a number of milliseconds since the start
+        self.parsetimecodes(offset, offset_is_negative)
 
-        def overlap(self, other):
-            """
-            Find the duration of time two subtitles overlap with each other
-            :param other: the other subtitle to compare with self
-            :return: duration of time two subtitles overlap with each other
-            """
-            start = max(self.start, other.start)
-            end = min(self.end, other.end)
-            return end - start
+        # remember if we have sterilized so we don't do it again
+        self.sterilized = False
 
-        def merge(self, other):
-            """
-            Merge another subtitle with this subtitle. Used when a sentence is spread across multiple subtitles.
-            :param other: other subtitle to merge
-            """
-            self.text += " " + other.text
-            self.end = other.end
-            self.timestring = self.timestring.split(TIMECODE_SEPARATOR)[0] + TIMECODE_SEPARATOR + other.timestring.split(TIMECODE_SEPARATOR)[1]
+    def has_content(self, sterilize=False):
+        if sterilize and not self.sterilized:
+            # Remove content surrounded by parenthesis
+            self.text = re.sub(PARENTHESES_REGEX, "", self.text)
 
-        def __str__(self):
-            return f'{self.timestring}: {self.text}'
+            # Remove HTML content
+            self.text = re.sub(HTML_REGEX, '', self.text).strip()
+
+            # Remove content surrounded by curly brackets
+            self.text = re.sub(CURLY_BRACKET_REGEX, '', self.text).strip()
+
+            # Remove leading hyphens
+            self.text = re.sub(LEADING_HYPHENS_REGEX, '', self.text).strip()
+
+        return len(self.text) > 0
+
+    def parsetimecodes(self, offset, offset_is_negative):
+        """
+        Turn timestrings like '01:23:45,678' into an integer offset milliseconds since movie start
+        """
+        def _parse(timestring):
+            pt = datetime.strptime(timestring, SRT_TIME_FORMAT)
+            if offset_is_negative:
+                microsecond = pt.microsecond - offset.microsecond
+                second = pt.second - offset.second
+                minute = pt.minute - offset.minute
+                hour = pt.hour - offset.hour
+            else:
+                microsecond = pt.microsecond + offset.microsecond
+                second = pt.second + offset.second
+                minute = pt.minute + offset.minute
+                hour = pt.hour + offset.hour
+            return microsecond + (second + minute * 60 + hour * 3600) * 1000000
+
+        parts = self.timestring.split(TIMECODE_SEPARATOR)
+        self.start = _parse(parts[0])
+        self.end = _parse(parts[1])
+
+    def overlap(self, other):
+        """
+        Find the duration of time two subtitles overlap with each other
+        :param other: the other subtitle to compare with self
+        :return: duration of time two subtitles overlap with each other
+        """
+        start = max(self.start, other.start)
+        end = min(self.end, other.end)
+        return end - start
+
+    def merge(self, other):
+        """
+        Merge another subtitle with this subtitle. Used when a sentence is spread across multiple subtitles.
+        :param other: other subtitle to merge
+        """
+        self.text += " " + other.text
+        self.end = other.end
+        self.timestring = self.timestring.split(TIMECODE_SEPARATOR)[0] + TIMECODE_SEPARATOR + other.timestring.split(TIMECODE_SEPARATOR)[1]
+
+    def __str__(self):
+        # return f'{self.timestring}: {self.text}'
+        return self.text
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.timestring == other.timestring
+
+    def __hash__(self):
+        return hash(self.timestring)
+
+class SubPair():
+    def __init__(self, source:Subtitle, sub_options:SubOptions):
+        self.source = source
+        self.sub_options = sub_options
+
+    def commonality_with(self, other):
+        return self.sub_options.find_common(other.sub_options)
+
+    def remove_option(self, option):
+        self.sub_options.remove(option)
+
+    def merge_options(self):
+        self.sub_options.merge()
+
+    def __str__(self):
+        if len(self.sub_options.options) > 1:
+            print(self.source)
+            print('--')
+            for sub in self.sub_options.options:
+                print(sub)
+        return f'- {self.source}\n- {self.sub_options}\n'
 
 
 def main(opts):
@@ -204,10 +302,8 @@ def main(opts):
     target_subs = Subtitles(ttext, opts.sterilize, opts.offset, opts.offset_is_negative)
 
     pairs = source_subs.find_pairs(target_subs)
-    print(f'Found {len(pairs)} subtitle pairs')
     for pair in pairs:
-        print(pair[0].text)
-        print(pair[1].text + "\n")
+        print(pair)
 
 
 if __name__ == '__main__':
