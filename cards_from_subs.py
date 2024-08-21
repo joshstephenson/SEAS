@@ -9,13 +9,16 @@ TIMECODE_SEPARATOR      = ' --> '
 SENT_BOUNDARIES_REGEX   = r'[\!\.\?]$'
 ELLIPSES_REGEX          = r'[.]{3}'
 CURLY_BRACKET_REGEX     = r'{[^{]+?}'
+SQUARE_BRACKET_REGEX    = r'\[[^\[]+?\]'
+MULTIPLE_SPACES         = r'[\s]+'
 HTML_REGEX              = r'<[^<]+?>'
+CAPTION_REGEX           = r'"[^"]+?"'
 PARENTHESES_REGEX       = r'\(.*\)'
 LEADING_HYPHENS_REGEX   = r'^-'
 SRT_TIME_FORMAT         = '%H:%M:%S,%f'
 
 class Subtitles():
-    def __init__(self, text, sterilize=False, offset='00:00:00,000', offset_is_negative=False):
+    def __init__(self, text, sterilize=True, strip_captions=True, offset='00:00:00,000', offset_is_negative=False):
         self.index = 0
         self.subtitles = []
         lines = text.split("\n\n")
@@ -28,7 +31,7 @@ class Subtitles():
             if len(sub_content) == 0:
                 continue
             subtitle = Subtitle(sub_content[0], sub_content[1:], offset, offset_is_negative)
-            if subtitle.has_content(sterilize):
+            if subtitle.has_content(sterilize, strip_captions):
                 self.subtitles.append(subtitle)
 
         self.subtitles = self.merge_sentences()
@@ -197,7 +200,14 @@ class Subtitle():
         # remember if we have sterilized so we don't do it again
         self.sterilized = False
 
-    def has_content(self, sterilize=False):
+        # remember if we have stripped captions
+        self.stripped_captions = False
+
+    def has_content(self, sterilize=True, strip_captions=True):
+        if strip_captions and not self.stripped_captions:
+            self.text = re.sub(CAPTION_REGEX, '', self.text).strip()
+            self.stripped_captions = True
+
         if sterilize and not self.sterilized:
             # Remove content surrounded by parenthesis
             self.text = re.sub(PARENTHESES_REGEX, "", self.text)
@@ -208,10 +218,19 @@ class Subtitle():
             # Remove content surrounded by curly brackets
             self.text = re.sub(CURLY_BRACKET_REGEX, '', self.text).strip()
 
+            # Remove content surrounded by square brackets
+            self.text = re.sub(SQUARE_BRACKET_REGEX, '', self.text).strip()
+
             # Remove leading hyphens
             self.text = re.sub(LEADING_HYPHENS_REGEX, '', self.text).strip()
 
+            # Remove ellipses
             self.text = re.sub(ELLIPSES_REGEX, '', self.text).strip()
+
+            # Replace multiple whitespace characters with one
+            self.text = re.sub(MULTIPLE_SPACES, ' ', self.text).strip()
+
+            self.sterilized = True
 
         return len(self.text) > 0
 
@@ -301,8 +320,8 @@ def main(opts):
     with open(target, 'r') as tfile:
         ttext = tfile.read()
 
-    source_subs = Subtitles(stext, opts.sterilize)
-    target_subs = Subtitles(ttext, opts.sterilize, opts.offset, opts.offset_is_negative)
+    source_subs = Subtitles(stext, opts.sterilize, opts.strip_captions)
+    target_subs = Subtitles(ttext, opts.sterilize, opts.strip_captions, opts.offset, opts.offset_is_negative)
 
     pairs = source_subs.find_pairs(target_subs)
     for pair in pairs:
@@ -316,5 +335,6 @@ if __name__ == '__main__':
     parser.add_argument('-o','--offset', required=False, default='00:00:00,000', type=str, help='Time offset between source and target in SRT format. .e.g 00:00:12,500.')
     parser.add_argument('--offset-is-negative', default=False, action='store_true', help='Indicates that the target is ahead of the source.')
     parser.add_argument('--sterilize', action='store_true', default=True, help='Ignores text between parenthesis and HTML.')
+    parser.add_argument('--strip-captions', action='store_true', default=True, help='Strip content between quotation markes which is usually captions.')
     opts = parser.parse_args()
     main(opts)
