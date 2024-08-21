@@ -7,6 +7,7 @@ import re
 
 TIMECODE_SEPARATOR      = ' --> '
 SENT_BOUNDARIES_REGEX   = r'[\!\.\?]$'
+ELLIPSES_REGEX          = r'[.]{3}'
 CURLY_BRACKET_REGEX     = r'{[^{]+?}'
 HTML_REGEX              = r'<[^<]+?>'
 PARENTHESES_REGEX       = r'\(.*\)'
@@ -210,6 +211,8 @@ class Subtitle():
             # Remove leading hyphens
             self.text = re.sub(LEADING_HYPHENS_REGEX, '', self.text).strip()
 
+            self.text = re.sub(ELLIPSES_REGEX, '', self.text).strip()
+
         return len(self.text) > 0
 
     def parsetimecodes(self, offset, offset_is_negative):
@@ -308,10 +311,10 @@ def main(opts):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--source', required=True)
-    parser.add_argument('--target', required=True)
-    parser.add_argument('--offset', required=False, default='00:00:00,000', type=str, help='Time offset between source and target in SRT format. .e.g 00:00:12,500.')
+    parser.add_argument('-s', '--source', required=True)
+    parser.add_argument('-t', '--target', required=True)
+    parser.add_argument('-o','--offset', required=False, default='00:00:00,000', type=str, help='Time offset between source and target in SRT format. .e.g 00:00:12,500.')
     parser.add_argument('--offset-is-negative', default=False, action='store_true', help='Indicates that the target is ahead of the source.')
-    parser.add_argument('--sterilize', action='store_true', default=False, help='Ignores text between parenthesis and HTML.')
+    parser.add_argument('--sterilize', action='store_true', default=True, help='Ignores text between parenthesis and HTML.')
     opts = parser.parse_args()
     main(opts)
