@@ -3,32 +3,33 @@
 import argparse
 import os
 from datetime import datetime
-import re
+import regex
 from nltk.tokenize import sent_tokenize
 
-TIMECODE_SEPARATOR      = ' --> '
-SENT_BOUNDARIES_REGEX   = r'[\!\.\?]$'
-ELLIPSES_REGEX          = r'[.]{3}'
-CURLY_BRACKET_REGEX     = r'{[^{]+?}'
-SQUARE_BRACKET_REGEX    = r'\[[^\[]+?\]'
-MULTIPLE_SPACES         = r'[\s]+'
-HTML_REGEX              = r'<[^<]+?>'
-CAPTION_REGEX           = r'"[^"]+?"'
-PARENTHESES_REGEX       = r'\(.*\)'
-LEADING_HYPHENS_REGEX   = r'^-'
-SRT_TIME_FORMAT         = '%H:%M:%S,%f'
+TIMECODE_SEPARATOR = ' --> '
+SENT_BOUNDARIES_REGEX = r'[\!\.\?]$'
+ELLIPSES_REGEX = r'[.]{3}'
+CURLY_BRACKET_REGEX = r'{[^{]+?}'
+SQUARE_BRACKET_REGEX = r'\[[^\[]+?\]'
+MULTIPLE_SPACES = r'[\s]+'
+HTML_REGEX = r'<[^<]+?>'
+CAPTION_REGEX = r'"[^"]+?"'
+CAPITALS_REGEX = r'[[:upper:]]*[:]+\W+'
+PARENTHESES_REGEX = r'\(.*\)'
+LEADING_HYPHENS_REGEX = r'^-'
+SRT_TIME_FORMAT = '%H:%M:%S,%f'
 
 
-class Subtitle():
+class Subtitle:
+    """
+    Subtitle represents a single visual text element in a movie in just one language
+    """
     def __init__(self, timestring, text, offset, offset_is_negative):
         self.offset = offset
         self.offset_is_negative = offset_is_negative
 
-        # join multiple lines of text into one line.
-        if type(text) is not str:
-            self.text = " ".join(text).strip()
-        else:
-            self.text = text
+        # join multiple lines of text into one line if necessary
+        self.text = text if type(text) is str else " ".join(text).strip()
 
         # Used to display subtitle timecodes
         self.timestring = timestring
@@ -38,50 +39,58 @@ class Subtitle():
         self.end = 0
 
         # Parse the time code into a number of milliseconds since the start
-        self.parsetimecodes(offset, offset_is_negative)
+        self.parse_time_codes(offset, offset_is_negative)
 
         # remember if we have sterilized so we don't do it again
         self.sterilized = False
 
-        # remember if we have stripped captions
-        self.stripped_captions = False
-
-    def has_content(self, sterilize=True, strip_captions=True):
-        if strip_captions and not self.stripped_captions:
-            self.text = re.sub(CAPTION_REGEX, '', self.text).strip()
-            self.stripped_captions = True
-
+    def has_content(self, sterilize=True, strip_captions=True, strip_capitalized=False):
+        """
+        :param sterilize: boolean to strip HTML and special characters
+        :param strip_captions: boolean to strip captions (content between quotation marks)
+        :returns: True if text length is not zero after sterilizaton when appropriate
+        """
         if sterilize and not self.sterilized:
+            if strip_captions:
+                self.text = regex.sub(CAPTION_REGEX, '', self.text)
+
             # Remove content surrounded by parenthesis
-            self.text = re.sub(PARENTHESES_REGEX, "", self.text)
+            self.text = regex.sub(PARENTHESES_REGEX, "", self.text)
 
             # Remove HTML content
-            self.text = re.sub(HTML_REGEX, '', self.text).strip()
+            self.text = regex.sub(HTML_REGEX, '', self.text)
 
             # Remove content surrounded by curly brackets
-            self.text = re.sub(CURLY_BRACKET_REGEX, '', self.text).strip()
+            self.text = regex.sub(CURLY_BRACKET_REGEX, '', self.text)
 
             # Remove content surrounded by square brackets
-            self.text = re.sub(SQUARE_BRACKET_REGEX, '', self.text).strip()
+            self.text = regex.sub(SQUARE_BRACKET_REGEX, '', self.text)
 
             # Remove leading hyphens
-            self.text = re.sub(LEADING_HYPHENS_REGEX, '', self.text).strip()
+            self.text = regex.sub(LEADING_HYPHENS_REGEX, '', self.text)
 
             # Remove ellipses
-            self.text = re.sub(ELLIPSES_REGEX, '', self.text).strip()
+            self.text = regex.sub(ELLIPSES_REGEX, '', self.text)
+            
+            if strip_capitalized:
+                self.text = regex.sub(CAPITALS_REGEX, '', self.text)
 
             # Replace multiple whitespace characters with one
-            self.text = re.sub(MULTIPLE_SPACES, ' ', self.text).strip()
+            self.text = regex.sub(MULTIPLE_SPACES, ' ', self.text).strip()
 
             self.sterilized = True
 
         return len(self.text) > 0
 
-    def parsetimecodes(self, offset, offset_is_negative):
+    def parse_time_codes(self, offset, offset_is_negative):
         """
         Turn timestrings like '01:23:45,678' into an integer offset milliseconds since movie start
+        :param offset: offset is a datetime object
+        :param offset_is_negative: boolean to indicate whether above offset is negative
+        :return: an integer duration since video start
         """
-        def _parse(timestring):
+
+        def _parse_timestring(timestring):
             pt = datetime.strptime(timestring, SRT_TIME_FORMAT)
             if offset_is_negative:
                 microsecond = pt.microsecond - offset.microsecond
@@ -96,8 +105,8 @@ class Subtitle():
             return microsecond + (second + minute * 60 + hour * 3600) * 1000000
 
         parts = self.timestring.split(TIMECODE_SEPARATOR)
-        self.start = _parse(parts[0])
-        self.end = _parse(parts[1])
+        self.start = _parse_timestring(parts[0])
+        self.end = _parse_timestring(parts[1])
 
     def overlap(self, other):
         """
@@ -116,10 +125,10 @@ class Subtitle():
         """
         self.text += " " + other.text
         self.end = other.end
-        self.timestring = self.timestring.split(TIMECODE_SEPARATOR)[0] + TIMECODE_SEPARATOR + other.timestring.split(TIMECODE_SEPARATOR)[1]
+        self.timestring = self.timestring.split(TIMECODE_SEPARATOR)[0] + TIMECODE_SEPARATOR + \
+                          other.timestring.split(TIMECODE_SEPARATOR)[1]
 
     def __str__(self):
-        # return f'{self.timestring}: {self.text}'
         return self.text
 
     def __eq__(self, other):
@@ -129,12 +138,20 @@ class Subtitle():
         return hash(self.timestring)
 
 
-class SubOptions():
-    def __init__(self, options:[Subtitle]):
+class SubOptions:
+    """
+    SubOptions is a class that acts as a wrapper for a list of subtitles.
+    It facilitates finding overlap with other lists of subtitles and merging those subtitles when necessary.
+    """
+    def __init__(self, options: [Subtitle]):
         self.options = options
         self.index = 0
 
     def find_common(self, other):
+        """
+        Find target subtitles that are common between this object and other
+        :return: list of target subtitles (typically just one)
+        """
         common = []
         for opt in self.options:
             if opt in other.options:
@@ -142,15 +159,17 @@ class SubOptions():
         return common
 
     def merge(self):
+        """
+        Merge all target subtitles (target options) into one
+        """
+        if len(self.options) == 0:
+            return
+
         merged = []
-        if len(self.options) > 1:
-            first = self.options[0]
-            for other in self.options[1:]:
-                first.merge(other)
-            merged.append(first)
-        elif len(self.options):
-            merged.append(self.options[0])
-        # merged should only have one entry
+        first = self.options[0]
+        merged.append(first)
+        for other in self.options[1:]:
+            first.merge(other)
         self.options = merged
 
     def remove(self, item):
@@ -168,7 +187,7 @@ class SubOptions():
         sub = Subtitle(opt.timestring, sentence, opt.offset, opt.offset_is_negative)
         return sub
 
-    def add_option(self, option:Subtitle):
+    def add_option(self, option: Subtitle):
         self.options.append(option)
 
     def __len__(self):
@@ -191,8 +210,14 @@ class SubOptions():
             raise StopIteration
 
 
-class SubPair():
-    def __init__(self, previous, source:Subtitle, sub_options:SubOptions):
+class SubPair:
+    """
+    SubPair is a class that has a one-to-many relationship between a source subtitle and target subtitles.
+    This is due to the fact that subtitle timecodes often overlap between languages.
+    This class is also used as a linked list to walk the subtitle pairs and resolve conflicts between them
+    and their previous and subsequent subtitle pairs by moving, merging or altering subtitles.
+    """
+    def __init__(self, previous, source: Subtitle, sub_options: SubOptions):
         self.source = source
         self.sub_options = sub_options
         self.flagged_for_delete = False
@@ -219,13 +244,13 @@ class SubPair():
         sentence = self.sub_options.remove_last_sentence()
         return sentence
 
-    def add_option(self, option:Subtitle):
+    def add_option(self, option: Subtitle):
         self.sub_options.add_option(option)
 
-    def add_sentence_to_source(self, sentence:str):
+    def append_sentence_to_source(self, sentence: str):
         self.source.text = self.source.text + ' ' + sentence
 
-    def resolve_conflicts(self, sterilize=True, strip_captions=True):
+    def resolve_conflicts(self, sterilize=True, strip_captions=True, strip_capitalized=False):
         # Resolve situations where two subsequent source subtitles have overlap with the same target subtitle
         # by assigning the target sub to the source with the greatest overlap
         commonality = self.commonality_with(self.subsequent)
@@ -243,21 +268,26 @@ class SubPair():
             if self.has_no_target():
                 if len(self.previous.target_sentences()) > 1:
                     sub = self.previous.pop_last_sentence_as_subtitle()
-                    if sub.has_content(sterilize, strip_captions):
+                    if sub.has_content(sterilize, strip_captions, strip_capitalized):
                         self.add_option(sub)
 
             if self.subsequent.has_no_target:
                 if len(self.target_sentences()) > 1:
                     sub = self.pop_last_sentence_as_subtitle()
-                    if sub.has_content(sterilize, strip_captions):
+                    if sub.has_content(sterilize, strip_captions, strip_capitalized):
                         self.subsequent.add_option(sub)
 
     def __str__(self):
         return f'- {self.source}\n- {self.sub_options}\n'
 
 
-class Subtitles():
-    def __init__(self, text, sterilize=True, strip_captions=True, offset='00:00:00,000', offset_is_negative=False):
+class Subtitles:
+    """
+    Subtitles is a class that takes in a body of text represent an SRT file and stores a list of subtitles associated
+    with a single language. It also allows merging of sentences and aligning subtitles from another language based
+    on timecodes.
+    """
+    def __init__(self, text, sterilize=True, strip_captions=True, strip_capitalized=False, offset='00:00:00,000', offset_is_negative=False):
         self.index = 0
         self.subtitles = []
         lines = text.split("\n\n")
@@ -270,11 +300,10 @@ class Subtitles():
             if len(sub_content) == 0:
                 continue
             subtitle = Subtitle(sub_content[0], sub_content[1:], offset, offset_is_negative)
-            if subtitle.has_content(sterilize, strip_captions):
+            if subtitle.has_content(sterilize, strip_captions, strip_capitalized):
                 self.subtitles.append(subtitle)
 
         self.subtitles = self.merge_sentences()
-
 
     def merge_sentences(self):
         """
@@ -284,9 +313,8 @@ class Subtitles():
         """
         to_delete = []
         current = None
-        found_boundary = True
         for sub in self.subtitles:
-            if re.search(SENT_BOUNDARIES_REGEX, sub.text):
+            if regex.search(SENT_BOUNDARIES_REGEX, sub.text):
                 found_boundary = True
             else:
                 # print(f'No word boundary for: {sub.text}')
@@ -329,7 +357,6 @@ class Subtitles():
             current = current.subsequent
         resolved.append(current)
 
-        # Merge suboptions
         for pair in resolved:
             pair.merge_options()
 
@@ -352,12 +379,15 @@ class Subtitles():
                 options.append(current)
         return SubOptions(options)
 
-    def _find_best(self, sub, options):
-        # If more than one subtitle was found, select the one with the largest overlap
+    def _find_best(self, source, options):
+        """
+        If more than one subtitle was found, select the one with the largest overlap
+        :returns: option with the largest overlap with source subtitle
+        """
         overlap = 0
         best = None
         for option in options:
-            _overlap = sub.overlap(option)
+            _overlap = source.overlap(option)
             if _overlap > overlap:
                 overlap = _overlap
                 best = option
@@ -376,23 +406,35 @@ class Subtitles():
         else:
             raise StopIteration
 
+
 def main(opts):
+    # find the full path of the file arguments
     source = os.path.expanduser(opts.source)
     target = os.path.expanduser(opts.target)
 
-    if not os.path.exists(source) or not os.path.exists(target):
-        raise(Exception("source or target path does not exist"))
+    # Check that these files exist
+    if not os.path.exists(source):
+        raise (Exception(f"source path does not exist: {source}"))
+    if not os.path.exists(target):
+        raise (Exception(f"target path does not exist: {target}"))
 
-    with open(source, 'r') as sfile:
-        stext = sfile.read()
-    with open(target, 'r') as tfile:
-        ttext = tfile.read()
+    # Read the files
+    with open(source, 'r') as source_file:
+        source_text = source_file.read()
+    with open(target, 'r') as target_file:
+        target_text = target_file.read()
 
-    source_subs = Subtitles(stext, opts.sterilize, opts.strip_captions)
-    target_subs = Subtitles(ttext, opts.sterilize, opts.strip_captions, opts.offset, opts.offset_is_negative)
+    # Create Subtitle objects from the file texts
+    source_subs = Subtitles(source_text, opts.sterilize, opts.strip_captions, opts.strip_capitalized)
+    target_subs = Subtitles(target_text, opts.sterilize, opts.strip_captions, opts.strip_capitalized, opts.offset, opts.offset_is_negative)
 
+    # Now align the subtitles based on timecodes
     pairs = source_subs.align(target_subs)
+
+    # Output the aligned sentences
     for pair in pairs:
+        if pair.has_no_target() and opts.strict:
+            continue
         print(pair)
 
 
@@ -400,9 +442,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--source', required=True)
     parser.add_argument('-t', '--target', required=True)
-    parser.add_argument('-o','--offset', required=False, default='00:00:00,000', type=str, help='Time offset between source and target in SRT format. .e.g 00:00:12,500.')
-    parser.add_argument('--offset-is-negative', default=False, action='store_true', help='Indicates that the target is ahead of the source.')
-    parser.add_argument('--sterilize', action='store_true', default=True, help='Ignores text between parenthesis and HTML.')
-    parser.add_argument('--strip-captions', action='store_true', default=True, help='Strip content between quotation markes which is usually captions.')
-    opts = parser.parse_args()
-    main(opts)
+    parser.add_argument('-o', '--offset', required=False, default='00:00:00,000', type=str,
+                        help='Time offset between source and target in SRT format. .e.g 00:00:12,500.')
+    parser.add_argument('--offset-is-negative', default=False, action='store_true',
+                        help='Indicates that the target is ahead of the source.')
+    parser.add_argument('--sterilize', action='store_true', default=True,
+                        help='Ignores text between HTML, parethesis, brackets and other special characters.')
+    parser.add_argument('--strip-captions', action='store_true', default=True,
+                        help='Strip content between quotation markes which is usually captions.')
+    parser.add_argument('--strict', action='store_true', default=True, help='Don\'t print out source subtitles that don\'t have a target subtitle.')
+    parser.add_argument('--strip-capitalized', default=False, action='store_true', help='Strip capitalized words which are usually names of characters or captioning.')
+    args = parser.parse_args()
+    main(args)
