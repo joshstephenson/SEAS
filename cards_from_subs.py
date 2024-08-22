@@ -192,10 +192,12 @@ class SubOptions():
 
 
 class SubPair():
-    def __init__(self, source:Subtitle, sub_options:SubOptions):
+    def __init__(self, previous, source:Subtitle, sub_options:SubOptions):
         self.source = source
         self.sub_options = sub_options
         self.flagged_for_delete = False
+        self.previous = previous
+        self.subsequent = None
 
     def commonality_with(self, other):
         return self.sub_options.find_common(other.sub_options)
@@ -223,37 +225,32 @@ class SubPair():
     def add_sentence_to_source(self, sentence:str):
         self.source.text = self.source.text + ' ' + sentence
 
-    def resolve_with(self, last, subsequent, sterilize=True, strip_captions=True):
+    def resolve_conflicts(self, sterilize=True, strip_captions=True):
         # Resolve situations where two subsequent source subtitles have overlap with the same target subtitle
         # by assigning the target sub to the source with the greatest overlap
-        commonality = self.commonality_with(subsequent)
-        print(subsequent.source)
+        commonality = self.commonality_with(self.subsequent)
         if len(commonality) > 0:
             for opt in commonality:
                 with_current = self.source.overlap(opt)
-                with_subsequent = subsequent.source.overlap(opt)
+                with_subsequent = self.subsequent.source.overlap(opt)
                 if with_current > with_subsequent:
-                    subsequent.remove_option(opt)
-                    # Now we have to check that it's not empty
-                    # print(f'HERE ({subsequent.source}): {.sub_options}')
-                    if subsequent.has_no_target():
-                        print('now other has no target')
+                    self.subsequent.remove_option(opt)
                 else:
                     self.remove_option(opt)
 
             # Sometimes a subtitle has no targets, most likely because the previous subtitle "swallowed" its target
             # So we should merge the sources
-            if subsequent.has_no_target():
-                # If the previous subpair has more than one sentence, move the last sentence to subsequent
+            if self.has_no_target():
+                if len(self.previous.target_sentences()) > 1:
+                    sub = self.previous.pop_last_sentence_as_subtitle()
+                    if sub.has_content(sterilize, strip_captions):
+                        self.add_option(sub)
+
+            if self.subsequent.has_no_target:
                 if len(self.target_sentences()) > 1:
                     sub = self.pop_last_sentence_as_subtitle()
                     if sub.has_content(sterilize, strip_captions):
-                        subsequent.add_option(sub)
-                # If the previous subpair does not have more than one sentence, move subsequent subtitle source
-                # to current source
-                else:
-                    self.add_sentence_to_source(subsequent.source.text)
-                    subsequent.flagged_for_delete = True
+                        self.subsequent.add_option(sub)
 
     def __str__(self):
         return f'- {self.source}\n- {self.sub_options}\n'
@@ -314,27 +311,23 @@ class Subtitles():
         :return: a list of SubPair objects
         """
         pairs = []
+        previous = None
         for sub in self:
-            options = target.find(sub)
-            pairs.append(SubPair(sub, options))
-
-        if len(pairs) < 2:
-            return pairs
+            sub_pair = SubPair(previous, sub, target.find(sub))
+            pairs.append(sub_pair)
+            if previous is not None:
+                previous.subsequent = sub_pair
+            previous = sub_pair
 
         # Resolve overlaps
         resolved = []
-        last = None
-        current = None
-        subsequent = pairs.pop(0)
-        while len(pairs) > 0:
-            last = current
-            current = subsequent
-            subsequent = pairs.pop(0)
-            current.resolve_with(last, subsequent)
+        current = pairs[0]
+        while current.subsequent is not None:
+            current.resolve_conflicts()
             if not current.flagged_for_delete:
                 resolved.append(current)
-        if not subsequent.flagged_for_delete:
-            resolved.append(subsequent)
+            current = current.subsequent
+        resolved.append(current)
 
         # Merge suboptions
         for pair in resolved:
