@@ -71,7 +71,7 @@ class Subtitle:
 
             # Remove ellipses
             self.text = regex.sub(ELLIPSES_REGEX, '', self.text)
-            
+
             if strip_capitalized:
                 self.text = regex.sub(CAPITALS_REGEX, '', self.text)
 
@@ -290,7 +290,7 @@ class Subtitles:
     def __init__(self, text, sterilize=True, strip_captions=True, strip_capitalized=False, offset='00:00:00,000', offset_is_negative=False):
         self.index = 0
         self.subtitles = []
-        lines = text.split("\n\n")
+        lines = regex.split(r'\n{2,}', text)
 
         # Best to only parse this once, rather than in the Subtitle class
         offset = datetime.strptime(offset, SRT_TIME_FORMAT)
