@@ -163,3 +163,5 @@ from_kaggle
 Code
 Reference
 .idea
+./output
+openai_creds.yaml

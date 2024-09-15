@@ -194,7 +194,7 @@ class SubOptions:
         return len(self.options)
 
     def __str__(self):
-        return "--".join(str(s) for s in self.options)
+        return "--".join(str(s) for s in self.options).strip()
 
     def __iter__(self):
         self.index = -1
@@ -235,6 +235,13 @@ class SubPair:
 
     def has_no_target(self):
         return len(self.sub_options) == 0
+
+    def is_longer_than(self, limit=30) -> bool:
+        if self.has_no_target():
+            return False
+        if len(str(self.source)) > limit and len(str(self.sub_options)) > limit:
+            return True
+        return False
 
     def target_sentences(self):
         sentences = self.sub_options.sentences()
@@ -278,7 +285,7 @@ class SubPair:
                         self.subsequent.add_option(sub)
 
     def __str__(self):
-        return f'- {self.source}\n- {self.sub_options}\n'
+        return f'{self.source}\n{self.sub_options}\n'
 
 
 class Subtitles:
@@ -433,10 +440,8 @@ def main(opts):
 
     # Output the aligned sentences
     for pair in pairs:
-        if pair.has_no_target() and opts.strict:
-            continue
-        print(pair)
-
+        if pair.is_longer_than(opts.strict):
+            print(pair)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -447,10 +452,10 @@ if __name__ == '__main__':
     parser.add_argument('--offset-is-negative', default=False, action='store_true',
                         help='Indicates that the target is ahead of the source.')
     parser.add_argument('--sterilize', action='store_true', default=True,
-                        help='Ignores text between HTML, parethesis, brackets and other special characters.')
+                        help='Ignores text between HTML, parenthesis, brackets and other special characters.')
     parser.add_argument('--strip-captions', action='store_true', default=True,
-                        help='Strip content between quotation markes which is usually captions.')
-    parser.add_argument('--strict', action='store_true', default=True, help='Don\'t print out source subtitles that don\'t have a target subtitle.')
+                        help='Strip content between quotation marks which is usually captions.')
+    parser.add_argument('--strict', default=30, type=int, help='Don\'t print out subtitle pairs if they\'re shorter than certain length.')
     parser.add_argument('--strip-capitalized', default=False, action='store_true', help='Strip capitalized words which are usually names of characters or captioning.')
     args = parser.parse_args()
     main(args)
