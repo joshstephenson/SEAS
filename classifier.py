@@ -8,8 +8,12 @@ from openai import OpenAI
 import argparse
 
 with open('openai_creds.yaml', 'r') as f:
-    creds = yaml.safe_load(f)
-client = OpenAI(creds)
+    creds = yaml.load(f, Loader=yaml.FullLoader)['openai']
+client = OpenAI(
+    organization=creds['organization'],
+    api_key=creds['api_key'],
+    project=creds['project']
+)
 
 def align_classifications(text, classifications):
     pairs = text.split("\n\n")
@@ -45,15 +49,15 @@ Put each two bit series on its own line and please don't include anything else i
 and they must correspond to the language pairs sent. Here are the pairs:
 
 """ + text
-
     request = client.chat.completions.create(
-        model="gpt-4o",  # gpt-4o, gpt-4o-mini
+        model="gpt-4o-mini",  # gpt-4o, gpt-4o-mini
         messages=[{"role": "user", "content": content}],
     )
 
     classifications = None
     for choice in request.choices:
         classifications = choice.message.content
+    print(classifications)
     _length = len(classifications.split("\n"))
     if _length != length:
         print(f'count was: {_length} but should have been {length}')
@@ -110,8 +114,11 @@ def test_consistency_chatgpt(opts, offset = 0, num_runs = 10, num_pairs = 10):
 
 
 def main(opts):
+    print(opts)
     text = load_text_from_file(opts.file)
-    classifications = classify_pairs(text)
+    pairs = text.split("\n\n")
+    classifications = classify_pairs(pairs)
+    print(classifications)
     save_classifications(text, classifications, get_output_filename(opts.file))
 
 
