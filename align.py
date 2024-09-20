@@ -4,6 +4,7 @@ import argparse
 import os
 from datetime import datetime
 import regex
+import string
 from nltk.tokenize import sent_tokenize
 
 TIMECODE_SEPARATOR = ' --> '
@@ -14,7 +15,12 @@ SQUARE_BRACKET_REGEX = r'\[[^\[]+?\]'
 MULTIPLE_SPACES = r'[\s]+'
 HTML_REGEX = r'<[^<]+?>'
 CAPTION_REGEX = r'"[^"]+?"'
-CAPITALS_REGEX = r'[[:upper:]]*[:]+\W+'
+
+# Matches one word with a colon
+CHARACTER_MARKER_REGEX = r'[[:upper:]]*[:]+\W+'
+
+# Matches 2 or more words in all CAPS along with adjacent punctuation
+CAPITALS_REGEX = r'([A-Z]{2,}[,:.]?\s){2,}[:]?' #
 PARENTHESES_REGEX = r'\(.*\)'
 LEADING_HYPHENS_REGEX = r'^-'
 SRT_TIME_FORMAT = '%H:%M:%S,%f'
@@ -44,15 +50,18 @@ class Subtitle:
         # remember if we have sterilized so we don't do it again
         self.sterilized = False
 
-    def has_content(self, sterilize=True, strip_captions=True, strip_capitalized=False):
+    def has_content(self, sterilize=True, strip_captions=True):
         """
         :param sterilize: boolean to strip HTML and special characters
         :param strip_captions: boolean to strip captions (content between quotation marks)
         :returns: True if text length is not zero after sterilizaton when appropriate
         """
+        self.text = self.text.replace('\n', ' ')
         if sterilize and not self.sterilized:
             if strip_captions:
                 self.text = regex.sub(CAPTION_REGEX, '', self.text)
+                self.text = regex.sub(CHARACTER_MARKER_REGEX, '', self.text)
+                self.text = regex.sub(CAPITALS_REGEX, '', self.text)
 
             # Remove content surrounded by parenthesis
             self.text = regex.sub(PARENTHESES_REGEX, "", self.text)
@@ -71,9 +80,6 @@ class Subtitle:
 
             # Remove ellipses
             self.text = regex.sub(ELLIPSES_REGEX, '', self.text)
-
-            if strip_capitalized:
-                self.text = regex.sub(CAPITALS_REGEX, '', self.text)
 
             # Replace multiple whitespace characters with one
             self.text = regex.sub(MULTIPLE_SPACES, ' ', self.text).strip()
@@ -257,7 +263,7 @@ class SubPair:
     def append_sentence_to_source(self, sentence: str):
         self.source.text = self.source.text + ' ' + sentence
 
-    def resolve_conflicts(self, sterilize=True, strip_captions=True, strip_capitalized=False):
+    def resolve_conflicts(self, sterilize=True, strip_captions=True):
         # Resolve situations where two subsequent source subtitles have overlap with the same target subtitle
         # by assigning the target sub to the source with the greatest overlap
         commonality = self.commonality_with(self.subsequent)
@@ -273,15 +279,15 @@ class SubPair:
             # Sometimes a subtitle has no targets, most likely because the previous subtitle "swallowed" its target
             # So we should merge the sources
             if self.has_no_target():
-                if len(self.previous.target_sentences()) > 1:
+                if self.previous is not None and len(self.previous.target_sentences()) > 1:
                     sub = self.previous.pop_last_sentence_as_subtitle()
-                    if sub.has_content(sterilize, strip_captions, strip_capitalized):
+                    if sub.has_content(sterilize, strip_captions):
                         self.add_option(sub)
 
             if self.subsequent.has_no_target:
                 if len(self.target_sentences()) > 1:
                     sub = self.pop_last_sentence_as_subtitle()
-                    if sub.has_content(sterilize, strip_captions, strip_capitalized):
+                    if sub.has_content(sterilize, strip_captions):
                         self.subsequent.add_option(sub)
 
     def __str__(self):
@@ -294,7 +300,7 @@ class Subtitles:
     with a single language. It also allows merging of sentences and aligning subtitles from another language based
     on timecodes.
     """
-    def __init__(self, text, sterilize=True, strip_captions=True, strip_capitalized=False, offset='00:00:00,000', offset_is_negative=False):
+    def __init__(self, text, sterilize=True, strip_captions=True, offset='00:00:00,000', offset_is_negative=False):
         self.index = 0
         self.subtitles = []
         lines = regex.split(r'\n{2,}', text)
@@ -307,7 +313,7 @@ class Subtitles:
             if len(sub_content) == 0:
                 continue
             subtitle = Subtitle(sub_content[0], sub_content[1:], offset, offset_is_negative)
-            if subtitle.has_content(sterilize, strip_captions, strip_capitalized):
+            if subtitle.has_content(sterilize, strip_captions):
                 self.subtitles.append(subtitle)
 
         self.subtitles = self.merge_sentences()
@@ -432,8 +438,8 @@ def main(opts):
         target_text = target_file.read()
 
     # Create Subtitle objects from the file texts
-    source_subs = Subtitles(source_text, opts.sterilize, opts.strip_captions, opts.strip_capitalized)
-    target_subs = Subtitles(target_text, opts.sterilize, opts.strip_captions, opts.strip_capitalized, opts.offset, opts.offset_is_negative)
+    source_subs = Subtitles(source_text, opts.sterilize, opts.strip_captions)
+    target_subs = Subtitles(target_text, opts.sterilize, opts.strip_captions, opts.offset, opts.offset_is_negative)
 
     # Now align the subtitles based on timecodes
     pairs = source_subs.align(target_subs)
@@ -456,6 +462,5 @@ if __name__ == '__main__':
     parser.add_argument('--strip-captions', action='store_true', default=True,
                         help='Strip content between quotation marks which is usually captions.')
     parser.add_argument('--strict', default=30, type=int, help='Don\'t print out subtitle pairs if they\'re shorter than certain length.')
-    parser.add_argument('--strip-capitalized', default=False, action='store_true', help='Strip capitalized words which are usually names of characters or captioning.')
     args = parser.parse_args()
     main(args)
