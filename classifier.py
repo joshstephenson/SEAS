@@ -7,8 +7,12 @@ import yaml
 from openai import OpenAI
 import argparse
 
-with open('openai_creds.yaml', 'r') as f:
-    creds = yaml.load(f, Loader=yaml.FullLoader)['openai']
+try:
+    with open('openai_creds.yaml', 'r') as f:
+        creds = yaml.load(f, Loader=yaml.FullLoader)['openai']
+except:
+    print("You must have a file openai_creds.yaml in the same directory as this script. "
+          "It must include keys {openai: {organization, api_key, project}.")
 client = OpenAI(
     organization=creds['organization'],
     api_key=creds['api_key'],
