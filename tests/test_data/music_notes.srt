@@ -1,0 +1,27 @@
+1
+00:10:45,836 --> 00:10:47,906
+LINDA:
+♪ Putting on a play ♪
+
+2
+00:10:48,007 --> 00:10:50,147
+♪ Having a really great day. ♪
+
+3
+00:10:50,245 --> 00:10:51,375
+Linda's in a good mood, huh?
+
+4
+00:10:51,480 --> 00:10:54,020
+Yeah, we're doing
+a very weird play thing
+
+5
+00:11:51,480 --> 00:11:54,020
+# Yeah, we're doing
+a very weird play thing #
+
+6
+00:11:51,480 --> 00:11:54,020
+# Some lyrics here without
+a closing pound sign
