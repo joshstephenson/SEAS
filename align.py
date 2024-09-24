@@ -419,6 +419,15 @@ class Subtitles:
         else:
             raise StopIteration
 
+def get_text(filename):
+    try:
+        with open(filename, 'r', encoding='utf-8') as source_file:
+            srt_text = source_file.read()
+    except UnicodeDecodeError as e:
+        print(f'UTF-8 decoding failed. Will try latin-1 encoding.')
+        with open(filename, 'r', encoding='latin-1') as source_file:
+            srt_text = source_file.read()
+    return srt_text
 
 def main(opts):
     # find the full path of the file arguments
@@ -432,10 +441,8 @@ def main(opts):
         raise (Exception(f"target path does not exist: {target}"))
 
     # Read the files
-    with open(source, 'r') as source_file:
-        source_text = source_file.read()
-    with open(target, 'r') as target_file:
-        target_text = target_file.read()
+    source_text = get_text(source)
+    target_text = get_text(target)
 
     # Create Subtitle objects from the file texts
     source_subs = Subtitles(source_text, opts.sterilize, opts.strip_captions)

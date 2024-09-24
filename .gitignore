@@ -165,3 +165,5 @@ Reference
 .idea
 ./output
 openai_creds.yaml
+kaggle
+bad_subs.txt
