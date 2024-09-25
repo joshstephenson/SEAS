@@ -1,0 +1,2974 @@
+43
+00:02:26,396 --> 00:02:27,438
+- Bow!
+- [grunts]
+
+146
+00:10:32,590 --> 00:10:35,635
+- Einstein wasn't right about everything.
+- [softly] Hmm.
+
+147
+00:10:36,469 --> 00:10:39,138
+If anyone can figure this out, it's you.
+
+148
+00:10:45,394 --> 00:10:46,979
+- Saul.
+- Yeah?
+
+149
+00:10:47,063 --> 00:10:48,814
+[haunting orchestral music playing]
+
+150
+00:10:48,898 --> 00:10:50,524
+Do you believe in God?
+
+151
+00:10:52,234 --> 00:10:53,778
+Is that what it's come to?
+
+152
+00:10:59,241 --> 00:11:01,744
+No. I don't.
+
+153
+00:11:03,454 --> 00:11:06,374
+I accept that this defies
+all known laws of physics,
+
+154
+00:11:06,457 --> 00:11:09,460
+but... I don't think
+that's an argument for God.
+
+155
+00:11:11,337 --> 00:11:12,963
+So, what's left?
+
+156
+00:11:18,386 --> 00:11:20,971
+[haunting strings building]
+
+157
+00:11:25,142 --> 00:11:27,770
+- [door opens]
+- [sensors humming]
+
+158
+00:11:29,522 --> 00:11:30,648
+[door closes]
+
+159
+00:11:41,742 --> 00:11:43,744
+[mechanical droning reverberates]
+
+160
+00:11:49,917 --> 00:11:50,918
+[inhales sharply]
+
+161
+00:12:01,262 --> 00:12:04,473
+[music builds to a terrifying crescendo]
+
+162
+00:12:10,104 --> 00:12:13,482
+- ["I Kissed a Girl" playing]
+<i>- ♪ I kissed a girl, and I liked it ♪</i>
+
+163
+00:12:13,566 --> 00:12:18,320
+<i>♪ The taste of her cherry ChapStick
+I kissed... ♪</i>
+
+164
+00:12:18,404 --> 00:12:19,864
+- [quietly] Wow.
+- Confidence.
+
+165
+00:12:23,159 --> 00:12:25,953
+- You know you're carrying me home, right?
+- I've done it before.
+
+166
+00:12:26,036 --> 00:12:27,204
+[both] <i>Salud.</i>
+
+167
+00:12:30,249 --> 00:12:31,375
+[mouthing] Thank you.
+
+168
+00:12:32,251 --> 00:12:35,755
+[out of tune]
+<i>♪ I kissed a girl, and I liked it... ♪</i>
+
+169
+00:12:35,838 --> 00:12:38,257
+It's possible our bar has gone to shit.
+
+170
+00:12:38,340 --> 00:12:42,178
+Second law of thermodynamics.
+Eventually, everything turns to shit.
+
+171
+00:12:42,970 --> 00:12:45,848
+Physics is turning to shit.
+Bars can't be far behind.
+
+172
+00:12:45,931 --> 00:12:48,017
+Explain to me what's going on.
+
+173
+00:12:49,143 --> 00:12:50,227
+Okay...
+
+174
+00:12:50,311 --> 00:12:52,396
+So, you ladies are gonna sing a song?
+
+175
+00:12:53,230 --> 00:12:55,107
+- No.
+- [man] No? What do you mean, no?
+
+176
+00:12:55,191 --> 00:12:56,567
+You're not... not singers?
+
+177
+00:12:56,650 --> 00:12:58,360
+- No.
+- [man chuckles] All right.
+
+178
+00:12:58,444 --> 00:13:00,863
+What do you do, then? Hmm?
+
+179
+00:13:00,946 --> 00:13:03,574
+Wait. Hold on. Don't tell me.
+Let me guess. You probably...
+
+180
+00:13:03,657 --> 00:13:06,786
+I design self-assembling,
+synthetic polymer nanofibers.
+
+181
+00:13:07,661 --> 00:13:09,830
+I started a company that manufactures them
+
+182
+00:13:09,914 --> 00:13:13,667
+for a variety of potential medical,
+energy, and materials applications.
+
+183
+00:13:16,086 --> 00:13:16,921
+And you?
+
+184
+00:13:17,004 --> 00:13:19,590
+I'm a senior researcher
+in the Theoretical Physics group
+
+185
+00:13:19,673 --> 00:13:20,716
+at Imperial College.
+
+186
+00:13:20,800 --> 00:13:22,718
+I'm doing a metastudy
+analyzing the results
+
+187
+00:13:22,802 --> 00:13:25,304
+of particle accelerator experiments
+around the world.
+
+188
+00:13:27,014 --> 00:13:29,058
+Nice one. Yeah.
+
+189
+00:13:29,141 --> 00:13:31,644
+- [MC] Rufus, you're up!
+- [Rufus] Yeah, all right. That's me!
+
+190
+00:13:31,727 --> 00:13:33,687
+Yeah, enjoy it. Bye.
+
+191
+00:13:37,024 --> 00:13:39,109
+Okay, why is everyone freaking out?
+
+192
+00:13:39,193 --> 00:13:40,486
+[sighs]
+
+193
+00:13:40,569 --> 00:13:41,946
+About a month ago,
+
+194
+00:13:42,029 --> 00:13:44,532
+all the major accelerators
+started generating results
+
+195
+00:13:44,615 --> 00:13:46,575
+that make no fucking sense.
+
+196
+00:13:46,659 --> 00:13:50,371
+<i>- ♪ It's nine o'clock on a Saturday ♪</i>
+- [crowd cheers]
+
+197
+00:13:50,454 --> 00:13:54,333
+<i>♪ And the regular crowd shuffles in ♪</i>
+
+198
+00:13:54,416 --> 00:13:57,670
+<i>♪ There's an old man sitting next to me ♪</i>
+
+199
+00:13:58,671 --> 00:14:01,799
+<i>♪ Making love to his tonic and gin ♪</i>
+
+200
+00:14:02,591 --> 00:14:04,593
+[vocalizing]
+
+201
+00:14:07,721 --> 00:14:09,139
+Go on, you know it!
+
+202
+00:14:10,683 --> 00:14:12,351
+Come have a smoke with me.
+
+203
+00:14:12,434 --> 00:14:14,436
+- That shit'll kill you.
+- Yeah. So will this.
+
+204
+00:14:14,520 --> 00:14:16,772
+[Rufus] <i>♪ Play me a memory? ♪</i>
+
+205
+00:14:16,856 --> 00:14:19,275
+- ["Take on Me" playing]
+<i>- ♪ I don't know what I'm to say ♪</i>
+
+206
+00:14:19,358 --> 00:14:20,901
+<i>♪ I'll say it anyway... ♪</i>
+
+207
+00:14:20,985 --> 00:14:22,069
+Wow.
+
+208
+00:14:22,570 --> 00:14:23,571
+[Jin] Mm.
+
+209
+00:14:23,654 --> 00:14:26,615
+Saul sent that one
+just last week from Oxford.
+
+210
+00:14:26,699 --> 00:14:30,077
+It's been a while since Particle Physics,
+but, I mean, this can't...
+
+211
+00:14:30,160 --> 00:14:32,162
+Nope. It can't.
+
+212
+00:14:32,997 --> 00:14:35,457
+- Well, then, maybe it's a hack.
+- [scoffs]
+
+213
+00:14:35,541 --> 00:14:37,543
+In every accelerator on the planet?
+
+214
+00:14:38,335 --> 00:14:40,796
+I went through the CERN code,
+line by line. Nothing.
+
+215
+00:14:42,006 --> 00:14:45,217
+The code for the centralized software?
+How many lines is that?
+
+216
+00:14:45,301 --> 00:14:48,345
+It's a lot, Auggie.
+It's a lot of fucking lines.
+
+217
+00:14:49,221 --> 00:14:51,056
+Okay, so it's a hardware issue.
+
+218
+00:14:51,599 --> 00:14:53,934
+Dipole magnets,
+muon chambers, calorimeters,
+
+219
+00:14:54,018 --> 00:14:58,314
+every component checked four times over
+in every collider from here to Beijing.
+
+220
+00:14:58,397 --> 00:15:00,316
+Okay, so what does Saul say?
+
+221
+00:15:00,399 --> 00:15:01,817
+He says it's impossible.
+
+222
+00:15:03,193 --> 00:15:04,320
+What about you?
+
+223
+00:15:04,403 --> 00:15:07,698
+[sighs] These experiments teach us
+how the universe works.
+
+224
+00:15:07,781 --> 00:15:08,782
+And that?
+
+225
+00:15:09,909 --> 00:15:12,536
+That's fucking
+<i>Alice in Wonderland.</i> [clicks tongue]
+
+226
+00:15:14,246 --> 00:15:15,789
+[cell phone ringing]
+
+227
+00:15:20,294 --> 00:15:21,295
+Now he calls.
+
+228
+00:15:21,378 --> 00:15:24,058
+I texted him to come three times,
+and he wouldn't even text me back.
+
+229
+00:15:24,131 --> 00:15:25,132
+[scoffs]
+
+230
+00:15:27,593 --> 00:15:29,595
+[energy thrumming]
+
+231
+00:15:36,310 --> 00:15:37,937
+See how you like it.
+
+232
+00:15:38,771 --> 00:15:41,106
+- You guys are like 14-year-olds.
+- [sighs]
+
+233
+00:15:41,190 --> 00:15:42,316
+[cell phone beeps]
+
+234
+00:15:43,275 --> 00:15:44,526
+[Auggie chuckles]
+
+235
+00:15:44,610 --> 00:15:47,112
+Take it. He's probably high as fuck.
+
+236
+00:15:49,156 --> 00:15:50,532
+It's fine. Take it.
+
+237
+00:15:52,993 --> 00:15:53,994
+[Jin] Hey.
+
+238
+00:15:55,245 --> 00:15:56,288
+[exhales deeply]
+
+239
+00:15:57,915 --> 00:15:59,917
+[tense music playing]
+
+240
+00:16:01,877 --> 00:16:02,920
+[lighter clicks]
+
+241
+00:16:05,673 --> 00:16:07,675
+- Hey.
+- Oh. Hey, hi.
+
+242
+00:16:08,217 --> 00:16:09,760
+[softly] Do you see that?
+
+243
+00:16:12,012 --> 00:16:13,305
+See what?
+
+244
+00:16:13,389 --> 00:16:15,599
+- That.
+- Huh?
+
+245
+00:16:15,683 --> 00:16:16,809
+[gasps softly]
+
+246
+00:16:19,687 --> 00:16:20,813
+[Rufus] You all right, love?
+
+247
+00:16:23,482 --> 00:16:24,525
+[inhales sharply]
+
+248
+00:16:29,905 --> 00:16:31,907
+[energy thrumming]
+
+249
+00:16:34,702 --> 00:16:36,704
+[breathing shakily]
+
+250
+00:16:39,039 --> 00:16:40,374
+- [Jin] Auggie?
+- [gasps]
+
+251
+00:16:43,210 --> 00:16:45,212
+Vera Ye just killed herself.
+
+252
+00:16:57,433 --> 00:16:58,559
+[cap snaps on marker]
+
+253
+00:17:32,968 --> 00:17:34,344
+[birds singing]
+
+254
+00:17:34,428 --> 00:17:36,889
+- [indistinct chatter outside]
+- [water running]
+
+255
+00:17:37,473 --> 00:17:39,099
+Excited to see Jin?
+
+256
+00:17:39,183 --> 00:17:42,436
+Well, it's not exactly
+ideal circumstances, is it?
+
+257
+00:17:43,020 --> 00:17:44,480
+How long has it been?
+
+258
+00:17:44,563 --> 00:17:45,563
+Don't know.
+
+259
+00:17:45,606 --> 00:17:48,650
+I'll bet you do.
+I bet you remember to the day.
+
+260
+00:17:51,028 --> 00:17:52,362
+It's been a while.
+
+261
+00:17:53,822 --> 00:17:56,742
+Fuck. I did not sleep at all last night.
+
+262
+00:17:56,825 --> 00:17:57,659
+Why not?
+
+263
+00:17:57,743 --> 00:17:58,743
+[inhales sharply]
+
+264
+00:17:59,161 --> 00:18:00,954
+I don't know, Jack. Maybe it's, uh...
+
+265
+00:18:01,038 --> 00:18:03,332
+Maybe it's because Vera's killed herself.
+
+266
+00:18:03,415 --> 00:18:04,541
+[Jack sighs]
+
+267
+00:18:04,625 --> 00:18:07,002
+[unscrews cap]
+
+268
+00:18:08,462 --> 00:18:09,546
+To Vera.
+
+269
+00:18:11,507 --> 00:18:12,758
+[gulps]
+
+270
+00:18:14,218 --> 00:18:15,886
+- [flask clatters]
+- [rustling]
+
+271
+00:18:18,055 --> 00:18:19,306
+- Jesus.
+- Hm?
+
+272
+00:18:19,389 --> 00:18:20,389
+[scoffs]
+
+273
+00:18:22,726 --> 00:18:24,186
+Hides the tequila smell.
+
+274
+00:18:24,269 --> 00:18:25,562
+- Want one?
+- No.
+
+275
+00:18:25,646 --> 00:18:27,356
+- Have one.
+- I don't want one.
+
+276
+00:18:27,439 --> 00:18:29,483
+It's my most popular flavor.
+
+277
+00:18:29,566 --> 00:18:31,318
+Third highest-selling crisps in the UK
+
+278
+00:18:31,401 --> 00:18:33,570
+after Walkers Cheese and Onion
+and Monster Munch Beef.
+
+279
+00:18:33,654 --> 00:18:35,906
+- Congratulations.
+- Mm-hmm. Suck a dick, Pringles.
+
+280
+00:18:35,989 --> 00:18:38,492
+- [chuckles]
+- [Jack sniffles]
+
+281
+00:18:39,451 --> 00:18:41,870
+[fastens flask cap]
+
+282
+00:18:41,954 --> 00:18:43,914
+Have you heard
+that Jin's got a new boyfriend?
+
+283
+00:18:46,500 --> 00:18:47,626
+Don't worry.
+
+284
+00:18:48,961 --> 00:18:50,838
+I bet he's a total squid.
+
+285
+00:18:52,714 --> 00:18:54,091
+[church bells tolling]
+
+286
+00:18:54,174 --> 00:18:55,175
+You okay?
+
+287
+00:18:55,801 --> 00:18:58,095
+[crows cawing in distance]
+
+288
+00:18:58,178 --> 00:18:59,680
+[Jin chuckles] Fuckin' Saul.
+
+289
+00:19:00,305 --> 00:19:01,390
+Come say hi.
+
+290
+00:19:10,440 --> 00:19:11,441
+[Jin] So sorry.
+
+291
+00:19:11,984 --> 00:19:13,026
+[Saul] Yeah. Me too.
+
+292
+00:19:15,028 --> 00:19:16,738
+So, this is Prithviraj.
+
+293
+00:19:16,822 --> 00:19:17,656
+Just Raj, mate.
+
+294
+00:19:17,739 --> 00:19:19,950
+Nice to meet you. [clears throat]
+
+295
+00:19:20,826 --> 00:19:23,787
+- [Jin] What is goin' on here?
+- I was trying to figure it out on YouTube.
+
+296
+00:19:23,871 --> 00:19:26,248
+Winner of the Apker Award.
+Can't tie a tie.
+
+297
+00:19:26,331 --> 00:19:29,960
+Well, Lord Kelvin thought that
+atoms were knotted vortices in the ether.
+
+298
+00:19:30,043 --> 00:19:32,588
+- Ah, did he?
+- He also thought that there are... [coughs]
+
+299
+00:19:33,547 --> 00:19:34,798
+Thank you.
+
+300
+00:19:34,882 --> 00:19:35,883
+[Jin] Is Auggie here yet?
+
+301
+00:19:35,966 --> 00:19:37,634
+[Saul] <i>She said she's running late.</i>
+
+302
+00:19:37,718 --> 00:19:41,346
+- [train clattering on tracks]
+- [horn blares]
+
+303
+00:19:41,430 --> 00:19:42,973
+[indistinct chatter]
+
+304
+00:19:43,056 --> 00:19:46,643
+[woman on PA] <i>This service
+is now approaching Oxford,</i>
+
+305
+00:19:46,727 --> 00:19:48,896
+<i>where this train will terminate.</i>
+
+306
+00:19:48,979 --> 00:19:51,481
+<i>Please make sure
+you have all your belongings with you</i>
+
+307
+00:19:51,565 --> 00:19:53,483
+<i>before you leave the train.</i>
+
+308
+00:19:54,401 --> 00:19:56,403
+[breathing shakily]
+
+309
+00:19:58,488 --> 00:20:00,240
+[gasps]
+
+310
+00:20:00,324 --> 00:20:03,160
+[energy thrumming]
+
+311
+00:20:07,456 --> 00:20:08,540
+[inhales sharply]
+
+312
+00:20:12,044 --> 00:20:14,087
+[takes a deep breath]
+
+313
+00:20:15,505 --> 00:20:18,425
+- [thrumming intensifies]
+- [glowing numbers sizzling]
+
+314
+00:20:20,177 --> 00:20:22,179
+[thrumming fades]
+
+315
+00:20:22,262 --> 00:20:24,264
+[monks chanting]
+
+316
+00:20:31,146 --> 00:20:34,691
+[Jin] So sorry for your loss.
+We all loved your daughter very much.
+
+317
+00:20:35,192 --> 00:20:36,693
+Thank you for coming.
+
+318
+00:20:36,777 --> 00:20:38,779
+[chanting continues]
+
+319
+00:20:41,406 --> 00:20:43,367
+[Vera's mom] You've all been so kind.
+
+320
+00:20:43,450 --> 00:20:44,868
+Jin's looking good.
+
+321
+00:20:49,039 --> 00:20:51,875
+Phwoar. He's looking good as well.
+
+322
+00:20:54,670 --> 00:20:56,296
+- What?
+- Fuck off.
+
+323
+00:20:56,797 --> 00:20:57,839
+[Jin sighs]
+
+324
+00:21:03,512 --> 00:21:05,347
+- [Jack chuckles softly]
+- [door opens]
+
+325
+00:21:12,854 --> 00:21:13,939
+[both] Hey.
+
+326
+00:21:15,023 --> 00:21:17,067
+[sighs] How are you doing?
+
+327
+00:21:17,150 --> 00:21:18,902
+Yeah, you know...
+
+328
+00:21:18,986 --> 00:21:20,696
+[sighs softly, sniffles]
+
+329
+00:21:28,120 --> 00:21:29,746
+- [Raj mouthing]
+- [Auggie] Hey.
+
+330
+00:21:32,791 --> 00:21:33,917
+[inhales sharply]
+
+331
+00:21:36,837 --> 00:21:38,839
+[whispers] Did you see the neurologist?
+
+332
+00:21:38,922 --> 00:21:39,923
+[quietly] Yeah.
+
+333
+00:21:40,841 --> 00:21:41,883
+What'd he say?
+
+334
+00:21:42,509 --> 00:21:44,928
+<i>- She.</i>
+- She. Oh. Jesus.
+
+335
+00:21:45,012 --> 00:21:46,430
+She has no clue why it's happening.
+
+336
+00:21:47,180 --> 00:21:48,849
+Well, still. It's still happening?
+
+337
+00:21:50,142 --> 00:21:52,060
+- [door opens]
+- Like, right now?
+
+338
+00:21:53,228 --> 00:21:55,272
+- Like, all the fucking time.
+- [door closes]
+
+339
+00:21:55,355 --> 00:21:57,607
+- [sighs]
+- [footsteps approach]
+
+340
+00:22:12,080 --> 00:22:14,166
+[tense instrumental music playing]
+
+341
+00:22:14,249 --> 00:22:16,835
+[chanting intensifies]
+
+342
+00:22:16,918 --> 00:22:20,213
+[temple block tapping]
+
+343
+00:22:24,092 --> 00:22:26,094
+[mala beads rattling]
+
+344
+00:22:27,429 --> 00:22:29,973
+- [breathing shakily]
+- [sounds distort]
+
+345
+00:22:30,057 --> 00:22:33,643
+- [energy thrumming]
+- [menacing music playing]
+
+346
+00:22:41,360 --> 00:22:43,570
+- [music cuts out]
+- [man] You drove, right?
+
+347
+00:22:43,653 --> 00:22:47,741
+- [indistinct chatter]
+- [camera shutter clicking rapidly]
+
+348
+00:22:47,824 --> 00:22:49,826
+[tense, energetic music playing]
+
+349
+00:22:54,831 --> 00:22:55,665
+[lens whirs]
+
+350
+00:22:55,749 --> 00:22:57,959
+- [shutter clicking rapidly]
+- [brakes squeak]
+
+351
+00:23:01,463 --> 00:23:02,589
+[tense music building]
+
+352
+00:23:04,674 --> 00:23:06,468
+[engine revs]
+
+353
+00:23:13,016 --> 00:23:15,185
+[tires squeal]
+
+354
+00:23:17,979 --> 00:23:19,981
+[lens whirs]
+
+355
+00:23:20,065 --> 00:23:22,359
+[camera shutter clicking rapidly]
+
+356
+00:23:26,029 --> 00:23:27,614
+[investigator exhales]
+
+357
+00:23:35,163 --> 00:23:37,958
+[whirring of blades fades into distance]
+
+358
+00:23:38,041 --> 00:23:39,751
+[Jin] What does that even mean?
+
+359
+00:23:39,835 --> 00:23:42,963
+"Do you believe in God?"
+Strange question, don't you think?
+
+360
+00:23:43,046 --> 00:23:45,966
+Yeah. Not as strange as jumping
+into a Cherenkov tank, but sure.
+
+361
+00:23:46,049 --> 00:23:47,259
+Was she acting weird, or...
+
+362
+00:23:47,342 --> 00:23:51,555
+I don't know. Uh, yes?
+But everything has been weird lately.
+
+363
+00:23:51,638 --> 00:23:54,325
+[Jin] That project was her baby.
+When it was shut down, it was like...
+
+364
+00:23:54,349 --> 00:23:55,475
+[Jack] It was shut down?
+
+365
+00:23:55,559 --> 00:23:58,270
+Can't justify using enough electricity
+to power a small town
+
+366
+00:23:58,353 --> 00:24:00,188
+when you're getting nonsense results.
+
+367
+00:24:00,272 --> 00:24:03,733
+Yeah. Not just Oxford.
+Every major accelerator on the planet.
+
+368
+00:24:03,817 --> 00:24:05,577
+[Will] She must've been depressed
+about that.
+
+369
+00:24:05,652 --> 00:24:07,012
+[Saul] Yeah. But to kill yourself?
+
+370
+00:24:07,070 --> 00:24:09,156
+She was a bit of a killjoy,
+if we're being honest.
+
+371
+00:24:09,239 --> 00:24:10,240
+Don't be a dick, Jack.
+
+372
+00:24:10,323 --> 00:24:13,243
+Ah. No. Listen to him.
+You were her favorite.
+
+373
+00:24:13,326 --> 00:24:16,305
+She'd have happily kept you on as
+a research assistant till the end of time.
+
+374
+00:24:16,329 --> 00:24:17,622
+But the rest of us, good luck.
+
+375
+00:24:17,706 --> 00:24:20,333
+That's fucking rich,
+considering you're the one who quit.
+
+376
+00:24:20,417 --> 00:24:23,545
+And trust me,
+all of you fucking noble academics,
+
+377
+00:24:23,628 --> 00:24:26,047
+you'll be coming to me
+and Auggie for loans in a few years.
+
+378
+00:24:26,131 --> 00:24:27,674
+- Oh, fuck off.
+- [sighs]
+
+379
+00:24:27,757 --> 00:24:30,385
+Isn't that right, Auggie? When your...
+
+380
+00:24:30,469 --> 00:24:32,012
+When your company goes public?
+
+381
+00:24:32,512 --> 00:24:34,890
+["The Killing Moon"
+by Echo & the Bunnymen playing]
+
+382
+00:24:34,973 --> 00:24:36,600
+- Auggie!
+- [Auggie sighs]
+
+383
+00:24:36,683 --> 00:24:38,393
+<i>♪ Nights I saw you... ♪</i>
+
+384
+00:24:38,477 --> 00:24:41,021
+We're just saying that...
+What did you call your company?
+
+385
+00:24:41,104 --> 00:24:43,064
+Uh, the Nanotechnology Research Center.
+
+386
+00:24:43,148 --> 00:24:46,651
+That's probably
+the most boring name I've ever heard.
+
+387
+00:24:46,735 --> 00:24:49,196
+[Jin] Oh! Says the guy who named
+his company "Jack's Snacks."
+
+388
+00:24:49,279 --> 00:24:50,864
+- [Auggie] Yeah.
+- Don't be a dick.
+
+389
+00:24:50,947 --> 00:24:52,699
+Will, how's, uh... How's teaching going?
+
+390
+00:24:52,782 --> 00:24:55,744
+[hesitates] Uh, I don't know.
+Like, I have about, um...
+
+391
+00:24:55,827 --> 00:24:59,706
+one kid in every class
+who actually listens to what I'm saying.
+
+392
+00:24:59,789 --> 00:25:02,268
+And the rest are just there
+for their mandatory science course.
+
+393
+00:25:02,292 --> 00:25:03,960
+- [Jin] Oh.
+- We were all that one kid.
+
+394
+00:25:04,044 --> 00:25:05,879
+Yeah, that's true. [sighs]
+
+395
+00:25:06,963 --> 00:25:08,673
+Are you two fighting right now?
+
+396
+00:25:09,508 --> 00:25:11,092
+- Or fucking?
+- [group murmurs]
+
+397
+00:25:11,176 --> 00:25:12,928
+- [Saul chuckles]
+- [Auggie clears throat]
+
+398
+00:25:13,011 --> 00:25:14,179
+Oh! Fighting <i>and</i> fucking.
+
+399
+00:25:14,262 --> 00:25:15,347
+- [Auggie] Jack!
+- Stop.
+
+400
+00:25:15,430 --> 00:25:17,557
+Shut your mouth. You wanna know as well.
+
+401
+00:25:17,641 --> 00:25:20,036
+Jack, I love you, but I swear,
+if you don't shut the fuck up,
+
+402
+00:25:20,060 --> 00:25:22,103
+I'm gonna punch a hole
+straight through your head.
+
+403
+00:25:22,187 --> 00:25:25,357
+["The Killing Moon" continues]
+
+404
+00:25:26,775 --> 00:25:28,235
+I'm just gonna grab a cigarette.
+
+405
+00:25:33,865 --> 00:25:35,867
+[excited chatter]
+
+406
+00:25:35,951 --> 00:25:38,161
+[panting]
+
+407
+00:25:44,251 --> 00:25:46,002
+[dogs barking in distance]
+
+408
+00:25:46,086 --> 00:25:47,963
+[truck engine putters by]
+
+409
+00:25:48,046 --> 00:25:49,506
+[quietly] Oh shit.
+
+410
+00:25:50,257 --> 00:25:51,383
+[sighs]
+
+411
+00:25:51,466 --> 00:25:52,717
+[wind whistling]
+
+412
+00:25:53,301 --> 00:25:54,803
+[flip-top lighter clicks]
+
+413
+00:25:55,303 --> 00:25:56,596
+[woman] Need a little help?
+
+414
+00:26:06,398 --> 00:26:07,524
+[Auggie] Thank you.
+
+415
+00:26:07,607 --> 00:26:08,942
+[exhales]
+
+416
+00:26:09,985 --> 00:26:11,403
+[woman sighs]
+
+417
+00:26:14,155 --> 00:26:15,657
+May I?
+
+418
+00:26:17,117 --> 00:26:18,117
+[Auggie] Hmm.
+
+419
+00:26:20,954 --> 00:26:22,205
+[exhales]
+
+420
+00:26:22,706 --> 00:26:23,873
+It's a clear night.
+
+421
+00:26:25,333 --> 00:26:28,420
+- [energy thrumming]
+- [woman] You can see the stars.
+
+422
+00:26:28,503 --> 00:26:31,256
+Where I grew up,
+you could see the stars every night.
+
+423
+00:26:34,926 --> 00:26:36,469
+It's not easy, is it?
+
+424
+00:26:38,430 --> 00:26:40,849
+Being a person in this fucked world.
+
+425
+00:26:42,517 --> 00:26:45,061
+- I understand what you're going through.
+- [sighs]
+
+426
+00:26:45,937 --> 00:26:47,022
+[scoffs] I doubt it.
+
+427
+00:26:48,231 --> 00:26:50,025
+It's not hopeless, though.
+
+428
+00:26:50,525 --> 00:26:51,443
+[Auggie sighs]
+
+429
+00:26:51,526 --> 00:26:53,445
+- Really.
+- [clears throat]
+
+430
+00:26:53,945 --> 00:26:55,572
+The Lord has a better way.
+
+431
+00:26:58,283 --> 00:27:01,286
+[sighs] Listen, you seem
+like a very nice person.
+
+432
+00:27:01,369 --> 00:27:02,871
+I'm just not interested, okay?
+
+433
+00:27:06,374 --> 00:27:07,584
+How far has it got?
+
+434
+00:27:11,212 --> 00:27:12,631
+Your countdown?
+
+435
+00:27:12,714 --> 00:27:14,716
+[unsettling string music playing]
+
+436
+00:27:16,760 --> 00:27:19,554
+How much time do you have left?
+
+437
+00:27:19,638 --> 00:27:21,598
+- [gasps]
+- Less than two days?
+
+438
+00:27:22,307 --> 00:27:23,307
+Yeah?
+
+439
+00:27:24,059 --> 00:27:25,060
+That's not much.
+
+440
+00:27:26,436 --> 00:27:28,563
+It's easy to make it stop.
+
+441
+00:27:29,689 --> 00:27:31,524
+You put an end to your work.
+
+442
+00:27:32,567 --> 00:27:34,027
+No more nanofibers.
+
+443
+00:27:34,110 --> 00:27:35,862
+You shut down the lab.
+
+444
+00:27:35,945 --> 00:27:37,030
+Simple.
+
+445
+00:27:39,199 --> 00:27:41,576
+- Who are you?
+- I'd be suspicious as well.
+
+446
+00:27:42,077 --> 00:27:43,161
+Tell you what.
+
+447
+00:27:45,497 --> 00:27:48,041
+Tomorrow, at midnight,
+
+448
+00:27:48,708 --> 00:27:50,543
+at exactly midnight,
+
+449
+00:27:51,795 --> 00:27:54,839
+go outside and look up at the sky.
+
+450
+00:27:57,133 --> 00:27:59,761
+Has the universe ever winked at you?
+
+451
+00:28:00,387 --> 00:28:02,389
+[ominous tone resonates]
+
+452
+00:28:05,809 --> 00:28:07,644
+[woman] Tomorrow at midnight.
+
+453
+00:28:12,232 --> 00:28:14,234
+You don't want it to get to zero.
+
+454
+00:28:16,444 --> 00:28:18,780
+Nothing good ever happens at zero.
+
+455
+00:28:21,783 --> 00:28:23,493
+[footsteps fade]
+
+456
+00:28:23,576 --> 00:28:24,577
+[Auggie] Hey!
+
+457
+00:28:33,795 --> 00:28:35,797
+[ominous tones building]
+
+458
+00:28:46,850 --> 00:28:48,852
+[energy thrumming]
+
+459
+00:28:50,645 --> 00:28:53,231
+{\an8}- [tones fade]
+- [wood creaking]
+
+460
+00:28:58,653 --> 00:29:00,989
+- [bird calls]
+- [trunk strains]
+
+461
+00:29:05,368 --> 00:29:07,036
+[men grunting]
+
+462
+00:29:07,120 --> 00:29:09,831
+- [indistinct chatter]
+- [somber music playing]
+
+463
+00:29:11,374 --> 00:29:14,210
+[workers panting]
+
+464
+00:29:19,048 --> 00:29:21,760
+[foreman shouting orders in Mandarin]
+
+465
+00:29:28,641 --> 00:29:31,394
+[all groaning]
+
+466
+00:29:42,864 --> 00:29:44,657
+[Ye Wenjie grunts]
+
+467
+00:29:45,825 --> 00:29:47,911
+[foreman shouting]
+
+468
+00:29:52,248 --> 00:29:54,501
+[indistinct chatter]
+
+469
+00:30:01,674 --> 00:30:04,844
+[man in Mandarin] How old?
+
+470
+00:30:09,307 --> 00:30:13,061
+Between three and four hundred, I assume.
+
+471
+00:30:14,813 --> 00:30:18,191
+[man] That tree saw the Ming emperors.
+
+472
+00:30:24,906 --> 00:30:31,162
+You must have considered
+the consequences of all this destruction.
+
+473
+00:30:34,666 --> 00:30:37,752
+These thoughts are dangerous.
+
+474
+00:30:37,836 --> 00:30:42,632
+I have nothing to say
+to the <i>Great Production News.</i>
+
+475
+00:30:42,715 --> 00:30:44,843
+I'm not asking on behalf of the paper.
+
+476
+00:30:44,926 --> 00:30:46,302
+I'm just Bai Mulin,
+
+477
+00:30:46,386 --> 00:30:48,513
+fellow comrade.
+
+478
+00:30:48,596 --> 00:30:51,432
+[alarm blaring above]
+
+479
+00:30:52,058 --> 00:30:53,226
+[dish whirs]
+
+480
+00:30:53,309 --> 00:30:57,689
+I've climbed up there. No one knows
+what goes on behind those gates.
+
+481
+00:30:57,981 --> 00:31:00,692
+Things get odder the closer you get.
+
+482
+00:31:00,775 --> 00:31:03,820
+The soldiers working there
+have lost their hair.
+
+483
+00:31:03,903 --> 00:31:06,281
+Clear weather turns stormy.
+
+484
+00:31:06,364 --> 00:31:09,951
+The animals make strange sounds.
+
+485
+00:31:12,996 --> 00:31:14,789
+[wind picks up]
+
+486
+00:31:14,873 --> 00:31:18,126
+[softly] You read English, don't you?
+
+487
+00:31:27,093 --> 00:31:28,177
+<i>Silent Spring.</i>
+
+488
+00:31:30,889 --> 00:31:32,849
+This book was very influential
+in the West.
+
+489
+00:31:32,932 --> 00:31:36,311
+It's about how people
+are poisoning the world.
+
+490
+00:31:36,394 --> 00:31:42,567
+It's like reading into the future
+if we persist with this destruction.
+
+491
+00:31:43,860 --> 00:31:46,362
+[melancholic piano music playing]
+
+492
+00:31:54,913 --> 00:32:01,628
+[in English] "Here again, we are reminded
+that in nature, nothing exists alone."
+
+493
+00:32:05,590 --> 00:32:08,301
+[in Mandarin]
+Keep it for now if you want to read it.
+
+494
+00:32:08,384 --> 00:32:10,553
+But be careful.
+
+495
+00:32:10,637 --> 00:32:13,264
+Don't let anyone see.
+
+496
+00:32:16,643 --> 00:32:20,897
+- [wind gusting]
+- [thunder rumbling]
+
+497
+00:32:20,980 --> 00:32:22,732
+[worker coughing]
+
+498
+00:32:24,734 --> 00:32:27,028
+[rain pattering on roof]
+
+499
+00:32:28,863 --> 00:32:32,116
+- [tools clanging]
+- [indistinct chatter]
+
+500
+00:32:38,748 --> 00:32:42,168
+[gentle orchestral music playing]
+
+501
+00:32:47,048 --> 00:32:49,384
+[branches creaking in breeze]
+
+502
+00:33:03,064 --> 00:33:05,066
+[guards chatting in distance]
+
+503
+00:33:33,511 --> 00:33:35,513
+[both breathing heavily]
+
+504
+00:33:40,518 --> 00:33:41,811
+[Ye Wenjie grunts]
+
+505
+00:33:43,604 --> 00:33:45,690
+[gentle music swells]
+
+506
+00:33:48,317 --> 00:33:50,319
+[tools clanging in distance]
+
+507
+00:34:15,720 --> 00:34:17,722
+[gentle music fades]
+
+508
+00:34:17,805 --> 00:34:19,807
+[music grows tense]
+
+509
+00:34:21,184 --> 00:34:23,061
+[gasps]
+
+510
+00:34:25,855 --> 00:34:27,774
+[music fades out]
+
+511
+00:34:27,857 --> 00:34:29,650
+[panting]
+
+512
+00:34:39,285 --> 00:34:40,286
+[inhales sharply]
+
+513
+00:34:44,582 --> 00:34:46,292
+Commander Song. Forgive me.
+
+514
+00:34:46,375 --> 00:34:49,670
+I didn't see where I was going.
+
+515
+00:34:50,379 --> 00:34:52,381
+[tense music playing]
+
+516
+00:34:52,465 --> 00:34:55,134
+[wind whistling]
+
+517
+00:34:58,179 --> 00:35:00,223
+Have you lost this?
+
+518
+00:35:01,432 --> 00:35:03,643
+How did you get this toxic propaganda?
+
+519
+00:35:03,726 --> 00:35:04,811
+It isn't mine.
+
+520
+00:35:04,894 --> 00:35:06,771
+It's in English.
+
+521
+00:35:06,854 --> 00:35:09,649
+You speak English. Who else's could it be?
+
+522
+00:35:12,318 --> 00:35:16,197
+A truthful response
+is in your best interest.
+
+523
+00:35:18,783 --> 00:35:19,992
+I forget.
+
+524
+00:35:20,868 --> 00:35:22,620
+[Song] You will pay the price
+
+525
+00:35:22,703 --> 00:35:24,705
+if you are protecting someone.
+
+526
+00:35:24,789 --> 00:35:28,084
+Someone must have given it to you!
+
+527
+00:35:31,420 --> 00:35:34,215
+Take her to Division Headquarters.
+
+528
+00:35:34,298 --> 00:35:36,217
+[somber music playing]
+
+529
+00:35:43,683 --> 00:35:45,685
+[engine running]
+
+530
+00:35:51,607 --> 00:35:53,109
+[wind whistling]
+
+531
+00:35:53,609 --> 00:35:57,572
+[woman] I am Teng Lihua
+of the Intermediate People's Court.
+
+532
+00:35:58,447 --> 00:36:01,367
+How long have they made you wait?
+
+533
+00:36:08,833 --> 00:36:09,959
+[Teng Lihua] Boy.
+
+534
+00:36:10,042 --> 00:36:12,128
+How long has this stove been out?
+
+535
+00:36:12,211 --> 00:36:16,048
+Little Wenjie will freeze to death!
+Fetch some coal.
+
+536
+00:36:16,966 --> 00:36:18,968
+[footsteps fade]
+
+537
+00:36:21,095 --> 00:36:23,764
+I asked to see you. Do you know why?
+
+538
+00:36:23,848 --> 00:36:25,183
+[door closes]
+
+539
+00:36:25,266 --> 00:36:29,520
+Because not only are you the daughter
+of the disgraced Ye Zhetai,
+
+540
+00:36:29,604 --> 00:36:32,106
+but his star pupil as well.
+
+541
+00:36:32,190 --> 00:36:34,609
+In the eyes of many in the Party,
+
+542
+00:36:34,692 --> 00:36:38,321
+this makes you irredeemable.
+
+543
+00:36:40,531 --> 00:36:42,408
+But I don't see it that way.
+
+544
+00:36:42,491 --> 00:36:46,120
+I know of your own accomplishments
+as a scholar.
+
+545
+00:36:46,204 --> 00:36:48,581
+I don't want your talent to go to waste.
+
+546
+00:36:51,876 --> 00:36:57,381
+All you need to do is sign this paper,
+take a political class,
+
+547
+00:36:57,465 --> 00:37:01,135
+and you'll be approved
+to rejoin the Construction Corps.
+
+548
+00:37:01,761 --> 00:37:03,512
+I'd like to read it, please.
+
+549
+00:37:04,597 --> 00:37:06,140
+[sighs, takes a deep breath]
+
+550
+00:37:06,224 --> 00:37:08,601
+You can trust me on this.
+
+551
+00:37:08,684 --> 00:37:12,939
+This document has nothing to do
+with the Imperialist book.
+
+552
+00:37:25,952 --> 00:37:27,954
+[breathing shakily]
+
+553
+00:37:30,581 --> 00:37:32,833
+My father is dead.
+
+554
+00:37:33,084 --> 00:37:35,670
+But there are others in his field
+
+555
+00:37:35,753 --> 00:37:37,880
+still spreading dangerous ideas.
+
+556
+00:37:38,631 --> 00:37:40,549
+We lack evidence against them.
+
+557
+00:37:40,883 --> 00:37:44,136
+I've never seen my father
+with any of these people.
+
+558
+00:37:44,679 --> 00:37:46,639
+The statements are all true.
+
+559
+00:37:46,722 --> 00:37:49,934
+Even your mother has signed.
+
+560
+00:37:50,476 --> 00:37:53,604
+See.
+
+561
+00:37:55,314 --> 00:37:57,066
+I cannot sign this.
+
+562
+00:37:58,276 --> 00:38:00,027
+I cannot testify.
+
+563
+00:38:00,319 --> 00:38:02,238
+If you fail to sign,
+
+564
+00:38:02,321 --> 00:38:05,283
+the Military Control Commission
+will prosecute you.
+
+565
+00:38:05,533 --> 00:38:06,909
+At that stage,
+
+566
+00:38:07,493 --> 00:38:10,204
+I will be powerless to help.
+
+567
+00:38:10,288 --> 00:38:13,791
+- [tense music playing]
+- [papers rustle]
+
+568
+00:38:16,585 --> 00:38:19,714
+I cannot sign this.
+
+569
+00:38:19,797 --> 00:38:22,383
+I cannot testify.
+
+570
+00:38:44,071 --> 00:38:46,532
+- [shivering]
+- [bucket clatters]
+
+571
+00:38:47,325 --> 00:38:50,661
+[under breath] Stubborn little bitch.
+
+572
+00:38:54,790 --> 00:38:56,125
+[cell door slams]
+
+573
+00:38:56,208 --> 00:38:58,836
+[haunting orchestral music playing]
+
+574
+00:38:58,919 --> 00:39:00,921
+[rattling]
+
+575
+00:39:13,934 --> 00:39:16,270
+[speaking softly in Mandarin]
+
+576
+00:39:33,579 --> 00:39:35,581
+[music fades]
+
+577
+00:39:45,299 --> 00:39:48,552
+- [birds singing]
+- [wind gusting]
+
+578
+00:40:06,070 --> 00:40:06,946
+Ye Wenjie.
+
+579
+00:40:07,029 --> 00:40:09,365
+I am Lei Zhicheng,
+Political Commissar of Red Coast Base.
+
+580
+00:40:09,448 --> 00:40:13,119
+This is Yang Weining,
+Chief Engineer of Red Coast Base.
+
+581
+00:40:13,202 --> 00:40:18,999
+Ye Wenjie, you are credited
+as the author of this article.
+
+582
+00:40:19,083 --> 00:40:20,459
+Yes.
+
+583
+00:40:23,796 --> 00:40:25,923
+[in English] "The Possible Extenses of..."
+
+584
+00:40:26,006 --> 00:40:28,217
+"The Possible Existence
+of Phase Boundaries
+
+585
+00:40:28,300 --> 00:40:32,513
+within the Solar Radiation Zone
+and Their Reflective Characteristics."
+
+586
+00:40:33,097 --> 00:40:34,932
+[in Mandarin] Yes. I wrote it.
+
+587
+00:40:35,015 --> 00:40:37,685
+We have a need for your specific talents.
+
+588
+00:40:37,768 --> 00:40:41,897
+The Commission has decided
+to give you a chance.
+
+589
+00:40:41,981 --> 00:40:44,984
+Rehabilitate yourself here
+rather than prison.
+
+590
+00:40:45,067 --> 00:40:46,944
+This is a military base.
+
+591
+00:40:47,027 --> 00:40:49,530
+The research here
+is of the highest security classification.
+
+592
+00:40:49,613 --> 00:40:51,532
+And given your status,
+
+593
+00:40:51,615 --> 00:40:53,868
+if you stay,
+
+594
+00:40:53,951 --> 00:40:56,036
+you will never leave.
+
+595
+00:40:57,163 --> 00:40:58,998
+I want to go in.
+
+596
+00:40:59,081 --> 00:41:01,709
+[tense music playing]
+
+597
+00:41:01,876 --> 00:41:04,795
+I will stay here for the rest of my life.
+
+598
+00:41:29,278 --> 00:41:30,571
+[doors close heavily]
+
+599
+00:41:30,654 --> 00:41:34,158
+{\an8}- [birds calling]
+- [car horn honks in distance]
+
+600
+00:41:41,123 --> 00:41:42,458
+[takes a deep breath]
+
+601
+00:41:48,172 --> 00:41:50,716
+[cell phone vibrating]
+
+602
+00:41:50,799 --> 00:41:52,927
+[sighs]
+
+603
+00:41:53,427 --> 00:41:54,427
+Yep.
+
+604
+00:41:54,470 --> 00:41:58,182
+- [Wade on speakerphone] <i>Any progress?</i>
+- More than you think. Less than you want.
+
+605
+00:41:58,682 --> 00:42:00,976
+<i>Anything happening with the Oxford five?</i>
+
+606
+00:42:01,060 --> 00:42:04,522
+Maybe. Some strange CCTV footage
+
+607
+00:42:04,605 --> 00:42:07,066
+{\an8}on Salazar the night of Vera Ye's funeral.
+
+608
+00:42:07,942 --> 00:42:08,943
+<i>What about Evans?</i>
+
+609
+00:42:09,652 --> 00:42:13,364
+[clicks tongue] Rarely seen
+in public since 1984.
+
+610
+00:42:13,447 --> 00:42:16,200
+Next to nothing written about him
+for 42 years
+
+611
+00:42:16,283 --> 00:42:18,327
+since he took over daddy's oil company.
+
+612
+00:42:18,410 --> 00:42:20,287
+<i>Where'd he go in that helicopter?</i>
+
+613
+00:42:20,371 --> 00:42:23,749
+{\an8}We lost him over the Atlantic.
+Satellite malfunction.
+
+614
+00:42:24,625 --> 00:42:26,669
+{\an8}<i>My satellites don't malfunction.</i>
+
+615
+00:42:27,920 --> 00:42:31,006
+{\an8}<i>All right. Now,
+what about that thing in Tehran?</i>
+
+616
+00:42:31,090 --> 00:42:32,591
+<i>The shiny bicycle helmet?</i>
+
+617
+00:42:33,217 --> 00:42:35,844
+Whatever it is,
+we can't get our hands on it.
+
+618
+00:42:35,928 --> 00:42:37,972
+<i>Are we sure it was another suicide?</i>
+
+619
+00:42:38,055 --> 00:42:39,223
+I wouldn't say "sure."
+
+620
+00:42:39,932 --> 00:42:43,310
+<i>The Iranians have been
+less than completely helpful.</i>
+
+621
+00:42:43,394 --> 00:42:48,857
+Clarence, you've been fired
+from Scotland Yard, MI5, and OSCT.
+
+622
+00:42:48,941 --> 00:42:50,526
+<i>That must be some kind of record.</i>
+
+623
+00:42:50,609 --> 00:42:52,778
+I've got a knack for failing upwards.
+
+624
+00:42:52,861 --> 00:42:54,613
+<i>You don't fail any higher than this.</i>
+
+625
+00:42:54,697 --> 00:42:56,448
+<i>This is your last-chance saloon.</i>
+
+626
+00:42:57,116 --> 00:42:58,325
+<i>Don't fuck it up.</i>
+
+627
+00:43:00,619 --> 00:43:01,662
+<i>No smoking in here.</i>
+
+628
+00:43:06,125 --> 00:43:08,127
+[soothing piano music playing]
+
+629
+00:43:08,210 --> 00:43:10,504
+[birds singing outside]
+
+630
+00:43:25,853 --> 00:43:27,646
+[Vera's mom speaking Mandarin]
+
+631
+00:43:33,319 --> 00:43:36,280
+Take it. She would want you to have it.
+
+632
+00:43:42,620 --> 00:43:44,038
+[Jin] I don't understand it.
+
+633
+00:43:46,373 --> 00:43:47,416
+I've tried.
+
+634
+00:43:48,626 --> 00:43:53,380
+But I just can't wrap my head around it,
+why she would do that.
+
+635
+00:43:55,049 --> 00:43:56,050
+That wasn't Vera.
+
+636
+00:43:57,134 --> 00:44:00,012
+Her work... Things weren't going well.
+
+637
+00:44:00,929 --> 00:44:03,807
+I know. It's the same for all of us.
+
+638
+00:44:05,434 --> 00:44:10,606
+I'm sorry to ask, but did she leave
+a note or any explanation?
+
+639
+00:44:11,690 --> 00:44:12,691
+[softly] Nothing.
+
+640
+00:44:19,239 --> 00:44:21,158
+She asked Saul about God.
+
+641
+00:44:21,742 --> 00:44:22,868
+Did she ever ask you?
+
+642
+00:44:22,951 --> 00:44:24,370
+About God?
+
+643
+00:44:26,372 --> 00:44:29,750
+We're not believers in this house.
+We're scientists.
+
+644
+00:44:30,250 --> 00:44:32,503
+Did she say anything strange to you?
+
+645
+00:44:33,295 --> 00:44:35,422
+Did she do anything strange?
+
+646
+00:44:40,135 --> 00:44:41,512
+Video games.
+
+647
+00:44:42,221 --> 00:44:44,515
+- She was playing a video game.
+- Vera?
+
+648
+00:44:44,598 --> 00:44:46,558
+Yes, quite a lot.
+
+649
+00:44:46,642 --> 00:44:47,559
+Hmm.
+
+650
+00:44:47,643 --> 00:44:49,144
+Where is it?
+
+651
+00:44:50,729 --> 00:44:51,729
+Oh.
+
+652
+00:44:52,189 --> 00:44:54,191
+[ominous music playing]
+
+653
+00:44:57,569 --> 00:44:59,071
+That's a video game?
+
+654
+00:45:00,197 --> 00:45:01,407
+Where's the rest of it?
+
+655
+00:45:02,533 --> 00:45:03,701
+That's it.
+
+656
+00:45:07,204 --> 00:45:09,289
+[Jin] What kind of game is this?
+
+657
+00:45:09,373 --> 00:45:11,625
+[quietly] I don't know. [chuckles]
+
+658
+00:45:12,584 --> 00:45:14,002
+I played <i>Pong.</i>
+
+659
+00:45:14,086 --> 00:45:15,212
+[both chuckle softly]
+
+660
+00:45:18,590 --> 00:45:19,466
+Can I have it?
+
+661
+00:45:19,550 --> 00:45:20,884
+Of course.
+
+662
+00:45:23,721 --> 00:45:26,223
+[music fades]
+
+663
+00:45:26,306 --> 00:45:27,558
+Is that you?
+
+664
+00:45:30,060 --> 00:45:33,105
+In another life. My first job.
+
+665
+00:45:33,897 --> 00:45:35,149
+You're beautiful.
+
+666
+00:45:36,191 --> 00:45:37,276
+I was.
+
+667
+00:45:38,610 --> 00:45:40,404
+Time is a motherfucker.
+
+668
+00:45:44,533 --> 00:45:46,535
+[suspenseful music playing]
+
+669
+00:45:49,621 --> 00:45:51,623
+[machinery whirring]
+
+670
+00:46:01,508 --> 00:46:02,948
+[Lei in Mandarin] Only three months,
+
+671
+00:46:03,010 --> 00:46:04,470
+and you get to see your first test.
+
+672
+00:46:04,553 --> 00:46:06,680
+You're lucky.
+
+673
+00:46:06,764 --> 00:46:09,683
+Most people have to wait longer.
+
+674
+00:46:09,767 --> 00:46:11,018
+What are we testing?
+
+675
+00:46:11,101 --> 00:46:12,811
+Missiles?
+
+676
+00:46:13,270 --> 00:46:15,981
+Everybody has missiles.
+
+677
+00:46:16,064 --> 00:46:21,945
+[man on PA] <i>Target Coordinates: BN20197F,</i>
+
+678
+00:46:22,029 --> 00:46:23,280
+<i>checked and confirmed.</i>
+
+679
+00:46:23,697 --> 00:46:25,365
+<i>Test transmission in ten.</i>
+
+680
+00:46:25,449 --> 00:46:26,283
+<i>Nine.</i>
+
+681
+00:46:26,408 --> 00:46:27,408
+<i>Eight.</i>
+
+682
+00:46:27,493 --> 00:46:28,327
+<i>Seven.</i>
+
+683
+00:46:28,410 --> 00:46:29,410
+<i>Six.</i>
+
+684
+00:46:29,453 --> 00:46:30,329
+<i>Five.</i>
+
+685
+00:46:30,412 --> 00:46:31,288
+<i>Four.</i>
+
+686
+00:46:31,371 --> 00:46:32,371
+<i>Three.</i>
+
+687
+00:46:32,414 --> 00:46:33,332
+<i>Two.</i>
+
+688
+00:46:33,415 --> 00:46:34,415
+<i>One.</i>
+
+689
+00:46:34,583 --> 00:46:35,876
+<i>Begin transmission.</i>
+
+690
+00:46:35,959 --> 00:46:39,505
+- [static crackling]
+- [high-pitched ringing]
+
+691
+00:46:41,089 --> 00:46:43,717
+[wings fluttering]
+
+692
+00:46:45,135 --> 00:46:47,137
+[birds calling frantically]
+
+693
+00:47:00,317 --> 00:47:03,904
+[birds slamming against satellite dish]
+
+694
+00:47:03,987 --> 00:47:05,989
+[panicked chirping intensifies]
+
+695
+00:47:09,660 --> 00:47:11,537
+- [ringing fades]
+- [flapping dies down]
+
+696
+00:47:11,620 --> 00:47:13,497
+[man on PA] <i>Transmission complete.</i>
+
+697
+00:47:14,122 --> 00:47:16,166
+[softly] BN20197F.
+
+698
+00:47:18,293 --> 00:47:19,962
+[somber music playing]
+
+699
+00:47:20,212 --> 00:47:22,381
+Those were the coordinates for the target.
+
+700
+00:47:22,464 --> 00:47:25,133
+You have a good memory.
+
+701
+00:47:26,385 --> 00:47:29,471
+What is the target?
+
+702
+00:47:30,931 --> 00:47:33,183
+[wind gusting]
+
+703
+00:47:33,267 --> 00:47:35,269
+[music fades]
+
+704
+00:47:44,194 --> 00:47:46,780
+[ominous music playing]
+
+705
+00:48:09,469 --> 00:48:11,471
+[sounds distort]
+
+706
+00:48:11,555 --> 00:48:14,224
+[muffled echoing]
+
+707
+00:48:15,225 --> 00:48:16,476
+[Jin gasps]
+
+708
+00:48:16,560 --> 00:48:17,769
+[woman] <i>Level one.</i>
+
+709
+00:48:17,853 --> 00:48:19,855
+[wind gusting]
+
+710
+00:48:19,938 --> 00:48:21,398
+[static crackles]
+
+711
+00:48:23,817 --> 00:48:24,860
+[Jin gasps]
+
+712
+00:48:37,414 --> 00:48:38,457
+[exhales sharply]
+
+713
+00:48:44,963 --> 00:48:46,048
+[sighs]
+
+714
+00:48:46,131 --> 00:48:48,800
+[ominous music playing]
+
+715
+00:48:57,059 --> 00:48:59,061
+[wind picks up]
+
+716
+00:49:08,695 --> 00:49:10,572
+[Jin grunting]
+
+717
+00:49:18,413 --> 00:49:19,613
+- [screams]
+- [static crackles]
+
+718
+00:49:20,707 --> 00:49:22,292
+[breathing shakily]
+
+719
+00:49:23,669 --> 00:49:24,795
+What the fuck?
+
+720
+00:49:28,256 --> 00:49:30,717
+[Clarence] Wade really wants
+one of these helmets.
+
+721
+00:49:30,801 --> 00:49:32,719
+Thinks they're highly relevant.
+
+722
+00:49:33,720 --> 00:49:35,514
+We ever seen one over here?
+
+723
+00:49:35,597 --> 00:49:37,140
+No, not yet.
+
+724
+00:49:38,433 --> 00:49:39,643
+What else is relevant?
+
+725
+00:49:39,726 --> 00:49:41,019
+Mike Evans.
+
+726
+00:49:41,103 --> 00:49:43,939
+That bicycle helmet looks expensive.
+
+727
+00:49:44,022 --> 00:49:45,399
+Evans is rich.
+
+728
+00:49:45,482 --> 00:49:46,692
+What about the countdowns?
+
+729
+00:49:46,775 --> 00:49:48,777
+Yes, if they happen to scientists.
+
+730
+00:49:48,860 --> 00:49:51,321
+Suicides, if they happen to scientists.
+
+731
+00:49:51,405 --> 00:49:54,157
+Anything strange happening
+to scientists is relevant.
+
+732
+00:49:54,241 --> 00:49:57,869
+Anyone connected to anything strange
+happening to scientists is relevant.
+
+733
+00:49:57,953 --> 00:50:00,038
+- Who decides what's relevant?
+- Wade.
+
+734
+00:50:00,122 --> 00:50:02,624
+- Who decides he decides?
+- Governments.
+
+735
+00:50:02,708 --> 00:50:04,126
+- [investigator] Which ones?
+- Most.
+
+736
+00:50:04,209 --> 00:50:07,713
+They're not too keen on
+the notion of science being broken.
+
+737
+00:50:07,796 --> 00:50:10,882
+I don't really understand
+the science that's broken, to be honest.
+
+738
+00:50:10,966 --> 00:50:14,052
+I don't understand it either,
+but it's not good.
+
+739
+00:50:14,886 --> 00:50:16,054
+[elevator bell chimes]
+
+740
+00:50:17,347 --> 00:50:19,808
+Just be glad you're not a scientist.
+
+741
+00:50:19,891 --> 00:50:22,352
+Shit time to be a scientist.
+
+742
+00:50:24,438 --> 00:50:27,274
+- [crickets chirping]
+- [Auggie] You're smoking a lot of weed.
+
+743
+00:50:27,357 --> 00:50:29,609
+Yep. Is that why we're here?
+This an intervention?
+
+744
+00:50:29,693 --> 00:50:30,693
+[Auggie] No.
+
+745
+00:50:31,111 --> 00:50:33,822
+- Well, what are we doing here?
+- Not what you're thinking.
+
+746
+00:50:33,905 --> 00:50:36,300
+- I don't think anything.
+- Yeah, you are. And it's not that.
+
+747
+00:50:36,324 --> 00:50:38,994
+You asked me to come, here I am,
+
+748
+00:50:40,162 --> 00:50:44,291
+on this moonless night,
+in this beautiful place.
+
+749
+00:50:45,208 --> 00:50:48,587
+[in Spanish] You with all those curves
+and me with no brakes.
+
+750
+00:50:48,670 --> 00:50:49,713
+[groans]
+
+751
+00:51:04,061 --> 00:51:06,772
+[exhales, in English] What did
+that weird chick say to you again?
+
+752
+00:51:06,855 --> 00:51:08,982
+"Has the universe ever winked at you?"
+
+753
+00:51:10,192 --> 00:51:13,111
+She said to look at the sky at midnight
+and gave me this.
+
+754
+00:51:14,613 --> 00:51:15,613
+[decoder clicks]
+
+755
+00:51:16,323 --> 00:51:18,950
+[Auggie] It came out of
+a breakfast cereal. I looked it up.
+
+756
+00:51:19,618 --> 00:51:21,495
+They haven't made it since 1963.
+
+757
+00:51:23,580 --> 00:51:26,374
+- What's going on with you, though?
+- I don't want you to know.
+
+758
+00:51:27,375 --> 00:51:28,460
+No confirmation bias.
+
+759
+00:51:28,543 --> 00:51:32,089
+Just watch, and let me know what
+you observe, if you observe anything.
+
+760
+00:51:32,172 --> 00:51:35,801
+Science, dude.
+That's why you're here, okay?
+
+761
+00:51:35,884 --> 00:51:38,512
+I understand my role. [clears throat]
+
+762
+00:51:40,555 --> 00:51:42,182
+Thank you for being here.
+
+763
+00:51:47,813 --> 00:51:48,897
+[Saul clears throat]
+
+764
+00:51:48,980 --> 00:51:49,980
+[clicking]
+
+765
+00:51:50,023 --> 00:51:52,734
+[Saul] It looks like Morse code,
+but it's not.
+
+766
+00:51:52,818 --> 00:51:55,487
+- You know Morse code?
+- I know all kind of shit.
+
+767
+00:51:57,405 --> 00:51:59,282
+Toasty-O-Sters.
+
+768
+00:51:59,950 --> 00:52:02,953
+I mean, it's not a very good name.
+I could think of a better name.
+
+769
+00:52:03,036 --> 00:52:04,704
+I'd have to taste it first.
+
+770
+00:52:04,788 --> 00:52:08,458
+The name should reflect and support
+what it feels like to eat the cereal.
+
+771
+00:52:08,542 --> 00:52:11,002
+It's toasted. Like, we know that much...
+
+772
+00:52:11,086 --> 00:52:12,796
+Shut up and observe.
+
+773
+00:52:15,882 --> 00:52:17,717
+Two minutes to midnight. [sighs]
+
+774
+00:52:19,094 --> 00:52:21,888
+[tense music playing]
+
+775
+00:52:21,972 --> 00:52:23,807
+[machinery whirring]
+
+776
+00:52:23,890 --> 00:52:24,891
+[in Mandarin] Sit.
+
+777
+00:52:35,402 --> 00:52:39,156
+Not everyone here agrees
+with what is about to be done.
+
+778
+00:52:39,239 --> 00:52:42,159
+Given your political status.
+
+779
+00:52:42,242 --> 00:52:46,913
+On Chief Engineer Yang's recommendation,
+
+780
+00:52:46,997 --> 00:52:49,082
+we have decided
+
+781
+00:52:49,166 --> 00:52:54,588
+to inform you of the true nature
+of the Red Coast Project.
+
+782
+00:52:55,797 --> 00:52:58,466
+[grunts] Stars are so bright tonight.
+
+783
+00:52:58,550 --> 00:52:59,593
+You're so high.
+
+784
+00:53:00,510 --> 00:53:03,138
+Yeah, but still,
+
+785
+00:53:04,472 --> 00:53:05,807
+they're pretty bright.
+
+786
+00:53:05,891 --> 00:53:08,560
+- [Auggie gasps]
+- [bell tolling the hour]
+
+787
+00:53:08,643 --> 00:53:11,730
+[ominous orchestral music playing]
+
+788
+00:53:11,813 --> 00:53:12,814
+Saul.
+
+789
+00:53:15,025 --> 00:53:17,068
+[breathing shakily]
+
+790
+00:53:20,030 --> 00:53:21,114
+[quietly] Oh my God.
+
+791
+00:53:21,990 --> 00:53:26,745
+[in Mandarin] Red Coast is not
+an experimental weapons program.
+
+792
+00:53:33,376 --> 00:53:34,376
+Go on.
+
+793
+00:53:35,629 --> 00:53:39,925
+The emissions from the system
+are modulated.
+
+794
+00:53:40,008 --> 00:53:43,595
+Frequency modulation is not necessary
+for weapons systems.
+
+795
+00:53:45,305 --> 00:53:47,015
+You are correct.
+
+796
+00:53:47,098 --> 00:53:50,310
+It is not necessary for weaponization.
+
+797
+00:53:50,393 --> 00:53:54,731
+But it is necessary for communication.
+
+798
+00:53:54,814 --> 00:53:57,317
+[bell continues tolling the hour]
+
+799
+00:53:57,400 --> 00:53:59,402
+[ominous music building]
+
+800
+00:54:02,239 --> 00:54:05,533
+[low rumbling]
+
+801
+00:54:11,790 --> 00:54:13,875
+[Saul] I observe the universe winking.
+
+802
+00:54:13,959 --> 00:54:15,502
+How can it be happening?
+
+803
+00:54:15,585 --> 00:54:16,585
+It can't.
+
+804
+00:54:17,337 --> 00:54:19,256
+[panting]
+
+805
+00:54:30,976 --> 00:54:32,227
+Shit. It's a code.
+
+806
+00:54:33,395 --> 00:54:34,562
+What?
+
+807
+00:54:34,646 --> 00:54:35,730
+[decoder clicking]
+
+808
+00:54:35,814 --> 00:54:37,232
+[Auggie] What does it say?
+
+809
+00:54:38,316 --> 00:54:39,317
+What does it say?
+
+810
+00:54:39,776 --> 00:54:41,528
+[in Mandarin] Communication...
+
+811
+00:54:42,445 --> 00:54:43,445
+with whom?
+
+812
+00:54:47,534 --> 00:54:50,787
+With whomever is out there.
+
+813
+00:54:53,999 --> 00:54:55,667
+[Clarence] What is that? [sighs]
+
+814
+00:54:55,750 --> 00:54:59,629
+That, Clarence, is our enemy.
+
+815
+00:55:00,755 --> 00:55:03,550
+It's not letters. It's just numbers.
+
+816
+00:55:03,633 --> 00:55:04,884
+Which numbers?
+
+817
+00:55:05,635 --> 00:55:09,264
+[Saul] Ten, thirty-four, zero, six,
+
+818
+00:55:09,347 --> 00:55:13,518
+five, four, three,
+
+819
+00:55:14,311 --> 00:55:16,354
+two, one.
+
+820
+00:55:16,438 --> 00:55:18,898
+[ominous music fades]
+
+821
+00:55:19,983 --> 00:55:21,985
+[tense music playing]
+
+822
+00:55:25,155 --> 00:55:27,282
+[clock ticking]
+
+823
+00:55:27,365 --> 00:55:29,993
+[Clarence] <i>Don't you want to know
+why the stars flickered for you?</i>
+
+824
+00:55:32,412 --> 00:55:34,914
+[Jin] <i>This is what Vera was playing
+before she killed herself.</i>
+
+825
+00:55:37,208 --> 00:55:41,171
+[man] <i>Your mission is to solve
+the riddle of this world.</i>
+
+826
+00:55:43,048 --> 00:55:44,924
+<i>If one of us survives,</i>
+
+827
+00:55:46,051 --> 00:55:47,385
+<i>we all survive.</i>
+
+828
+00:55:48,428 --> 00:55:49,679
+[blows gently]
+
+829
+00:55:55,393 --> 00:55:57,395
+[Wade] <i>There's someone behind everything.</i>
+
+830
+00:55:58,146 --> 00:55:59,146
+<i>You just have to dig.</i>
+
+831
+00:56:02,150 --> 00:56:03,401
+[speaking inaudibly]
+
+832
+00:56:04,652 --> 00:56:07,155
+My Lord, we can help you.
+
+833
+00:56:07,238 --> 00:56:08,615
+[tense music building]
+
+834
+00:56:18,291 --> 00:56:19,709
+[Jin] <i>I think they're real.</i>
+
+835
+00:56:20,210 --> 00:56:21,252
+<i>And they're coming.</i>
+
+836
+00:56:21,336 --> 00:56:22,796
+[music swells]
+
+837
+00:56:24,547 --> 00:56:26,383
+[explosion blasts]
+
+838
+00:56:30,887 --> 00:56:33,807
+[somber closing theme playing]
+
+839
+00:58:29,005 --> 00:58:30,924
+[closing theme fades]
+

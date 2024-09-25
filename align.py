@@ -55,6 +55,6 @@ if __name__ == '__main__':
                         help='Indicates that the target is ahead of the source.')
     parser.add_argument('--sterilize', action='store_true', default=True,
                         help='Ignores text between HTML, parenthesis, brackets and other special characters.')
-    parser.add_argument('--strict', default=30, type=int, help='Don\'t print out subtitle pairs if they\'re shorter than certain length.')
+    parser.add_argument('--strict', default=12, type=int, help='Don\'t print out subtitle pairs if they\'re shorter than certain length.')
     args = parser.parse_args()
     main(args)

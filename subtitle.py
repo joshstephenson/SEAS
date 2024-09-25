@@ -4,8 +4,8 @@ from datetime import datetime
 SRT_TIME_FORMAT = '%H:%M:%S,%f'
 TIMECODE_SEPARATOR = ' --> '
 ELLIPSES_REGEX = r'[.]{3}'
-CURLY_BRACKET_REGEX = r'{[^{]+?}'
-SQUARE_BRACKET_REGEX = r'\[[^\[]+?\]'
+CURLY_BRACKET_REGEX = r'{[^{]+?}\s?'
+SQUARE_BRACKET_REGEX = r'\[[^\[]+?\]\s?'
 MULTIPLE_SPACES = r'[\s]+'
 # HTML_REGEX = r'<[^<]+?>' # This only strips the tags
 HTML_REGEX = r'<.*?>.*?</.*?>'
@@ -72,7 +72,7 @@ class Subtitle:
         self.text = self.text.replace('\n', ' ')
 
         if sterilize and not self.sterilized:
-
+            self.text = regex.sub(r'\r', '', self.text)
             # Strip character markers and captions
             self.text = regex.sub(CHARACTER_MARKER_REGEX, '', self.text)
             self.text = regex.sub(CAPITALS_REGEX, '', self.text)
@@ -99,7 +99,9 @@ class Subtitle:
             self.text = regex.sub(ELLIPSES_REGEX, '', self.text)
 
             # Replace multiple whitespace characters with one
-            self.text = regex.sub(MULTIPLE_SPACES, ' ', self.text).strip()
+            self.text = regex.sub(MULTIPLE_SPACES, ' ', self.text)
+
+            self.text = self.text.strip()
 
             self.sterilized = True
 
