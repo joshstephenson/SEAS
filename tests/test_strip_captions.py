@@ -11,7 +11,7 @@ def captions():
 
 
 def test_3_subtitles_get_stripped(captions):
-    assert len([*captions]) == 7
+    assert len([*captions]) == 9
 
 # We want to strip strings of all uppercase when that string has more than one word in uppercase
 def test_multiple_words_in_all_captions_with_optional_punctuation_are_stripped(captions):
@@ -24,7 +24,7 @@ def test_multiple_words_in_all_captions_with_optional_punctuation_are_stripped(c
         assert re.search('STUDIO CHOCOLATE', sub.text) is None
 
 def test_that_single_words_in_all_caps_are_not_stripped_unless_they_are_at_beginning_with_subsequent_colon(captions):
-    text = captions.subtitles[6].text
+    text = captions.subtitles[8].text
     assert re.search('IRS', text) is not None
     assert re.search('FBI', text) is not None
     assert re.search('AFAIK', text) is not None

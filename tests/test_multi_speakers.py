@@ -1,0 +1,20 @@
+import pytest
+from subtitles import Subtitles
+from subtitle import Subtitle
+from align import get_text
+import re
+
+@pytest.fixture
+def captions_en():
+    text = get_text('test_data/multi_speaker_en.srt')
+    return Subtitles(text)
+
+@pytest.fixture
+def captions_es():
+    text = get_text('test_data/multi_speaker_es.srt')
+    return Subtitles(text)
+
+def test_splits_single_subtitle_with_multiple_speakers_into_two(captions_en, captions_es):
+    assert len([*captions_en.subtitles]) == 2
+    assert len([*captions_es.subtitles]) == 2
+
