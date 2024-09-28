@@ -53,13 +53,12 @@ class Subtitle:
 
         # remember if we have sterilized so we don't do it again
         self.sterilized = False
-
         self.sterilize(sterilize)
 
     def sterilize(self, sterilize):
         """
         :param sterilize: boolean to strip HTML and special characters
-        :returns: True if text length is not zero after sterilizaton when appropriate
+        :returns: True if text length is not zero after sterilization when appropriate
         """
 
         # Just completely void subtitles with the musical note
@@ -72,7 +71,6 @@ class Subtitle:
         self.text = self.text.replace('\n', ' ')
 
         if sterilize and not self.sterilized:
-            self.text = regex.sub(r'\r', '', self.text)
             # Strip character markers and captions
             self.text = regex.sub(CHARACTER_MARKER_REGEX, '', self.text)
             self.text = regex.sub(CAPITALS_REGEX, '', self.text)

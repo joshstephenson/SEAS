@@ -67,13 +67,13 @@ class SubPair:
             if self.has_no_target():
                 if self.previous is not None and len(self.previous.target_sentences()) > 1:
                     sub = self.previous.pop_last_sentence_as_subtitle()
-                    if sub.has_content(sterilize, strip_captions):
+                    if sub.has_content():
                         self.add_option(sub)
 
             if self.subsequent.has_no_target:
                 if len(self.target_sentences()) > 1:
                     sub = self.pop_last_sentence_as_subtitle()
-                    if sub.has_content(sterilize, strip_captions):
+                    if sub.has_content():
                         self.subsequent.add_option(sub)
 
     def __str__(self):

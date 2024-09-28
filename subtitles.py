@@ -1,5 +1,6 @@
 
 import regex
+import sys
 from datetime import datetime
 from subtitle import Subtitle
 from subpair import SubPair
@@ -14,20 +15,36 @@ class Subtitles:
     on timecodes.
     """
     def __init__(self, text, sterilize=True, offset='00:00:00,000', offset_is_negative=False):
+        # First replace bad carriage returns:
+        text = regex.sub(r'\r', '', text)
+
         self.index = 0
         self.subtitles = []
-        lines = regex.split(r'\n{2,}', text)
+
+        # Split on 2 or more lines in a row
+        sub_contents = regex.split(r'\n{2,}', text)
 
         # Best to only parse this once, rather than in the Subtitle class
         offset = datetime.strptime(offset, Subtitle.srt_time_format)
 
-        for line in lines:
-            sub_content = line.strip().split("\n")[1:]
+        # We need to split subtitles if they have dashes that indicate a change in speaker
+        def _split_multiple_speakers(lines):
+            joined = " ".join(sub_content[1:])
+            return regex.split(r'-\s*', joined)
+
+
+        for sub_content in sub_contents:
+            sub_content = sub_content.strip().split("\n")[1:]
             if len(sub_content) == 0:
                 continue
-            subtitle = Subtitle(sub_content[0], sub_content[1:], sterilize, offset, offset_is_negative)
-            if subtitle.has_content():
-                self.subtitles.append(subtitle)
+            individuals = _split_multiple_speakers(sub_content[1:])
+            for individual in individuals:
+                try:
+                    subtitle = Subtitle(sub_content[0], individual, sterilize, offset, offset_is_negative)
+                    if subtitle.has_content():
+                        self.subtitles.append(subtitle)
+                except ValueError as e:
+                    sys.stderr.write(f'Value error in subtitle timestring "{sub_content[0]}": {e}\n')
 
         self.subtitles = self.merge_sentences()
 
@@ -66,6 +83,9 @@ class Subtitles:
         """
         pairs = []
         previous = None
+        if len(self.subtitles) == 0:
+            sys.stderr.write("No subtitles" + '\n')
+            exit(0)
         for sub in self:
             sub_pair = SubPair(previous, sub, target.find(sub))
             pairs.append(sub_pair)
@@ -122,7 +142,8 @@ class Subtitles:
 
     def __iter__(self):
         self.index = -1
-        self.current = self.subtitles[self.index]
+        if len(self.subtitles):
+            self.current = self.subtitles[self.index]
         return self
 
     def __next__(self):
