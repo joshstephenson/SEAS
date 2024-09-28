@@ -43,15 +43,17 @@ find "$FINDPATH" -d 1 -type d | while read -r DIR; do
         GENERATED=()
         for ENG_FILE in $(all_srt_for "$DIR" "eng"); do
             for SPA_FILE in $(all_srt_for "$DIR" "spa"); do
+                echo "$ENG_FILE"
+                echo "$SPA_FILE"
                 OUT_FILE="$DIR/eng_spa-$COUNT.txt"
-
                 # Run the alignment script
                 if ./align.py \
                     -s "$ENG_FILE" \
-                    -t "$SPA_FILE" 2> "$STDERRFILE" > "$OUT_FILE" ; then
+                    -t "$SPA_FILE"  > "$OUT_FILE" ; then # 2> "$STDERRFILE"
                     GENERATED+=("$OUT_FILE")
                     COUNT=$((COUNT+1))
                 else
+                    exit 1
                     # If alignment fails, remove the output file
                     rm -f "$OUT_FILE"
                     if grep 'No module named' "$STDERRFILE"; then

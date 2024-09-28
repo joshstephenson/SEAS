@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+"""
+Uses linga tools to verify if language in SRT file matches known language code (ISO 639) language codes
+Skips firts 50 subtitles becausey they often have annotations and other non-dialogue text.
+Collects first 250 (or more) characters and then detects the language.
+"""
 
 from lingua import Language, LanguageDetectorBuilder
 import argparse
