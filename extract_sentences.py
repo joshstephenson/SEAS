@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""
+Extract sentences from SRT file after preprocessing. Writes to STDOUT.
+"""
 import argparse
 import os
 import sys
