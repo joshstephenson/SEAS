@@ -15,6 +15,6 @@ def captions_es():
     return Subtitles(text)
 
 def test_splits_single_subtitle_with_multiple_speakers_into_two(captions_en, captions_es):
-    assert len([*captions_en.subtitles]) == 2
+    assert len([*captions_en.subtitles]) == 3 # English has a test to make sure we don't split a hypen in the middle of the sentence
     assert len([*captions_es.subtitles]) == 2
 

@@ -7,7 +7,7 @@ import re
 @pytest.fixture
 def subs():
     text = get_text('test_data/carriage_returns.srt')
-    return Subtitles(text, sterilize=True)
+    return Subtitles(text)
 
 def test_strip_carriage_returns(subs):
     assert len([*subs]) == 1

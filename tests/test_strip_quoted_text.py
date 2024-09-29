@@ -7,7 +7,7 @@ import re
 @pytest.fixture
 def subs():
     text = get_text('test_data/quoted.srt')
-    return Subtitles(text, sterilize=True)
+    return Subtitles(text)
 
 def test_removes_entire_subs_if_everything_is_quoted(subs):
     assert len([*subs]) == 3

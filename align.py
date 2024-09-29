@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import sys
 
 # local imports
 from subtitles import Subtitles
@@ -12,7 +13,7 @@ def get_text(filename):
         with open(filename, 'r', encoding='utf-8') as source_file:
             srt_text = source_file.read()
     except UnicodeDecodeError as e:
-        print(f'UTF-8 decoding failed. Will try latin-1 encoding.')
+        sys.stderr.write(f'UTF-8 decoding failed. Will try latin-1 encoding.')
         with open(filename, 'r', encoding='latin-1') as source_file:
             srt_text = source_file.read()
     return srt_text
@@ -34,8 +35,8 @@ def main(opts):
     target_text = get_text(target)
 
     # Create Subtitle objects from the file texts
-    source_subs = Subtitles(source_text, opts.sterilize)
-    target_subs = Subtitles(target_text, opts.sterilize, opts.offset, opts.offset_is_negative)
+    source_subs = Subtitles(source_text)
+    target_subs = Subtitles(target_text, opts.offset, opts.offset_is_negative)
 
     # Now align the subtitles based on timecodes
     pairs = source_subs.align(target_subs)
@@ -53,8 +54,6 @@ if __name__ == '__main__':
                         help='Time offset between source and target in SRT format. .e.g 00:00:12,500.')
     parser.add_argument('--offset-is-negative', default=False, action='store_true',
                         help='Indicates that the target is ahead of the source.')
-    parser.add_argument('--sterilize', action='store_true', default=True,
-                        help='Ignores text between HTML, parenthesis, brackets and other special characters.')
     parser.add_argument('--strict', default=12, type=int, help='Don\'t print out subtitle pairs if they\'re shorter than certain length.')
     args = parser.parse_args()
     main(args)

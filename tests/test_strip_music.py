@@ -7,7 +7,7 @@ import re
 @pytest.fixture
 def subs():
     text = get_text('test_data/music_notes.srt')
-    return Subtitles(text, sterilize=True)
+    return Subtitles(text)
 
 def test_removes_four_of_six_subtitles(subs):
     assert len([*subs]) == 2

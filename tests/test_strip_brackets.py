@@ -7,7 +7,7 @@ import re
 @pytest.fixture
 def subs():
     text = get_text('test_data/has_brackets.srt')
-    return Subtitles(text, sterilize=True)
+    return Subtitles(text)
 
 def test_removes_eight_subtitles(subs):
     assert len([*subs]) == 8

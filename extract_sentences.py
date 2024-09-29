@@ -13,7 +13,7 @@ def get_text(filename):
         with open(filename, 'r', encoding='utf-8') as source_file:
             srt_text = source_file.read()
     except UnicodeDecodeError as e:
-        print(f'UTF-8 decoding failed. Will try latin-1 encoding.')
+        sys.stderr.write(f'UTF-8 decoding failed. Will try latin-1 encoding.')
         with open(filename, 'r', encoding='latin-1') as source_file:
             srt_text = source_file.read()
     return srt_text
@@ -24,7 +24,7 @@ def main(opts):
     if not os.path.exists(file):
         raise (Exception(f"File path does not exist: {file}"))
     text = get_text(file)
-    subtitles = Subtitles(text, sterilize=True)
+    subtitles = Subtitles(text)
     for subtitle in subtitles:
         sys.stdout.write(subtitle.text + "\n")
 

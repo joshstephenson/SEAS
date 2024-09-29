@@ -8,13 +8,39 @@ from suboptions import SubOptions
 
 SENT_BOUNDARIES_REGEX = r'[\!\.\?]$'
 
+ELLIPSES_REGEX = r'[.]{3}'
+CURLY_BRACKET_REGEX = r'{[^{]+?}\s?'
+SQUARE_BRACKET_REGEX = r'\[[^\[]+?\]\s?'
+MULTIPLE_SPACES = r'[\s]+'
+
+# Greedily replace HTML
+HTML_REGEX = r'<.*>'
+QUOTES_REGEX = r'(["“”«»„‟‹›〝〞『』【】「」])(.*?)(["“”«»„‟‹›〝〞『』【】「」])' #r'"[^"]+?"'
+
+# Character marker might look like:
+# JOHN: blah blah
+# OR
+# Person #1: blah blah
+# allows up to three 'words' before a colon and space
+CHARACTER_MARKER_REGEX = r'^([\w.,#\'-]+\s?){1,3}: '
+
+# Matches 2 or more words in all CAPS along with adjacent punctuation
+# CAPITALS_REGEX = r'([A-Z]{2,}[,:.]?\s){2,}[:]?'
+CAPITALS_REGEX = r'[A-Z,]{2,}( [A-Z0-9,]{2,})+'
+PARENTHESES_REGEX = r'\(.*\)'
+LEADING_HYPHENS_REGEX = r'^-'
+
+# Used to transcribe music
+MUSICAL_NOTE = '♪'
+LEADING_POUND_SIGN = r'^#'
+
 class Subtitles:
     """
     Subtitles is a class that takes in a body of text represent an SRT file and stores a list of subtitles associated
     with a single language. It also allows merging of sentences and aligning subtitles from another language based
     on timecodes.
     """
-    def __init__(self, text, sterilize=True, offset='00:00:00,000', offset_is_negative=False):
+    def __init__(self, text, offset='00:00:00,000', offset_is_negative=False):
         # First replace bad carriage returns:
         text = regex.sub(r'\r', '', text)
 
@@ -28,25 +54,78 @@ class Subtitles:
         offset = datetime.strptime(offset, Subtitle.srt_time_format)
 
         # We need to split subtitles if they have dashes that indicate a change in speaker
-        def _split_multiple_speakers(lines):
-            joined = " ".join(sub_content[1:])
-            return regex.split(r'-\s*', joined)
+        def _split_multiple_speakers(text):
+            parts = regex.split(r'(^|\n)-\s*', text)
+            # Join each individual speaker's words
+            joined = [part.replace("\n", " ") for part in parts]
+            # return a cleaned version
+            return [part.strip() for part in joined if len(part)]
 
 
         for sub_content in sub_contents:
             sub_content = sub_content.strip().split("\n")[1:]
             if len(sub_content) == 0:
                 continue
-            individuals = _split_multiple_speakers(sub_content[1:])
+            timecode_string = sub_content[0]
+
+            # sterilize the text before we look for multiple speakers
+            text = '||'.join(sub_content[1:])
+            text = self.sterilize(text)
+            text = text.replace('||', '\n')
+
+            individuals = _split_multiple_speakers(text)
             for individual in individuals:
                 try:
-                    subtitle = Subtitle(sub_content[0], individual, sterilize, offset, offset_is_negative)
+                    subtitle = Subtitle(timecode_string, individual, offset, offset_is_negative)
                     if subtitle.has_content():
                         self.subtitles.append(subtitle)
                 except ValueError as e:
                     sys.stderr.write(f'Value error in subtitle timestring "{sub_content[0]}": {e}\n')
 
         self.subtitles = self.merge_sentences()
+
+    def sterilize(self, text):
+        """
+        Yes, many of these regex's could be combined for performance but at the expense of readability
+        :param text: text to sterilize
+        :returns: True if text length is not zero after sterilization when appropriate
+        """
+
+        # Just completely void subtitles with the musical note or leading # which indicates music
+        if MUSICAL_NOTE in text or regex.match(LEADING_POUND_SIGN, text) is not None:
+            return ''
+
+        # Remove HTML content
+        text = regex.sub(HTML_REGEX, '', text)
+
+        # Strip character markers and captions
+        text = regex.sub(CHARACTER_MARKER_REGEX, '', text)
+        text = regex.sub(CAPITALS_REGEX, '', text)
+
+        # Strip quoted content. There's no telling whether it's actually a character or an off-screen
+        text = regex.sub(QUOTES_REGEX, '', text)
+
+        # Remove content surrounded by parenthesis
+        text = regex.sub(PARENTHESES_REGEX, "", text)
+
+        # Remove content surrounded by curly brackets
+        text = regex.sub(CURLY_BRACKET_REGEX, '', text)
+
+        # Remove content surrounded by square brackets
+        text = regex.sub(SQUARE_BRACKET_REGEX, '', text)
+
+        # Remove leading hyphens
+        text = regex.sub(LEADING_HYPHENS_REGEX, '', text)
+
+        # Remove ellipses
+        text = regex.sub(ELLIPSES_REGEX, '', text)
+
+        # Replace multiple whitespace characters with one
+        text = regex.sub(MULTIPLE_SPACES, ' ', text)
+
+        text = text.strip()
+
+        return text
 
     def merge_sentences(self):
         """

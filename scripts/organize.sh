@@ -8,12 +8,20 @@ if [ -z "$YEAR" ]; then
     echo "Must pass year."
     exit 1
 fi
+if [ -z "$EXTRACT_SCRIPT" ]; then
+    echo "Set EXTRACT_SCRIPT env variable to location of sentence extractor script."
+    exit 1
+fi
+if [ -z "$SUBTITLE_DATA" ]; then
+    echo "Set SUBTITLE_DATA env variable to the location of the OpenSubtitle Data. No trailing slash."
+fi
 
+EXPORT_FILE="$SUBTITLE_DATA/$EXPORT_FILE"
 find_by_year() {
     years=$(awk -F'\t' '{print $9}' $EXPORT_FILE | grep -v MovieYear | sort -r | uniq | head -n20)
 
     for year in $years; do
-        awk -F'\t' -v year="$year" '$9 == year' $EXPORT_FILE | grep -v 'Empty Movie' > "$year.txt"
+        awk -F'\t' -v year="$year" '$9 == year' $EXPORT_FILE | grep -v 'Empty Movie' > "$SUBTITLE_DATA/processed/$year.txt"
     done
 }
 
@@ -35,7 +43,7 @@ get_title() {
 srt_file() {
     LINE="$1"
     ID=$(echo "$LINE" | awk -F'\t' '{print $2}')
-    echo -n "files/"
+    echo -n "$SUBTITLE_DATA/files/"
     for i in $(seq 4); do
         echo "$ID" | tail -c $((1+i)) | head -c 1
         echo -n "/"
@@ -60,7 +68,7 @@ new_file() {
     CLEANED="$(get_title "$LINE" | sed 's/ /_/g' | sed 's/[^a-zA-Z0-9_-]//g' | tr -s "_")"
     LANG="$(get_lang "$LINE")"
     FILE="$(echo "$LINE" | awk -F'\t' '{print $2}')"
-    echo "processed/$YEAR/$CLEANED/$LANG/$FILE.srt.gz"
+    echo "$SUBTITLE_DATA/processed/$YEAR/$CLEANED/$LANG/$FILE.srt.gz"
 }
 
 process_file() {
@@ -72,7 +80,7 @@ process_file() {
     NEW="$(new_file "$LINE")"
     mkdir -p $(dirname "$NEW")
     cp "$OLD" "$NEW"
-    INFO_FILE="processed/$YEAR/$CLEANED/info.txt"
+    INFO_FILE="$SUBTITLE_DATA/processed/$YEAR/$CLEANED/info.txt"
     echo "TITLE: $TITLE" > "$INFO_FILE"
     echo "YEAR: $YEAR" >> "$INFO_FILE"
     echo "ID: $ID" >> "$INFO_FILE"
@@ -86,6 +94,9 @@ process_file() {
     gunzip "$NEW"
     # Remove the .gz file if it hangs around
     rm -f "$NEW"
+
+    # Extract sentences
+    "$EXTRACT_SCRIPT" -f "${NEW/.gz/}" > "${NEW/.srt.gz/.sent}"
 }
 
 process_year() {
@@ -100,7 +111,7 @@ process_year() {
             echo "PROCESSING: $TITLE"
             process_file "$LINE"
         fi
-    done < "$YEAR.txt"
+    done < "$SUBTITLE_DATA/index/$YEAR.txt"
 }
 #find_by_year
 process_year
