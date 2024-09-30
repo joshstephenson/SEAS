@@ -3,6 +3,7 @@ from datetime import datetime
 
 SRT_TIME_FORMAT = '%H:%M:%S,%f'
 TIMECODE_SEPARATOR = ' --> '
+TIMECODE_LINE_REGEX = r'(\d{2}:\d{2}:\d{2},\d{3}).+(\d{2}:\d{2}:\d{2},\d{3})'
 
 class Subtitle:
     """
@@ -53,9 +54,13 @@ class Subtitle:
                 hour = pt.hour + offset.hour
             return microsecond + (second + minute * 60 + hour * 3600) * 1000000
 
-        parts = self.timestring.split(TIMECODE_SEPARATOR)
-        self.start = _parse_timestring(parts[0])
-        self.end = _parse_timestring(parts[1])
+        match = regex.match(TIMECODE_LINE_REGEX, self.timestring)
+        if match is not None and len(match.groups()) > 1:
+            self.start = _parse_timestring(match.group(1))
+            self.end = _parse_timestring(match.group(2))
+            self.timestring = f'{match.group(1)} --> {match.group(2)}'
+        else:
+            raise Exception("Invalid timecode string: " + self.timestring)
 
     def overlap(self, other):
         """
