@@ -1,0 +1,11 @@
+1
+00:00:16,141 --> 00:00:17,767
+Here is a test with a proper splitter -->s.
+
+2
+00:00:17,767-->00:00:19,561
+Here is another test where the splitter has no spaces.
+
+3
+00:00:19,561 00:00:24,899
+And a third test where the splitter is a space.
