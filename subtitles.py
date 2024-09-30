@@ -34,6 +34,8 @@ LEADING_HYPHENS_REGEX = r'^-'
 MUSICAL_NOTE = '♪'
 LEADING_POUND_SIGN = r'^#'
 
+URL_REGEX = r'((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*'
+
 class Subtitles:
     """
     Subtitles is a class that takes in a body of text represent an SRT file and stores a list of subtitles associated
@@ -94,6 +96,12 @@ class Subtitles:
         # Just completely void subtitles with the musical note or leading # which indicates music
         if MUSICAL_NOTE in text or regex.match(LEADING_POUND_SIGN, text) is not None:
             return ''
+
+        # A url invalides the entire subtitle
+        if regex.search(URL_REGEX, text, regex.MULTILINE) is not None:
+            return ''
+        else:
+            print("PASSEDD")
 
         # Remove HTML content
         text = regex.sub(HTML_REGEX, '', text)
