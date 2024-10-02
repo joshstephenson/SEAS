@@ -171,3 +171,5 @@ data
 vecalign
 LASER
 results
+gold.txt
+gui.py
