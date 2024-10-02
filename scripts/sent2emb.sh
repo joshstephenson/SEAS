@@ -34,4 +34,4 @@ echo "Generated embeddings to $TARGET_EMB" 1>&2
     --src "$SOURCE" \
     --tgt "$TARGET" \
     --src_embed "$SOURCE_OVERLAP" "$SOURCE_EMB" \
-    --tgt_embed "$TARGET_OVERLAP" "$TARGET_EMB"
+    --tgt_embed "$TARGET_OVERLAP" "$TARGET_EMB" 2>/dev/null

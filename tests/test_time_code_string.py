@@ -1,7 +1,6 @@
 import pytest
 from subtitles import Subtitles
-from subtitle import Subtitle
-from align import get_text
+from scripts.align import get_text
 
 @pytest.fixture
 def subs():

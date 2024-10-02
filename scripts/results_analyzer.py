@@ -8,7 +8,6 @@ from nltk import everygrams
 import curses
 
 DELAY=0.20
-GOLD_FILE='gold.txt'
 
 class Data:
     def __init__(self, files):
@@ -193,19 +192,22 @@ def main(opts):
                         pass
 
     data = Data(opts.files)
-    curses.wrapper(draw_ui, data.left_label, data.right_label)
+    if opts.annotate:
+        curses.wrapper(draw_ui, data.left_label, data.right_label)
 
-    output = open('gold.txt', 'w', encoding='utf-8')
+    output = open(opts.output, 'w', encoding='utf-8')
     gold = [g.strip() for g in data.gold if len(g.strip())]
     for g in gold:
         output.write(g + "\n\n")
     output.close()
-    print(f'Wrote {len(gold)} to {GOLD_FILE}')
+    print(f'\n\nWrote {len(gold)} to {opts.output}')
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--files', required=True, nargs='+', help='2 alignment files to compare')
+    parser.add_argument('-o', '--output', required=True)
+    parser.add_argument('-a', '--annotate', action='store_true', default=False)
     args = parser.parse_args()
     if len(args.files) != 2:
         parser.error('Must provide 2 alignment files')

@@ -13,7 +13,6 @@ def main(opts):
     alignments_file = open(opts.alignments, 'r', encoding='utf-8')
     source_file = open(opts.source, 'r', encoding='utf-8')
     target_file = open(opts.target, 'r', encoding='utf-8')
-
     alignments = [a.strip() for a in alignments_file.readlines()]
     alignments_file.close()
     source_sentences = np.array([l.strip() for l in source_file.readlines()])
