@@ -1,5 +1,6 @@
 import regex
 from datetime import datetime
+import sys
 
 SRT_TIME_FORMAT = '%H:%M:%S,%f'
 TIMECODE_SEPARATOR = ' --> '
@@ -30,7 +31,15 @@ class Subtitle:
 
 
     def has_content(self):
-        return len(self.text) > 0
+        # return regex.match(r'[[:lower:]]{2,}', self.text) is not None
+        # Count the number of lowercase and uppercase letters in the string
+        lower_count = sum(1 for char in self.text if char.islower())
+        upper_count = sum(1 for char in self.text if char.isupper())
+
+        # The string must be either:
+        # - More than one lowercase character, or
+        # - One lowercase and one uppercase character
+        return (lower_count > 1) or (lower_count >= 1 and upper_count >= 1)
 
     def parse_time_codes(self, offset, offset_is_negative):
         """
@@ -54,13 +63,15 @@ class Subtitle:
                 hour = pt.hour + offset.hour
             return microsecond + (second + minute * 60 + hour * 3600) * 1000000
 
-        match = regex.match(TIMECODE_LINE_REGEX, self.timestring)
+        match = regex.match(TIMECODE_LINE_REGEX, self.timestring.strip())
         if match is not None and len(match.groups()) > 1:
             self.start = _parse_timestring(match.group(1))
             self.end = _parse_timestring(match.group(2))
             self.timestring = f'{match.group(1)} --> {match.group(2)}'
         else:
-            raise Exception("Invalid timecode string: " + self.timestring)
+            sys.stderr.write("Invalid timecode string: " + self.timestring + "\n")
+            # Nullify this subtitle
+            self.text = ''
 
     def overlap(self, other):
         """

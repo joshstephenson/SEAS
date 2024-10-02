@@ -37,10 +37,12 @@ def with_dir(opts):
             if file.lower().endswith('.srt'):
                 text = get_text(file)
                 subtitles = Subtitles(text)
-                output = open(file.replace('.srt', '.sent'), 'w', encoding='utf-8')
+                sent_file = file.replace('.srt', '.sent')
+                output = open(sent_file, 'w', encoding='utf-8')
                 for subtitle in subtitles:
                     output.write(subtitle.text + "\n")
                 output.close()
+                sys.stdout.write(sent_file + "\n")
 
 
 if __name__ == '__main__':

@@ -18,4 +18,4 @@ def test_strips_all_types_of_quoted_content(subs):
         for char in '"“”«»„‟‹›〝〞『』【】「」':
             assert char not in sub.text
     text = subs.subtitles[2].text
-    assert text == "editor really had no idea"
+    assert text == "editor really had no idea."

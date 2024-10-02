@@ -34,4 +34,8 @@ genuine, the apology.
 22
 00:00:49,800 --> 00:00:51,840
 "I think the" editor
-really had no idea
+really had no idea.
+
+495
+00:51:06,815 --> 00:51:09,025
+"¿El Universo te guiñó el ojo?".

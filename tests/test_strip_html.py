@@ -15,8 +15,6 @@ def three_body_subs():
     return Subtitles(text)
 
 def test_removes_entire_subs_when_html_wraps_all_text(subs):
-    for sub in subs:
-        print(sub.text)
     assert len([*subs]) == 6
 
 def test_strips_html(subs):

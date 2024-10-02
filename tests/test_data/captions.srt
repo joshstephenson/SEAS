@@ -39,4 +39,8 @@ Ik moet uw tas controleren.
 
 10
 00:01:05,106 --> 00:01:07,025
-IRS and FBI are federal agencies AFAIK
+IRS and FBI are federal agencies AFAIK.
+
+11
+00:47:14,124 --> 00:47:16,585
+BN20197F.

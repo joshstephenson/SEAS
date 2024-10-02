@@ -48,7 +48,7 @@ class SubOptions:
         opt: Subtitle = self.options[-1]
         sentence = self.sentences()[-1]
         opt.text = opt.text.replace(sentence, '')
-        sub = Subtitle(opt.timestring, sentence, opt.sterilized, opt.offset, opt.offset_is_negative)
+        sub = Subtitle(opt.timestring, sentence, opt.offset, opt.offset_is_negative)
         return sub
 
     def add_option(self, option: Subtitle):

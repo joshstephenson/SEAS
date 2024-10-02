@@ -94,9 +94,6 @@ process_file() {
     gunzip "$NEW"
     # Remove the .gz file if it hangs around
     rm -f "$NEW"
-
-    # Extract sentences
-    "$EXTRACT_SCRIPT" -f "${NEW/.gz/}" > "${NEW/.srt.gz/.sent}"
 }
 
 process_year() {

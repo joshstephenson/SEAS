@@ -74,7 +74,8 @@ class Subtitles:
             text = '||'.join(sub_content[1:])
             text = self.sterilize(text)
             text = text.replace('||', '\n')
-
+            if len(text) == 0:
+                continue
             individuals = _split_multiple_speakers(text)
             for individual in individuals:
                 try:
@@ -100,8 +101,6 @@ class Subtitles:
         # A url invalides the entire subtitle
         if regex.search(URL_REGEX, text, regex.MULTILINE) is not None:
             return ''
-        else:
-            print("PASSEDD")
 
         # Remove HTML content
         text = regex.sub(HTML_REGEX, '', text)
