@@ -2,8 +2,13 @@
 
 import argparse
 import os
+from math import ceil
+import time
 from nltk import everygrams
+import curses
 
+DELAY=0.20
+GOLD_FILE='gold.txt'
 
 class Data:
     def __init__(self, files):
@@ -56,7 +61,7 @@ class Data:
                 best_overlap = len(overlap)
                 best = alignment
         if best is None:
-            print('Resulting to ngrams.')
+            # print('Resulting to ngrams.')
             target_grams = list(everygrams(target.replace('\n', '').split(), max_len=2))
 
             for alignment in self.right_pool:
@@ -86,38 +91,116 @@ class Data:
         self.left_pool.remove(left)
         self.right_pool.remove(right)
 
-    def stats_str(self):
+    def stats(self):
         left_score = self.left_stats[0] / self.left_stats[1] * 100.0
         right_score = self.right_stats[0] / self.right_stats[1] * 100.0
         remaining = min(len(self.left_pool), len(self.right_pool))
-        return f'{self.left_label}: {left_score:.2f}. {self.right_label}: {right_score:.2f}. REMAINING: {remaining}'
+        return f'{left_score:.2f}%', f'{right_score:.2f}%', f'GOLD: {len(self.gold)}\nREMAINING: {remaining}'
 
 
 def main(opts):
-    data = Data(opts.files)
+    def draw_ui(stdscr, label1, label2):
+        def set_bottom(text):
+            bottom_pad.addstr(0, 0, text, curses.A_BOLD)
+            bottom_pad.refresh(0, 0, 0, 0, 2, 30)
 
-    while len(data.left_pool):
-        left = data.left_pool[0]
-        right = data.find_candidate(left)
-        if right is None:
-            print(f'Could not find a candidate for "{left[0:40]}". Skipping...')
-            data.left_pool.remove(left)
-        else:
-            print(data.stats_str())
-            print("\n", left, "\n---------\n", right)
-            answer = input("\n1) Top. 2) Bottom. 3) Neither.")
-            match answer:
-                case '1':
-                    data.select_option(left, right)
-                case '2':
-                    data.select_option(right, left)
-                case _:
-                    data.both_wrong(left, right)
+        def update_stats(stats):
+            left_stats_len = len(stats[0])
+            right_stats_len = len(stats[1])
+
+            left_pad.addstr(1, 0, stats[0], curses.A_BOLD)
+            left_pad.refresh(1, 0, 1, mid_width-left_stats_len-2, 1, content_width)
+            right_pad.addstr(1, 0, stats[1], curses.A_BOLD)
+            right_pad.refresh(1, 0, 1, mid_width, 1, full_width-1)
+
+        def update_pads(left, right, standout=None):
+            left_lines = left.split('\n')
+            right_lines = right.split('\n')
+
+            max_length = max(len(left_lines[0]), len(right_lines[0]))
+            num_top_lines = ceil(max_length / content_width)
+            num_bottom_lines = ceil(max(len(left_lines[1]), len(right_lines[1])) / content_width)
+
+            # pad the lines so they line up vertically
+            left_lines[0] = left_lines[0].ljust(num_top_lines * content_width, ' ')
+            left_lines[1] = left_lines[1].ljust(num_bottom_lines * content_width, ' ')
+
+            separator = '-' * (mid_width-2)
+            left_str = f'{separator}'.join(left_lines)
+            left_pad.addstr(3, 0, " " * 20 * content_width)
+            if standout == 'left':
+                left_pad.addstr(3, 0, left_str, curses.A_STANDOUT)
+            else:
+                left_pad.addstr(3, 0, left_str)
+            left_pad.refresh(3, 0, 3, 0, 20, content_width)
+
+            right_lines[0] = right_lines[0].ljust(num_top_lines * content_width, ' ')
+            right_lines[1] = right_lines[1].ljust(num_bottom_lines * content_width, ' ')
+            right_str = f'{separator}'.join(right_lines)
+            right_pad.addstr(3, 0, " " * 20 * content_width)
+            if standout == 'right':
+                right_pad.addstr(3, 0, right_str, curses.A_STANDOUT)
+            else:
+                right_pad.addstr(3, 0, right_str)
+            right_pad.refresh(3, 0, 3, mid_width, 20, full_width - 1)
+
+        k = 0
+        # Clear and refresh the screen for a blank canvas
+        stdscr.clear()
+        stdscr.refresh()
+        # Initialization
+        _, full_width = stdscr.getmaxyx()
+
+        full_height = 40
+        mid_width = int(full_width / 2.0)  # middle point of the window
+        content_width = mid_width - 2
+
+        left_pad = curses.newpad(full_height, content_width)
+        right_pad = curses.newpad(full_height, content_width)
+        # These labels won't change
+        left_pad.addstr(0, 0, f'{label1}', curses.A_BOLD)
+        right_pad.addstr(0, 0, f'{label2}', curses.A_BOLD)
+        left_pad.refresh(0, 0, 0, content_width - len(label1), 1, mid_width)
+        right_pad.refresh(0, 0, 0, mid_width, 1, full_width - 1)
+
+        bottom_pad = curses.newpad(2, full_width - 1)
+
+        while k != ord('q') and len(data.left_pool):
+            left = data.left_pool[0]
+            right = data.find_candidate(left)
+            if right is None:
+                # print(f'Could not find a candidate for "{left[0:40]}". Skipping...')
+                data.left_pool.remove(left)
+            else:
+                stats = data.stats()
+                update_stats(stats)
+                update_pads(left, right)
+                set_bottom(stats[2])
+                # print("\n", left, "\n---------\n", right)
+                k = stdscr.getch()
+                match k:
+                    case curses.KEY_LEFT:
+                        update_pads(left, right, 'left')
+                        time.sleep(DELAY)
+                        data.select_option(left, right)
+                    case curses.KEY_RIGHT:
+                        update_pads(left, right, 'right')
+                        time.sleep(DELAY)
+                        data.select_option(right, left)
+                    case curses.KEY_DOWN:
+                        data.both_wrong(left, right)
+                    case _:
+                        pass
+
+    data = Data(opts.files)
+    curses.wrapper(draw_ui, data.left_label, data.right_label)
 
     output = open('gold.txt', 'w', encoding='utf-8')
-    for g in [g.strip() for g in data.gold if len(g.strip())]:
+    gold = [g.strip() for g in data.gold if len(g.strip())]
+    for g in gold:
         output.write(g + "\n\n")
     output.close()
+    print(f'Wrote {len(gold)} to {GOLD_FILE}')
 
 
 if __name__ == '__main__':
