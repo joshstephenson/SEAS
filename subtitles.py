@@ -110,7 +110,8 @@ class Subtitles:
         text = regex.sub(CAPITALS_REGEX, '', text)
 
         # Strip quoted content. There's no telling whether it's actually a character or an off-screen
-        text = regex.sub(QUOTES_REGEX, '', text)
+        # Not sure we should be stripping quotes afterall. They're used for when characters are quoting things.
+        # text = regex.sub(QUOTES_REGEX, '', text)
 
         # Remove content surrounded by parenthesis
         text = regex.sub(PARENTHESES_REGEX, "", text)
