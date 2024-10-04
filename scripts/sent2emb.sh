@@ -24,11 +24,11 @@ echo "Generated overlaps of $OVERLAP_SIZE to $SOURCE_OVERLAP" 1>&2
 ./vecalign/overlap.py -n $OVERLAP_SIZE -i "$TARGET" -o "$TARGET_OVERLAP"
 echo "Generated overlaps of $OVERLAP_SIZE to $TARGET_OVERLAP" 1>&2
 
-./LASER/tasks/embed/embed.sh "$SOURCE_OVERLAP" "$SOURCE_EMB"
-echo "Generated embeddings to $SOURCE_EMB" 1>&2
+./LASER/tasks/embed/embed.sh "$SOURCE_OVERLAP" "$SOURCE_EMB" 2>/dev/null
+#echo "Generated embeddings to $SOURCE_EMB" 2>/dev/null
 
-./LASER/tasks/embed/embed.sh "$TARGET_OVERLAP" "$TARGET_EMB"
-echo "Generated embeddings to $TARGET_EMB" 1>&2
+./LASER/tasks/embed/embed.sh "$TARGET_OVERLAP" "$TARGET_EMB" 2>/dev/null
+#echo "Generated embeddings to $TARGET_EMB"
 
 ./vecalign/vecalign.py --alignment_max_size 8 \
     --src "$SOURCE" \
