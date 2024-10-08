@@ -31,12 +31,11 @@ that holds up quite as well.
 
 8
 00:00:19,353 --> 00:00:20,843
-{\an8}I just remember seeing it the first time
+{\an8}This subtitle should merge with
 
 9
 00:00:20,938 --> 00:00:23,680
-{\an8}and being like, that is
-the exact experience you want.
+{\an8}this subtitle.
 
 10
 00:01:13,304 --> 00:01:14,806

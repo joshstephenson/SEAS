@@ -1,6 +1,6 @@
 import pytest
 from subtitles import Subtitles
-from scripts.align import get_text
+from scripts.timecode_align import get_text
 
 
 @pytest.fixture
@@ -9,9 +9,10 @@ def subs():
     return Subtitles(text)
 
 def test_removes_eight_subtitles(subs):
-    assert len([*subs]) == 8
+    assert len([*subs]) == 9
 
 def test_has_no_brackets(subs):
     for sub in subs:
+        print(sub.text)
         assert '{\an8}' not in sub.text
         assert '[in Mandarin] ' not in sub.text
