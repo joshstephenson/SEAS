@@ -13,7 +13,9 @@ CURLY_BRACKET_REGEX = r'{[^{]+?}\s?'
 SQUARE_BRACKET_REGEX = r'\[[^\[]+?\]\s?'
 MULTIPLE_SPACES = r'[\s]+'
 
-# Greedily replace HTML
+# We only want to replace the italics tags, not the text inside
+ITALICS_REGEX = r'</?[iI]>'
+# But for all other HTML we want to strip everything inside too
 HTML_REGEX = r'<.*>'
 QUOTES_REGEX = r'(["“”«»„‟‹›〝〞『』【】「」])(.*?)(["“”«»„‟‹›〝〞『』【】「」])' #r'"[^"]+?"'
 
@@ -102,7 +104,12 @@ class Subtitles:
         if regex.search(URL_REGEX, text, regex.MULTILINE) is not None:
             return ''
 
-        # Remove HTML content
+        text = regex.sub(CAPITALS_REGEX, '', text)
+
+        # First strip italics tags
+        text = regex.sub(ITALICS_REGEX, '', text)
+
+        # Then remove all other HTML with inner content
         text = regex.sub(HTML_REGEX, '', text)
 
         # Strip character markers and captions
