@@ -21,13 +21,13 @@ echo "TARGET: $TARGET"
 SOURCE_SENT="${SOURCE/.srt/.sent}"
 TARGET_SENT="${TARGET/.srt/.sent}"
 TIME_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-timecode.txt"
-VEC_ALIGN_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vec.align"
+VEC_ALIGN_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vec.path"
 VEC_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vec.txt"
 GOLD_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}.gold"
 
 # First do the align script for timecode-based alignments
 if [ ! -f "$TIME_FILE" ]; then
-    $SUBTITLE_REPO/scripts/align.py -s "$SOURCE" -t "$TARGET" > "$TIME_FILE"
+    $SUBTITLE_REPO/scripts/timecode_align.py -s "$SOURCE" -t "$TARGET" > "$TIME_FILE"
 fi
 echo "$TIME_FILE"
 #
@@ -41,7 +41,7 @@ if [ ! -f "$TARGET_SENT" ]; then
 fi
 echo "$TARGET_SENT"
 if [ ! -f "$VEC_ALIGN_FILE" ]; then
-    $SUBTITLE_REPO/scripts/sent2emb.sh "$SOURCE_SENT" "$TARGET_SENT" | grep -v "| INFO |" > "$VEC_ALIGN_FILE" 2>/dev/null
+    $SUBTITLE_REPO/scripts/sent2emb.sh "$SOURCE_SENT" "$TARGET_SENT" | grep -v "| INFO |" > "$VEC_ALIGN_FILE" #2>/dev/null
 fi
 echo "$VEC_ALIGN_FILE"
 if [ ! -f "$VEC_FILE" ]; then

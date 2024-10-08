@@ -3,6 +3,12 @@ import argparse
 import re
 import numpy as np
 import sys
+"""
+This script generates aligned sentences using 3 files:
+- A file of sentences from the source Subtitle file (*.sent file)
+- A file of sentences from the target Subtitle file (*.sent file)
+- A file of alignments from either vecalign or sentalign (*.path)
+"""
 
 def get_ids_from_str(id_string):
     ids = re.findall(r'\d+', id_string)

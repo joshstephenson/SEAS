@@ -240,7 +240,6 @@ def main(opts):
     print(f'\n\nWrote {len(gold)} to {opts.output}')
 
     left_file = opts.files[0].replace(".txt", "-bronze.txt")
-    right_file = opts.files[1].replace(".txt", "-bronze.txt")
 
     # Write left bronze annotations, e.g. didn't agree with right
     output = open(left_file, 'w', encoding='utf-8')
@@ -252,7 +251,8 @@ def main(opts):
     output.close()
     print(f'\nWrote {count} to {left_file}. Should have been {target}')
 
-    # Write right ronze annotations, e.g. didn't agree with left
+    right_file = opts.files[1].replace(".txt", "-bronze.txt")
+    # Write right bronze annotations, e.g. didn't agree with left
     output = open(right_file, 'w', encoding='utf-8')
     target = len(data.right_alignments) - len(data.gold)
     count = 0
@@ -260,7 +260,7 @@ def main(opts):
         count += 1
         output.write(a + "\n\n")
     output.close()
-    print(f'Wrote {count} to {left_file}. Should have been {target}')
+    print(f'Wrote {count} to {right_file}. Should have been {target}')
 
 
 if __name__ == '__main__':
