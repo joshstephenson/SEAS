@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-
+# Opensubtitles shared a tar file with it's own unique stucture.
+# This converts to something more friendly:
+# /YEAR/TITLE/LANGCODE/FILE.srt where FILE is the original filename from opensubtitles (10 digit number).
+#
 EXPORT_FILE="export.txt"
 YEAR="$1"
 EMPTY_MOVIE="Empty Movie"

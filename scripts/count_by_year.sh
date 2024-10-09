@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# Assumes there's a sqlite database called subtitles.db
 YEAR=2000
 echo "YEAR, FILES, TITLES"
 while [[ $YEAR -lt 2025 ]];do

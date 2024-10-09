@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
-
+#
+# First splits SRT files into groups based on significant gaps in the timecodes
+# Based on those gaps in the source file, it finds corresponding groups in target SRT file
+# Files are saved with original file names with an infix '-NUM' where NUM is a 3 digit number
+#
+# After that, this file runs both timecode basad alignments and vector embedding alignments and then uses
+# results_analyzer.sh to find overlap.
+#
 if [ -z "$SUBTITLE_REPO" ]; then
     echo "Please set SUBTITLE_REPO environment variable to the root of this repository."
 fi
@@ -28,12 +35,17 @@ $SUBTITLE_REPO/scripts/split_srt.py -s "$SOURCE" -t "$TARGET" -g "$SPLIT_GAP_LEN
 
 SOURCE_FILES=$(find -E "$BASE_DIR/$SOURCE_LANG" -iregex '.+-[0-9]{3}.srt' | sort)
 
+# First do the align script for timecode-based alignments
+# We don't split the files for this
+TIME_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-timecode.txt"
+$SUBTITLE_REPO/scripts/timecode_align.py -s "$SOURCE" -t "$TARGET" > "$TIME_FILE"
+
 for SOURCE in ${SOURCE_FILES[@]}; do
     INFIX=$(echo $SOURCE | cut -d- -f2 | cut -d. -f1)
     TARGET="$(find -E "$BASE_DIR/$TARGET_LANG" -iregex ".+[0-9]{8,}-$INFIX.srt" -exec ls -S {} \; | tail -n 1)"
     SOURCE_SENT="${SOURCE/.srt/.sent}"
     TARGET_SENT="${TARGET/.srt/.sent}"
-    TIME_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-timecode-${INFIX}.txt"
+#    TIME_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-timecode-${INFIX}.txt"
     VEC_ALIGN_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vec-${INFIX}.path"
     VEC_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vec-${INFIX}.txt"
 #    echo "$SOURCE"
@@ -46,11 +58,11 @@ for SOURCE in ${SOURCE_FILES[@]}; do
     echo ""
 
     if [ ! -s "$SOURCE_SENT" ]; then
-        $SUBTITLE_REPO/scripts/srt2sent.py -f "$SOURCE" > "$SOURCE_SENT"
+        "$SUBTITLE_REPO/scripts/srt2sent.py" -f "$SOURCE" > "$SOURCE_SENT"
     fi
     echo "$SOURCE_SENT"
     if [ ! -s "$TARGET_SENT" ]; then
-        $SUBTITLE_REPO/scripts/srt2sent.py -f "$TARGET" > "$TARGET_SENT"
+        "$SUBTITLE_REPO/scripts/srt2sent.py" -f "$TARGET" > "$TARGET_SENT"
     fi
 
     # Skip this Split because it doesn't have any subtitles to align
@@ -59,30 +71,23 @@ for SOURCE in ${SOURCE_FILES[@]}; do
         continue
     fi
     echo "SPLIT: $INFIX"
-    # First do the align script for timecode-based alignments
-    $SUBTITLE_REPO/scripts/timecode_align.py -s "$SOURCE" -t "$TARGET" > "$TIME_FILE"
-
 
     echo "$TARGET_SENT"
     if [ ! -s "$VEC_ALIGN_FILE" ]; then
-        $SUBTITLE_REPO/scripts/sent2path.sh "$SOURCE_SENT" "$TARGET_SENT" | grep -v "| INFO |" > "$VEC_ALIGN_FILE" #2>/dev/null
+        "$SUBTITLE_REPO/scripts/sent2path.sh" "$SOURCE_SENT" "$TARGET_SENT" | grep -v "| INFO |" > "$VEC_ALIGN_FILE" #2>/dev/null
     fi
     echo "$VEC_ALIGN_FILE"
     if [ ! -s "$VEC_FILE" ]; then
-        $SUBTITLE_REPO/scripts/path2align.py -s "$SOURCE_SENT" -t "$TARGET_SENT" -a "$VEC_ALIGN_FILE" > "$VEC_FILE"
+        "$SUBTITLE_REPO/scripts/path2align.py" -s "$SOURCE_SENT" -t "$TARGET_SENT" -a "$VEC_ALIGN_FILE" > "$VEC_FILE"
     fi
 done
 
-TIME_FILE="$BASE_DIR/$SOURCE_LANG-$TARGET_LANG-timecode.txt"
 VEC_FILE="$BASE_DIR/$SOURCE_LANG-$TARGET_LANG-vec.txt"
 GOLD_FILE="$BASE_DIR/$SOURCE_LANG-$TARGET_LANG-gold.txt"
 
-# Combine timecode alignments
-cat $BASE_DIR/$SOURCE_LANG-$TARGET_LANG-timecode-*.txt > "$TIME_FILE"
-
 # Combine the vector alignments
-cat $BASE_DIR/$SOURCE_LANG-$TARGET_LANG-vec-*.txt > "$VEC_FILE"
+cat "$BASE_DIR/$SOURCE_LANG-$TARGET_LANG"-vec-*.txt > "$VEC_FILE"
 
-$SUBTITLE_REPO/scripts/results_analyzer.py -f "$TIME_FILE" "$VEC_FILE" -o "$GOLD_FILE" -a
+"$SUBTITLE_REPO/scripts/results_analyzer.py" -f "$TIME_FILE" "$VEC_FILE" -o "$GOLD_FILE" -a
 
 

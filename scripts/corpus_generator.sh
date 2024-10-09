@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
-
+# Takes a directory (year) which has subdirs of titles. Each title has subdirs of lang codes
+# 2024/Scream/eng For example
+# Will walk the directory looking for language support (currently hard-coded to eng and spa)
+# And will run all possible alignments (each language dir likely has more than one subtitle file representing the same
+# title).
+# At the end it will find the longest alignment file and delete the rest leaving just eng-spa.txt
+#
 FINDPATH=$1
 
 if [ ! -d "$FINDPATH" ]; then

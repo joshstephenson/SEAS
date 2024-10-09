@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# Finds pairs, triplets and quads of languages for unique titles
 
 rm -f lang_support.txt
 LANGS=(eng spa fre dut ita ger swe kor chi jpn)

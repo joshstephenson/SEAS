@@ -1,5 +1,10 @@
 #!/usr/bin/env python
-
+"""
+Takes two separate alignments and finds where they agree. Alignment files have one sentence on one line, the aligned
+sentence from target language on the next line and then each alignment (pair) is separated by a newline.
+Assuming the -a parameter for annotation, it allows the user to decide which annotation is correct where the two did not
+agree.
+"""
 import argparse
 import os
 from math import ceil

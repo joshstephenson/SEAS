@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-
+# Given two .sent files (which has sentences on each line with no spaces), one for source and one for target
+# this script will generate the .path file which is used to align the sentences (see path2align.py).
+#
 if [ -z "$1" ] || [ -z "$2" ] ; then
     echo "Usage: $0 [source] [target]"
     exit 1
 fi
 
-OVERLAP_SIZE=4
+OVERLAP_SIZE=15
 
 SOURCE="$1"
 TARGET="$2"
