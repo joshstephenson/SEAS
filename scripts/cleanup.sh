@@ -19,7 +19,7 @@ else
 fi
 
 # Make sure not to match info.txt files
-FILES=$(find -E "$SEARCH_PATH" -type f \! -regex '.*\.srt$' \! -iname "info.txt")
+FILES=$(find -E "$SEARCH_PATH" -type f \! -regex '.*[0-9]{10}.srt$' \! -iname "info.txt")
 COUNT=$(echo "$FILES" | wc -l)
 read -n1 -p  "Found $COUNT files to remove. Remove them now?"  CONFIRM
 if [ "$CONFIRM" == 'y' ]; then

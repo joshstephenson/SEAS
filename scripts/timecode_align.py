@@ -2,22 +2,10 @@
 
 import argparse
 import os
-import sys
+from helpers import get_text
 
 # local imports
 from subtitles import Subtitles
-
-
-def get_text(filename):
-    try:
-        with open(filename, 'r', encoding='utf-8') as source_file:
-            srt_text = source_file.read()
-    except UnicodeDecodeError as e:
-        sys.stderr.write(f'UTF-8 decoding failed. Will try latin-1 encoding.')
-        with open(filename, 'r', encoding='latin-1') as source_file:
-            srt_text = source_file.read()
-    return srt_text
-
 
 def main(opts):
     # find the full path of the file arguments

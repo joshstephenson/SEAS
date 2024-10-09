@@ -1,6 +1,6 @@
 import pytest
 from subtitles import Subtitles
-from scripts.timecode_align import get_text
+from helpers import get_text
 
 @pytest.fixture
 def subs():

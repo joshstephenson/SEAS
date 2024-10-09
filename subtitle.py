@@ -1,18 +1,17 @@
 import regex
-from datetime import datetime
+from helpers import parse_timestring
 import sys
 
-SRT_TIME_FORMAT = '%H:%M:%S,%f'
 TIMECODE_SEPARATOR = ' --> '
 TIMECODE_LINE_REGEX = r'(\d{2}:\d{2}:\d{2},\d{3}).+(\d{2}:\d{2}:\d{2},\d{3})'
+
 
 class Subtitle:
     """
     Subtitle represents a single visual text element in a movie in just one language
     """
-    srt_time_format = SRT_TIME_FORMAT
 
-    def __init__(self, timestring, text, offset, offset_is_negative):
+    def __init__(self, timestring, text, offset, offset_is_negative=False):
         self.offset = offset
         self.offset_is_negative = offset_is_negative
 
@@ -29,6 +28,9 @@ class Subtitle:
         # Parse the time code into a number of milliseconds since the start
         self.parse_time_codes(offset, offset_is_negative)
 
+        # Can be set externally
+        self.previous = None
+        self.following = None
 
     def has_content(self):
         # return regex.match(r'[[:lower:]]{2,}', self.text) is not None
@@ -49,24 +51,10 @@ class Subtitle:
         :return: an integer duration since video start
         """
 
-        def _parse_timestring(timestring):
-            pt = datetime.strptime(timestring, SRT_TIME_FORMAT)
-            if offset_is_negative:
-                microsecond = pt.microsecond - offset.microsecond
-                second = pt.second - offset.second
-                minute = pt.minute - offset.minute
-                hour = pt.hour - offset.hour
-            else:
-                microsecond = pt.microsecond + offset.microsecond
-                second = pt.second + offset.second
-                minute = pt.minute + offset.minute
-                hour = pt.hour + offset.hour
-            return microsecond + (second + minute * 60 + hour * 3600) * 1000000
-
         match = regex.match(TIMECODE_LINE_REGEX, self.timestring.strip())
         if match is not None and len(match.groups()) > 1:
-            self.start = _parse_timestring(match.group(1))
-            self.end = _parse_timestring(match.group(2))
+            self.start = parse_timestring(match.group(1), offset, offset_is_negative)
+            self.end = parse_timestring(match.group(2), offset, offset_is_negative)
             self.timestring = f'{match.group(1)} --> {match.group(2)}'
         else:
             sys.stderr.write("Invalid timecode string: " + self.timestring + "\n")

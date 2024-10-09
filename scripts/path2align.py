@@ -21,20 +21,27 @@ def main(opts):
     target_file = open(opts.target, 'r', encoding='utf-8')
     alignments = [a.strip() for a in alignments_file.readlines()]
     alignments_file.close()
+
+    # Using np arrays because they allow passing arrays as indices to np arrays
     source_sentences = np.array([l.strip() for l in source_file.readlines()])
-    source_file.close()
     target_sentences = np.array([l.strip() for l in target_file.readlines()])
+
+    source_file.close()
     target_file.close()
 
     for line in alignments:
         parts = line.split(':')
         source_idx = get_ids_from_str(parts[0])
         target_idx = get_ids_from_str(parts[1])
-        source_sentence = " ".join(source_sentences[source_idx])
-        target_sentence = " ".join(target_sentences[target_idx])
-        # sys.stdout.write(f'{parts[0]}:{parts[1]}' + "\n")
-        if len(source_sentence) and len(target_sentence):
-            sys.stdout.write(f'{source_sentence}\n{target_sentence}' + "\n\n")
+        # sound_idx and target_idx are arrays
+        source_sentence = opts.join_token.join(source_sentences[source_idx])
+        target_sentence = opts.join_token.join(target_sentences[target_idx])
+        if len(source_sentence) == 0:
+            source_sentence = "*" * len(target_sentence)
+        elif len(target_sentence) == 0:
+            target_sentence = "*" * len(source_sentence)
+
+        sys.stdout.write(f'{source_sentence}\n{target_sentence}' + "\n\n")
 
 
 if __name__ == "__main__":
@@ -42,5 +49,6 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--source', required=True)
     parser.add_argument('-t', '--target', required=True)
     parser.add_argument('-a', '--alignments', required=True)
+    parser.add_argument('-j', '--join-token', default=' ', help="The token to join multiple sentences. Default is space.")
     args = parser.parse_args()
     main(args)

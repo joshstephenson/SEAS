@@ -5,28 +5,30 @@ Extract sentences from SRT file after preprocessing. Writes to STDOUT.
 import argparse
 import os
 import sys
+import regex
+from helpers import sterilize, get_text
 
 from subtitles import Subtitles
-
-def get_text(filename):
-    try:
-        with open(filename, 'r', encoding='utf-8') as source_file:
-            srt_text = source_file.read()
-    except UnicodeDecodeError as e:
-        sys.stderr.write(f'UTF-8 decoding failed. Will try latin-1 encoding.')
-        with open(filename, 'r', encoding='latin-1') as source_file:
-            srt_text = source_file.read()
-    return srt_text
-
 
 def with_file(opts):
     file = os.path.expanduser(opts.file)
     if not os.path.exists(file):
         raise (Exception(f"File path does not exist: {file}"))
     text = get_text(file)
-    subtitles = Subtitles(text)
-    for subtitle in subtitles:
-        sys.stdout.write(subtitle.text + "\n")
+    if opts.raw:
+        text = regex.sub(r'\r', '', text)
+        # Split on 2 or more lines in a row
+        sub_contents = regex.split(r'\n{2,}', text)
+        for sub_text in sub_contents:
+            content = "\n".join(sub_text.splitlines()[2:])
+            content = sterilize(content)
+            if len(content):
+                sys.stdout.write(content + '\n')
+    else:
+        subtitles = Subtitles(text)
+        for subtitle in subtitles:
+            sys.stdout.write(subtitle.text + "\n")
+
 
 def with_dir(opts):
     directory = os.path.expanduser(opts.directory)
@@ -49,6 +51,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', required=False)
     parser.add_argument('-d', '--directory', required=False)
+    parser.add_argument('-r', '--raw', action="store_true")
     args = parser.parse_args()
     if args.file is not None:
         with_file(args)
