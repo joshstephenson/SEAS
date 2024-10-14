@@ -2,10 +2,10 @@
 
 import argparse
 import os
-from helpers import get_text
+from src.helpers import get_text
 
 # local imports
-from subtitles import Subtitles
+from src.subtitles import Subtitles
 
 def main(opts):
     # find the full path of the file arguments
@@ -24,7 +24,7 @@ def main(opts):
 
     # Create Subtitle objects from the file texts
     source_subs = Subtitles(source_text)
-    target_subs = Subtitles(target_text, opts.offset, opts.offset_is_negative)
+    target_subs = Subtitles(target_text)
 
     # Now align the subtitles based on timecodes
     pairs = source_subs.align(target_subs)
@@ -38,10 +38,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--source', required=True)
     parser.add_argument('-t', '--target', required=True)
-    parser.add_argument('-o', '--offset', required=False, default='00:00:00,000', type=str,
-                        help='Time offset between source and target in SRT format. .e.g 00:00:12,500.')
-    parser.add_argument('--offset-is-negative', default=False, action='store_true',
-                        help='Indicates that the target is ahead of the source.')
-    parser.add_argument('--strict', default=12, type=int, help='Don\'t print out subtitle pairs if they\'re shorter than certain length.')
+    parser.add_argument('--strict', default=2, type=int, help='Don\'t print out subtitle pairs if they\'re shorter than certain length.')
     args = parser.parse_args()
     main(args)

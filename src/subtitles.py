@@ -1,14 +1,11 @@
-
 import regex
 import sys
-from datetime import datetime
-from subtitle import Subtitle
-from subpair import SubPair
-from suboptions import SubOptions
-from helpers import sterilize, SRT_TIME_FORMAT
 
-SENT_BOUNDARIES_REGEX = r'[\!\.\?]$'
-
+from src.helpers import is_not_empty
+from src.subtitle import Subtitle
+from src.subpair import SubPair
+from src.suboptions import SubOptions
+from src.utterance import Utterance
 
 
 class Subtitles:
@@ -17,9 +14,11 @@ class Subtitles:
     with a single language. It also allows merging of sentences and aligning subtitles from another language based
     on timecodes.
     """
-    def __init__(self, text, offset='00:00:00,000', offset_is_negative=False):
-        # First replace bad carriage returns:
-        text = regex.sub(r'\r', '', text)
+
+    def __init__(self, text, is_source=True):
+        self.is_source = is_source
+        # First strip bad carriage returns:
+        text = regex.sub(r'\r', '', text).strip()
 
         self.index = 0
         self.subtitles = []
@@ -27,65 +26,56 @@ class Subtitles:
         # Split on 2 or more lines in a row
         sub_contents = regex.split(r'\n{2,}', text)
 
-        # Best to only parse this once, rather than in the Subtitle class
-        offset = datetime.strptime(offset, SRT_TIME_FORMAT)
-
-        # We need to split subtitles if they have dashes that indicate a change in speaker
-        def _split_multiple_speakers(text):
-            parts = regex.split(r'(^|\n)-\s*', text)
-            # Join each individual speaker's words
-            joined = [part.replace("\n", " ") for part in parts]
-            # return a cleaned version
-            return [part.strip() for part in joined if len(part)]
-
-
+        previous_sub = None
         for sub_content in sub_contents:
-            sub_content = sub_content.strip().split("\n")[1:]
-            if len(sub_content) == 0:
-                continue
-            timecode_string = sub_content[0]
+            # Save the raw text in case we need to recreate it
+            subtitle = None
+            try:
+                subtitle = Subtitle(sub_content, is_source)
+            except ValueError as e:
+                sys.stderr.write(f'Value error in subtitle timestring "{sub_content}": {e}\n')
 
-            # sterilize the text before we look for multiple speakers
-            text = '||'.join(sub_content[1:])
-            text = sterilize(text)
-            text = text.replace('||', '\n')
-            if len(text) == 0:
-                continue
-            individuals = _split_multiple_speakers(text)
-            for individual in individuals:
-                try:
-                    subtitle = Subtitle(timecode_string, individual, offset, offset_is_negative)
-                    if subtitle.has_content():
-                        self.subtitles.append(subtitle)
-                except ValueError as e:
-                    sys.stderr.write(f'Value error in subtitle timestring "{sub_content[0]}": {e}\n')
+            if subtitle is not None:
+                self.subtitles.append(subtitle)
+                if previous_sub is not None:
+                    subtitle.previous = previous_sub
+                    previous_sub.subsequent = subtitle
+                previous_sub = subtitle
 
-        self.subtitles = self.merge_sentences()
+        self.utterances = self.find_utterances()
 
-
-    def merge_sentences(self):
+    def find_utterances(self):
         """
-        Merges subtitles into sentences. If a subtitle does not end with a word boundary,
-        the subsequent subtitles will be merged until a word boundary is found.
-        :return: merged subtitles
+        Finds utterances across subtitles.
+        Cases:
+        1. One subtitle has more than one sentence.
+        2. Two or more subtitles have one sentence spread across them.
+        :return: list of unique utterances linked to their subtitles
         """
+        utterances = [Utterance(text, [sub]) for sub in self.subtitles for text in sub.texts if is_not_empty(text)]
         to_delete = []
-        current = None
-        for sub in self.subtitles:
-            if regex.search(SENT_BOUNDARIES_REGEX, sub.text):
+        previous = None
+        for current in utterances:
+            if current.ends_utterance():
                 found_boundary = True
             else:
-                # print(f'No word boundary for: {sub.text}')
                 found_boundary = False
-                if current is None:
-                    current = sub
-            if current is not None and current != sub:
-                current.merge(sub)
-                to_delete.append(sub)
+                if previous is None:
+                    previous = current
+            if previous is not None and previous != current:
+                if not current.starts_utterance():
+                    previous.merge(current)
+                    to_delete.append(current)
             if found_boundary:
-                current = None
+                previous = None
 
-        return [s for s in self.subtitles if s not in to_delete]
+        return [u for u in utterances if u not in to_delete]
+
+    def find_utterances_for_sub(self, subtitle) -> list[Utterance]:
+        return [u for u in self.utterances if subtitle in u.subtitles]
+
+    def find_utterances_by_time(self, start, end) -> list[Utterance]:
+        return [u for u in self.utterances if u.end() >= start and u.start() <= end]
 
     def align(self, target):
         """

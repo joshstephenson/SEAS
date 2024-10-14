@@ -1,5 +1,5 @@
-from subtitle import Subtitle
-from suboptions import SubOptions
+from src.subtitle import Subtitle
+from src.suboptions import SubOptions
 
 
 class SubPair:

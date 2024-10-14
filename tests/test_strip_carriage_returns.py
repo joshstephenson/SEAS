@@ -1,6 +1,6 @@
 import pytest
-from subtitles import Subtitles
-from helpers import get_text
+from src.subtitles import Subtitles
+from src.helpers import get_text
 import re
 
 @pytest.fixture

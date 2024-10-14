@@ -30,13 +30,14 @@ def main(opts):
         # Print occurrences of the line in the alignments file
         matching_lines = []
         if line in alignments:
-            matching_lines = [align for align in alignments.splitlines() if line in align]
-        if opts.verbose:
-            if len(matching_lines) > 0:
-                matches += 1
-                print(f'MATCH {line}\n\t{matching_lines}')
-            else:
-                print(f'NO MATCH {line}')
+            matching_lines = [align for align in alignments.splitlines() if line == align]
+
+        if len(matching_lines) > 0:
+            matches += 1
+            if opts.verbose:
+                print(f'MATCH: {line}\n\t{matching_lines}')
+        else:
+            print(f'NO MATCH: {line}')
 
     print(f"Matches: {matches}, Original lines: {len(lines)}, Aligned lines: {int(len(alignment_lines)/3)}")
 

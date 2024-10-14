@@ -22,7 +22,7 @@ def main(opts):
     alignments = [a.strip() for a in alignments_file.readlines()]
     alignments_file.close()
 
-    # Using np arrays because they allow passing arrays as indices to np arrays
+    # Using np arrays because they allow passing arrays as indices
     source_sentences = np.array([l.strip() for l in source_file.readlines()])
     target_sentences = np.array([l.strip() for l in target_file.readlines()])
 
