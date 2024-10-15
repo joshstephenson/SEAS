@@ -11,8 +11,8 @@ fi
 SOURCE="$1"
 TARGET="$2"
 BASE_DIR=$(dirname $(dirname $SOURCE))
-SOURCE_LANG=$(dirname $SOURCE | cut -d'/' -f2)
-TARGET_LANG=$(dirname $TARGET | cut -d'/' -f2)
+SOURCE_LANG=$(dirname $SOURCE | awk -F/ '{print $NF}')
+TARGET_LANG=$(dirname $TARGET | awk -F/ '{print $NF}')
 #echo "SOURCE: $SOURCE"
 #echo "TARGET: $TARGET"
 echo "Detecting $SOURCE_LANG --> $TARGET_LANG in Dir: $BASE_DIR"
