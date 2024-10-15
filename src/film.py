@@ -12,7 +12,7 @@ class Film:
             text = get_text(srt_file)
             self.subtitles = Subtitles(text, is_source).subtitles
 
-    def __init__(self, source_file, target_file, alignments: Alignments):
+    def __init__(self, source_file, target_file, alignments: Alignments, ignore_stranded=False):
         self.source = Film.Language(source_file, is_source=True)
         self.target = Film.Language(target_file, is_source=False)
         self.alignments = alignments
@@ -28,26 +28,27 @@ class Film:
             for sub in alignment.source_subs:
                 if sub.index in stranded_subs:
                     stranded_subs.remove(sub.index)
-        for sub in self.source.subtitles:
-            assert sub.index > 0
-            if sub.index in stranded_subs:
-                if sub is not None and sub.index > 0:
-                    self.annotations.append(Annotation([sub],
-                                                       [],
-                                                       None,
-                                                       None))
+        if not ignore_stranded:
+            for sub in self.source.subtitles:
+                if sub.index in stranded_subs:
+                    if sub is not None and sub.index > 0:
+                        self.annotations.append(Annotation([sub],
+                                                           [],
+                                                           None,
+                                                           None))
         self.annotations = [annot for annot in self.annotations if len(annot.source.subtitles) > 0]
         self.annotations = sorted(self.annotations, key=lambda annot: annot.order())
-        self.annotation_index = 182
-
-    def total(self) -> int:
-        return len(self.annotations)
+        self.annotation_index = 0
+        self.stranded_count = len(stranded_subs)
+        self.total = len(self.annotations)
 
     def previous(self):
         self.annotation_index -= 1
 
     def next(self):
         self.annotation_index += 1
+        if self.annotation_index == len(self.annotations):
+            self.annotation_index = 0
 
     def get_annotation(self) -> Annotation:
         return self.annotations[self.annotation_index]

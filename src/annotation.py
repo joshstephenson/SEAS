@@ -39,6 +39,16 @@ class Annotation:
     def has_empty_target(self) -> bool:
         return self.target.utterance is None
 
+    def content_length(self) -> int:
+        if self.has_empty_source() and self.has_empty_target():
+            return 0
+        elif self.has_empty_target():
+            return len(self.source.utterance)
+        elif self.has_empty_source():
+            return len(self.target.utterance)
+        else:
+            return max(len(self.source.utterance), len(self.target.utterance))
+
     def order(self) -> int:
         print([sub.index for sub in self.source.subtitles])
         return min([sub.index for sub in self.source.subtitles])

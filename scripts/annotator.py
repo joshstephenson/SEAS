@@ -9,14 +9,13 @@ import argparse
 import os.path
 import subprocess
 import curses
+from math import ceil
 
 from src.Alignments import Alignments
 from src.annotation import Annotation
 from src.film import Film
 
-DEBUG_Y = 0
-SUBTITLE_Y = 2
-
+MIN_HIGHLIGHT_LENGTH = 4
 
 class CommandCodes:
     DELETE = ord('d')
@@ -29,20 +28,21 @@ class CommandCodes:
 def main(opts, alignments):
     def draw_ui(stdscr, label1, label2):
 
-        def _show_side(language, window):
+        def _show_side(language, window, longest):
+            start_of_subs = ceil(longest / content_width) + 1
             if language.has_subtitles():
-                window.addstr(SUBTITLE_Y, 0, language.lines())
+                window.addstr(start_of_subs, 0, language.lines())
                 if language.has_utterance():
-                    previous_y = SUBTITLE_Y
+                    previous_y = start_of_subs
                     for subtitle in language.subtitles:
-                        window.addstr(DEBUG_Y, 0, language.utterance)
-                        y_offset = 1
+                        window.addstr(0, 0, language.utterance)
+                        y_offset = start_of_subs - 1
                         running_length = 0
                         groups = []
                         for line in language.lines().split('\n'):
                             y, x_offset, length = language.get_offsets_and_length(line)
                             y_offset += y
-                            if length >= 3:
+                            if length > MIN_HIGHLIGHT_LENGTH:
                                 groups.append({'y': y_offset, 'x': x_offset, 'length': length})
                             running_length += length
                             if running_length >= len(language.utterance):
@@ -61,8 +61,12 @@ def main(opts, alignments):
             left_window.erase()
             right_window.erase()
 
-            _show_side(annotation.source, left_window)
-            _show_side(annotation.target, right_window)
+            longest = annotation.content_length()
+
+            _show_side(annotation.source, left_window, longest)
+            _show_side(annotation.target, right_window, longest)
+
+            left_window.addstr(full_height-1, 0, f'{film.annotation_index}/{film.total} TOTAL ANNOTATIONS. ({film.stranded_count} INVALID)')
 
             left_window.refresh()
             right_window.refresh()
@@ -109,14 +113,15 @@ def main(opts, alignments):
         # Clear and refresh the screen for a blank canvas
         stdscr.clear()
         stdscr.refresh()
+        curses.curs_set(0)
         # Initialization
         full_height, full_width = stdscr.getmaxyx()
 
         half_width = int(full_width / 2.0)  # middle point of the window
         content_width = half_width - 2
 
-        left_window = curses.newwin(full_height - 20, half_width, 0, 0)
-        right_window = curses.newwin(full_height - 20, half_width, 0, half_width + 1)
+        left_window = curses.newwin(full_height, content_width, 0, 0)
+        right_window = curses.newwin(full_height, content_width, 0, half_width + 2)
         left_window.keypad(True)
         while k != ord('q'):
             annotation = film.get_annotation()
@@ -137,7 +142,7 @@ def main(opts, alignments):
                 case _:
                     pass
 
-    film = Film(opts.source, opts.target, alignments)
+    film = Film(opts.source, opts.target, alignments, opts.ignore_empty)
     curses.wrapper(draw_ui, film.source.label, film.target.label)
 
 
