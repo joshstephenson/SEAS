@@ -18,7 +18,7 @@ class Annotation:
             match = SequenceMatcher(None, self.utterance, line).find_longest_match()
             y_offset = 0
             length = match.size
-            x_offset = match.b # max(match.a, match.b)
+            x_offset = match.b
             y_offset += 1
 
             return y_offset, x_offset, length
@@ -33,6 +33,11 @@ class Annotation:
         self.source = Annotation.Language(source_subs, source_utterance, is_source=True)
         self.target = Annotation.Language(target_subs, target_utterance, is_source=False)
 
+    def has_empty_source(self) -> bool:
+        return self.source.utterance is None
+
+    def has_empty_target(self) -> bool:
+        return self.target.utterance is None
 
     def order(self) -> int:
         print([sub.index for sub in self.source.subtitles])

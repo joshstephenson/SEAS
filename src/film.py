@@ -38,7 +38,7 @@ class Film:
                                                        None))
         self.annotations = [annot for annot in self.annotations if len(annot.source.subtitles) > 0]
         self.annotations = sorted(self.annotations, key=lambda annot: annot.order())
-        self.annotation_index = 0
+        self.annotation_index = 182
 
     def total(self) -> int:
         return len(self.annotations)
