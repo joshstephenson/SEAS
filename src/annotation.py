@@ -9,27 +9,17 @@ class Annotation:
             self.utterance = utterance
 
         def lines(self) -> str:
-                return "\n\n".join(s.lines for s in self.subtitles)
+            return "\n\n".join(s.lines for s in self.subtitles)
 
-        def get_offsets_and_length(self, subtitle):
+        def get_offsets_and_length(self, line):
             """
             returns y,x and length for curses highlighting
             """
-            text = subtitle.lines
-            content_lines = '\n'.join(text.split("\n")[:2])
-            if text.count('\n') > 2:
-                match = SequenceMatcher(None, self.utterance, text.replace('\n', ' ')).find_longest_match()
-            else:
-                match = SequenceMatcher(None, self.utterance, text).find_longest_match()
+            match = SequenceMatcher(None, self.utterance, line).find_longest_match()
             y_offset = 0
             length = match.size
-
-            x_orig = max(match.a, match.b)
-            x_offset = x_orig
-            for line in text.split('\n')[:-1]:
-                if x_offset - len(line) > 0:
-                    x_offset -= len(line) + 1
-                    y_offset += 1
+            x_offset = match.b # max(match.a, match.b)
+            y_offset += 1
 
             return y_offset, x_offset, length
 

@@ -40,6 +40,9 @@ class Film:
         self.annotations = sorted(self.annotations, key=lambda annot: annot.order())
         self.annotation_index = 0
 
+    def total(self) -> int:
+        return len(self.annotations)
+
     def previous(self):
         self.annotation_index -= 1
 

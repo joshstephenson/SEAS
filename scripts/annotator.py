@@ -21,47 +21,41 @@ SUBTITLE_Y = 2
 def main(opts, alignments):
     def draw_ui(stdscr, label1, label2):
 
+        def _show_side(language, window):
+            if language.has_subtitles():
+                window.addstr(SUBTITLE_Y, 0, language.lines())
+                if language.has_utterance():
+                    previous_y = SUBTITLE_Y
+                    for subtitle in language.subtitles:
+                        window.addstr(DEBUG_Y, 0, language.utterance)
+                        y_offset = 1
+                        running_length = 0
+                        groups = []
+                        for line in language.lines().split('\n'):
+                            y, x_offset, length = language.get_offsets_and_length(line)
+                            y_offset += y
+                            if length > 3:
+                                groups.append({'y': y_offset, 'x': x_offset, 'length': length})
+                                # window.chgat(y_offset, x_offset, length, curses.A_STANDOUT)
+                            running_length += length
+                            if running_length >= len(language.utterance):
+                                break
+                        selected = None
+                        for group in groups:
+                            if group['length'] == len(language.utterance):
+                                selected = group
+                        if selected is not None:
+                            window.chgat(selected['y'], selected['x'], selected['length'], curses.A_STANDOUT)
+                        else:
+                            for group in groups:
+                                window.chgat(group['y'], group['x'], group['length'], curses.A_STANDOUT)
+
         def show_annotation(annotation: Annotation):
             left_window.erase()
             right_window.erase()
 
-            if annotation.source.has_subtitles():
-                left_window.addstr(SUBTITLE_Y, 0, annotation.source.lines())
-                if annotation.source.has_utterance():
-                    previous_y = SUBTITLE_Y
-                    for subtitle in annotation.source.subtitles:
-                        left_window.addstr(DEBUG_Y, 0, annotation.source.utterance)
-                        y_offset, x_offset, length = annotation.source.get_offsets_and_length(subtitle)
-                        try:
-                            length_of_third = len(annotation.source.lines().split('\n')[y_offset])
-                            lengths = [length_of_third, length - length_of_third - 1]
-                            if length > length_of_third:
-                                for i in range(2):
-                                    left_window.chgat(y_offset + previous_y + i, 0, lengths[i], curses.A_STANDOUT)
-                            else:
-                                left_window.chgat(y_offset + previous_y, x_offset, length, curses.A_STANDOUT)
-                        except curses.error as _:
-                            pass
-                        previous_y += y_offset + SUBTITLE_Y
-
-            if annotation.target.has_subtitles():
-                right_window.addstr(SUBTITLE_Y, 0, annotation.target.lines())
-                if annotation.target.has_utterance():
-                    previous_y = SUBTITLE_Y
-                    for subtitle in annotation.target.subtitles:
-                        right_window.addstr(DEBUG_Y, 0, annotation.target.utterance)
-                        y_offset, x_offset, length = annotation.target.get_offsets_and_length(subtitle)
-                        try:
-                            length_of_third = len(annotation.target.lines().split('\n')[y_offset])
-                            lengths = [length_of_third, length - length_of_third - 1]
-                            if length > length_of_third:
-                                for i in range(2):
-                                    right_window.chgat(y_offset + previous_y + i, 0, lengths[i], curses.A_STANDOUT)
-                            else:
-                                right_window.chgat(y_offset + previous_y, x_offset, length, curses.A_STANDOUT)
-                        except curses.error as _:
-                            pass
-                        previous_y += y_offset + SUBTITLE_Y
+            _show_side(annotation.source, left_window)
+            _show_side(annotation.target, right_window)
 
             left_window.refresh()
             right_window.refresh()
@@ -115,6 +109,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--source', required=True, help='Source subtitle file.')
     parser.add_argument('-t', '--target', required=True, help='Target subtitle file.')
+    parser.add_argument('-i', '--ignore-empty', required=False, action='store_true', help='Don\'t print subtitles with no valid content.')
     args = parser.parse_args()
 
     source_sent, source_sent_index = sent_files_for_srt(args.source)
@@ -123,6 +118,7 @@ if __name__ == '__main__':
         run_vecalign(args)
 
     paths_file, alignments_file = alignment_files(args.source, args.target)
+    print(paths_file, alignments_file)
     if not os.path.exists(alignments_file):
         print("Failure running vecalign.")
         exit(1)
