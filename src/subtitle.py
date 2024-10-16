@@ -73,7 +73,8 @@ LEADING_HYPHENS_REGEX = r'^-'
 MUSICAL_NOTE = '♪'
 LEADING_POUND_SIGN = r'^#'
 
-URL_REGEX = r'((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*'
+# URL_REGEX = r'((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*'
+URL_REGEX = r'((http|https)\:\/\/)?[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*'
 
 
 def sterilize(sub_lines: [str]) -> Optional[str]:

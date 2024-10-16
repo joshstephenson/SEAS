@@ -16,8 +16,8 @@ TARGET_LANG="$3"
 yes | $SUBTITLE_REPO/scripts/cleanup.sh "$BASE_DIR"
 
 # First we have to find subtitle files to use
-SOURCE=$(find -E "$BASE_DIR/$SOURCE_LANG" -iregex ".+[0-9]{10}.srt" -exec ls -S {} \; | tail -n 1)
-TARGET=$(find -E "$BASE_DIR/$TARGET_LANG" -iregex ".+[0-9]{10}.srt" -exec ls -S {} \; | tail -n 1)
+SOURCE=$(find -E "$BASE_DIR/$SOURCE_LANG" -iregex ".+[0-9]{4,10}.srt" -exec ls -S {} \; | tail -n 1)
+TARGET=$(find -E "$BASE_DIR/$TARGET_LANG" -iregex ".+[0-9]{4,10}.srt" -exec ls -S {} \; | tail -n 1)
 echo "SOURCE: $SOURCE"
 echo "TARGET: $TARGET"
 

@@ -1,5 +1,5 @@
 class Alignment:
-    def __init__(self, source, target, source_sub_ids = [], target_sub_ids = []):
+    def __init__(self, source: str, target: str, source_sub_ids=[], target_sub_ids=[]):
         """
 
         """
@@ -22,4 +22,4 @@ class Alignment:
         return f'{self.source} <-> {self.target}'
 
     def __eq__(self, other: "Alignment"):
-        return str(self) == str(other)
+        return self.source == other.source and self.target == other.target

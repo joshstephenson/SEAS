@@ -21,10 +21,10 @@ fi
 
 EXPORT_FILE="$SUBTITLE_DATA/$EXPORT_FILE"
 find_by_year() {
-    years=$(awk -F'\t' '{print $9}' $EXPORT_FILE | grep -v MovieYear | sort -r | uniq | head -n20)
+    years=$(awk -F'\t' '{print $9}' $EXPORT_FILE | grep -v MovieYear | sort -r | uniq | head -n 100 | tail -n 50)
 
     for year in $years; do
-        awk -F'\t' -v year="$year" '$9 == year' $EXPORT_FILE | grep -v 'Empty Movie' > "$SUBTITLE_DATA/processed/$year.txt"
+        awk -F'\t' -v year="$year" '$9 == year' $EXPORT_FILE | grep -v 'Empty Movie' > "$SUBTITLE_DATA/index/$year.txt"
     done
 }
 
