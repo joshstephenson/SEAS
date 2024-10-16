@@ -21,8 +21,10 @@ class CommandCodes:
     DELETE = ord('d')
     EDIT = ord('e')
     SAVE = ord('w')
+    SPLIT = ord('s')
     NEXT = ord('j')
     PREV = ord('k')
+    JOIN = ord('u')
 
 
 def main(opts, alignments):
@@ -31,7 +33,12 @@ def main(opts, alignments):
         def _show_side(language, window, longest):
             start_of_subs = ceil(longest / content_width) + 1
             if language.has_subtitles():
-                window.addstr(start_of_subs, 0, language.lines())
+                available_lines = full_height - start_of_subs - 2
+                lines = language.lines().split('\n')
+                if len(lines) > available_lines:
+                    lines = lines[:available_lines]
+                lines = '\n'.join(lines)
+                window.addstr(start_of_subs, 0, lines)
                 if language.has_utterance():
                     previous_y = start_of_subs
                     for subtitle in language.subtitles:
@@ -39,7 +46,7 @@ def main(opts, alignments):
                         y_offset = start_of_subs - 1
                         running_length = 0
                         groups = []
-                        for line in language.lines().split('\n'):
+                        for line in lines.split('\n'):
                             y, x_offset, length = language.get_offsets_and_length(line)
                             y_offset += y
                             if length > MIN_HIGHLIGHT_LENGTH:
@@ -57,7 +64,7 @@ def main(opts, alignments):
                             for group in groups:
                                 window.chgat(group['y'], group['x'], group['length'], curses.A_STANDOUT)
 
-        def show_annotation(annotation: Annotation):
+        def show_annotation(annotation: Annotation, extra=None):
             left_window.erase()
             right_window.erase()
 
@@ -66,7 +73,8 @@ def main(opts, alignments):
             _show_side(annotation.source, left_window, longest)
             _show_side(annotation.target, right_window, longest)
 
-            left_window.addstr(full_height-1, 0, f'{film.annotation_index}/{film.total} TOTAL ANNOTATIONS. ({film.stranded_count} INVALID)')
+            left_window.addstr(full_height-1, 0, f'{film.annotation_index}/{film.total} '
+                                                 f'TOTAL. [-{film.stranded_count} +{film.added}]')
 
             left_window.refresh()
             right_window.refresh()
@@ -74,25 +82,35 @@ def main(opts, alignments):
         def edit_annotation(annotation: Annotation):
             curses.endwin()
             with open("/tmp/alignment.txt", 'w', encoding='utf-8') as f:
-                f.write(annotation.source.utterance + '\n')
-                f.write(annotation.target.utterance)
+                if not annotation.has_empty_source():
+                    f.write(annotation.source.utterance + '\n')
+                if not annotation.has_empty_target():
+                    f.write(annotation.target.utterance)
             subprocess.run(['vim', '/tmp/alignment.txt'])
             with open("/tmp/alignment.txt", 'r', encoding='utf-8') as f:
                 lines = f.readlines()
-            annotation.source.utterance = lines[0].strip()
-            annotation.target.utterance = lines[1].strip()
+            if len(lines) > 1:
+                annotation.source.utterance = lines[0].strip()
+                annotation.target.utterance = lines[1].strip()
             curses.reset_prog_mode()
             show_annotation(annotation)
 
         def delete_annotation(annotation: Annotation):
-            annotation.target.subtitles = []
-            annotation.target.utterance = None
-            annotation.source.utterance = None
+            film.clear_annotation(annotation)
+            show_annotation(annotation)
+
+        def split_annotation(annotation: Annotation):
+            film.split_annotation()
+            curses.flash()
+            show_annotation(annotation, 'Annotation duplicated.')
+
+        def join_annotation(annotation: Annotation):
+            film.join_annotation_with_subsequent()
             show_annotation(annotation)
 
         def save_annotations():
             # _, alignments_file = alignment_files(opts.source, opts.target)
-            with open(alignments_file, 'w', encoding='utf-8') as f:
+            with open(alignments_file.replace('-vec', '-gold'), 'w', encoding='utf-8') as f:
                 for annotation in film.annotations:
                     if annotation.has_empty_target() and annotation.has_empty_source():
                         continue
@@ -121,8 +139,7 @@ def main(opts, alignments):
         content_width = half_width - 2
 
         left_window = curses.newwin(full_height, content_width, 0, 0)
-        right_window = curses.newwin(full_height, content_width, 0, half_width + 2)
-        left_window.keypad(True)
+        right_window = curses.newwin(full_height, content_width, 0, half_width+2)
         while k != ord('q'):
             annotation = film.get_annotation()
             show_annotation(annotation)
@@ -137,8 +154,12 @@ def main(opts, alignments):
                     edit_annotation(annotation)
                 case CommandCodes.DELETE:
                     delete_annotation(annotation)
+                case CommandCodes.SPLIT:
+                    split_annotation(annotation)
                 case CommandCodes.SAVE:
                     save_annotations()
+                case CommandCodes.JOIN:
+                    join_annotation(annotation)
                 case _:
                     pass
 

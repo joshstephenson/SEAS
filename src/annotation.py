@@ -50,7 +50,6 @@ class Annotation:
             return max(len(self.source.utterance), len(self.target.utterance))
 
     def order(self) -> int:
-        print([sub.index for sub in self.source.subtitles])
         return min([sub.index for sub in self.source.subtitles])
 
     def is_stranded(self) -> bool:

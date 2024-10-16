@@ -51,6 +51,6 @@ if [ ! -s "$VEC_FILE" ]; then
     $SUBTITLE_REPO/scripts/path2align.py -s "$SOURCE_SENT" -t "$TARGET_SENT" -a "$VEC_ALIGN_FILE" > "$VEC_FILE"
 fi
 echo "$VEC_FILE"
-$SUBTITLE_REPO/scripts/results_analyzer.py -f "$TIME_FILE" "$VEC_FILE" -o "$GOLD_FILE" -a
+#$SUBTITLE_REPO/scripts/results_analyzer.py -f "$TIME_FILE" "$VEC_FILE" -o "$GOLD_FILE" -a
 
 

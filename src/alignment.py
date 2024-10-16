@@ -1,5 +1,5 @@
 class Alignment:
-    def __init__(self, source, target, source_sub_ids, target_sub_ids):
+    def __init__(self, source, target, source_sub_ids = [], target_sub_ids = []):
         """
 
         """
@@ -19,4 +19,7 @@ class Alignment:
         return max([sub.end for sub in (self.source_subs + self.target_subs)])
 
     def __str__(self):
-        return f'{self.source_ids}:{self.target_ids} - {self.source} <-> {self.target}'
+        return f'{self.source} <-> {self.target}'
+
+    def __eq__(self, other: "Alignment"):
+        return str(self) == str(other)

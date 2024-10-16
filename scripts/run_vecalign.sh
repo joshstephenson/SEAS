@@ -22,6 +22,7 @@ TARGET_SENT="${TARGET/.srt/.sent}"
 PATH_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vec.path"
 ALIGNMENTS_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vec.txt"
 
+echo "Extracting sentences..."
 $SUBTITLE_REPO/scripts/srt2sent.py -f "$SOURCE" -i > "$SOURCE_SENT"
 echo "$SOURCE_SENT"
 
@@ -33,9 +34,8 @@ if [ -z "$LASER" ]; then
     exit 1
 fi
 
-$SUBTITLE_REPO/scripts/sent2path.sh "$SOURCE_SENT" "$TARGET_SENT" | grep -v "| INFO |" > "$PATH_FILE"
-
+echo "Overlapping, embedding and aligning"
+$SUBTITLE_REPO/scripts/sent2path.sh "$SOURCE_SENT" "$TARGET_SENT" | grep -v "| INFO |" > "$PATH_FILE" 2>/dev/null
+$SUBTITLE_REPO/scripts/path2align.py -s "$SOURCE_SENT" -t "$TARGET_SENT" -a "$PATH_FILE" > "$ALIGNMENTS_FILE" 2>/dev/null
 echo "$PATH_FILE"
-
-$SUBTITLE_REPO/scripts/path2align.py -s "$SOURCE_SENT" -t "$TARGET_SENT" -a "$PATH_FILE" > "$ALIGNMENTS_FILE"
 echo "$ALIGNMENTS_FILE"

@@ -2,6 +2,7 @@ from src.Alignments import Alignments
 from src.annotation import Annotation
 from src.helpers import get_text
 from src.subtitles import Subtitles
+import copy
 
 
 class Film:
@@ -41,6 +42,7 @@ class Film:
         self.annotation_index = 0
         self.stranded_count = len(stranded_subs)
         self.total = len(self.annotations)
+        self.added = 0
 
     def previous(self):
         self.annotation_index -= 1
@@ -52,3 +54,29 @@ class Film:
 
     def get_annotation(self) -> Annotation:
         return self.annotations[self.annotation_index]
+
+    def clear_annotation(self, annotation: Annotation):
+        annotation.target.subtitles = []
+        annotation.target.utterance = None
+        annotation.source.utterance = None
+        self.stranded_count += 1
+
+    def split_annotation(self) -> None:
+        annotation = self.get_annotation()
+        self.added += 1
+        duplicate = Annotation(annotation.source.subtitles,
+                               annotation.target.subtitles,
+                               annotation.source.utterance,
+                               annotation.target.utterance)
+        self.annotations.insert(self.annotation_index, duplicate)
+        self.total = len(self.annotations)
+
+    def join_annotation_with_subsequent(self) -> Annotation:
+        annotation = self.get_annotation()
+        next_annotation = self.annotations[self.annotation_index + 1]
+        annotation.source.utterance += ' ' + next_annotation.source.utterance
+        annotation.target.utterance += ' ' + next_annotation.target.utterance
+        annotation.source.subtitles.extend(next_annotation.source.subtitles)
+        annotation.target.subtitles.extend(next_annotation.target.subtitles)
+        self.annotations.remove(next_annotation)
+        self.total = len(self.annotations)

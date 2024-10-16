@@ -138,7 +138,6 @@ class Data:
 def main(opts):
     def draw_ui(stdscr, label1, label2):
         def set_bottom(text):
-            # TODO: pad this because when the remaining time drops from 3-2 digits, the 0 hangs around
             padded_text = []
             for line in text.split('\n'):
                 padded_text.append(line.ljust(16, ' '))
