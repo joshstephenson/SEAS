@@ -19,8 +19,8 @@ echo "Detecting $SOURCE_LANG --> $TARGET_LANG in Dir: $BASE_DIR"
 
 SOURCE_SENT="${SOURCE/.srt/.sent}"
 TARGET_SENT="${TARGET/.srt/.sent}"
-PATH_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vec.path"
-ALIGNMENTS_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vec.txt"
+PATH_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vecalign.path"
+ALIGNMENTS_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vecalign.txt"
 
 echo "Extracting sentences..."
 $SUBTITLE_REPO/scripts/srt2sent.py -f "$SOURCE" -i > "$SOURCE_SENT"
@@ -30,7 +30,7 @@ $SUBTITLE_REPO/scripts/srt2sent.py -f "$TARGET" -i > "$TARGET_SENT"
 echo "$TARGET_SENT"
 
 if [ -z "$LASER" ]; then
-    echo "You need to set LASER env var"
+    echo "Please set LASER env var to LASER repository."
     exit 1
 fi
 

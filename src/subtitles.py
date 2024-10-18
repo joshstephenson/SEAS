@@ -1,10 +1,10 @@
 import regex
 import sys
 
-from src.helpers import is_not_empty
+from src.helpers import is_not_empty, collate_subs, find_partitions
 from src.subtitle import Subtitle
-from src.subpair import SubPair
-from src.suboptions import SubOptions
+from src.utterance_pair import UtterancePair
+from src.utterance_options import UtteranceOptions
 from src.utterance import Utterance
 
 
@@ -30,10 +30,10 @@ class Subtitles:
         for sub_content in sub_contents:
             # Save the raw text in case we need to recreate it
             subtitle = None
-            try:
-                subtitle = Subtitle(sub_content, is_source)
-            except ValueError as e:
-                sys.stderr.write(f'Value error in subtitle timestring "{sub_content}": {e}\n')
+            # try:
+            subtitle = Subtitle(sub_content, is_source)
+            # except ValueError as e:
+            #     sys.stderr.write(f'Value error in subtitle timestring "{sub_content}": {e}\n')
 
             if subtitle is not None:
                 self.subtitles.append(subtitle)
@@ -78,31 +78,29 @@ class Subtitles:
         return [u for u in self.utterances if u.end() >= start and u.start() <= end]
 
     def align(self, target):
-        """
-        Aligns the subtitles in target by iterating over the subtitles in self and looking for a match in target
-        based on timecodes. The targets found might be multiple in which case the SubPair object will have one source
-        and multiple sub_options. Those will be resolved in this function as well (if possible) by selecting the
-        options with the greatest overlap, compared to the previous subtitle.
-        :param target: Another Subtitles object for corresponding language
-        :return: a list of SubPair objects
-        """
-        pairs = []
+        # collated = collate_subs(self.subtitles, target.subtitles)
+        # partitions = find_partitions(collated)
+        # pairs = []
+        # for partition in partitions:
+        #     # print(partition)
+        #     if len(partition.source.utterances) > 0 and len(partition.target.utterances) > 0:
+        #         pairs.append([str(partition.source), str(partition.target)])
+        # return pairs
         previous = None
-        if len(self.subtitles) == 0:
-            sys.stderr.write("No subtitles" + '\n')
-            exit(0)
-        for sub in self:
-            sub_pair = SubPair(previous, sub, target.find(sub))
-            pairs.append(sub_pair)
+        pairs = []
+        for utterance in self.utterances:
+            pair = UtterancePair(previous, utterance, target.find(utterance))
+            pairs.append(pair)
             if previous is not None:
-                previous.subsequent = sub_pair
-            previous = sub_pair
+                previous.subsequent = pair
+            previous = pair
 
         # Resolve overlaps
-        resolved = []
+        resolved: list[UtterancePair] = []
         current = pairs[0]
+
         while current.subsequent is not None:
-            current.resolve_conflicts()
+            current.resolve_multiple_targets()
             if not current.flagged_for_delete:
                 resolved.append(current)
             current = current.subsequent
@@ -113,22 +111,22 @@ class Subtitles:
 
         return resolved
 
-    def find(self, other):
+    def find(self, other: Utterance) -> UtteranceOptions:
         """
         Find the counterpart to a subtitle provided from another language in the current set
-        :param other: a target subtitle to find the match
+        :param other: a target utterance to find the match
         :return: counterpart subtitle or None
         """
 
         options = []
-        for current in self.subtitles:
-            if current.end < other.start:
+        for current in self.utterances:
+            if current.end() < other.start():
                 continue
-            elif current.start > other.end:
+            elif current.start() > other.end():
                 break
             else:
                 options.append(current)
-        return SubOptions(options)
+        return UtteranceOptions(options)
 
     @staticmethod
     def _find_best(source, options):

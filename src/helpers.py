@@ -6,6 +6,7 @@ import sys
 
 from src.alignment import Alignment
 from src.partition import Partition
+from src.utterance import Utterance
 
 MICROSECONDS_PER_SECOND = 1e6
 
@@ -97,31 +98,31 @@ def collate_subs(first, second):
     return sorted(first + second, key=lambda sub: sub.start)
 
 
-def find_utterances(self):
-    """
-    Finds utterances across subtitles.
-    Cases:
-    1. One subtitle has more than one sentence.
-    2. Two or more subtitles have one sentence spread across them.
-    :return: list of unique utterances linked to their subtitles
-    """
-    utterances = [Utterance(text, [sub]) for sub in self.subtitles for text in sub.texts]
-    to_delete = []
-    current = None
-    for utterance in utterances:
-        if regex.search(SENT_BOUNDARIES_REGEX, utterance.text):
-            found_boundary = True
-        else:
-            found_boundary = False
-            if current is None:
-                current = utterance
-        if current is not None and current != utterance:
-            current.merge(utterance)
-            to_delete.append(utterance)
-        if found_boundary:
-            current = None
-
-    return [u for u in utterances if u not in to_delete]
+# def find_utterances(self):
+#     """
+    # Finds utterances across subtitles.
+    # Cases:
+    # 1. One subtitle has more than one sentence.
+    # 2. Two or more subtitles have one sentence spread across them.
+    # :return: list of unique utterances linked to their subtitles
+    # """
+    # utterances = [Utterance(text, [sub]) for sub in self.subtitles for text in sub.texts]
+    # to_delete = []
+    # current = None
+    # for utterance in utterances:
+    #     if regex.search(SENT_BOUNDARIES_REGEX, utterance.text):
+    #         found_boundary = True
+    #     else:
+    #         found_boundary = False
+    #         if current is None:
+    #             current = utterance
+    #     if current is not None and current != utterance:
+    #         current.merge(utterance)
+    #         to_delete.append(utterance)
+    #     if found_boundary:
+    #         current = None
+    #
+    # return [u for u in utterances if u not in to_delete]
 
 
 def find_in_range(subtitles, start, end):

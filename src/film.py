@@ -1,4 +1,4 @@
-from src.Alignments import Alignments
+from src.alignments import Alignments
 from src.annotation import Annotation
 from src.helpers import get_text
 from src.subtitles import Subtitles
@@ -74,6 +74,10 @@ class Film:
     def join_annotation_with_subsequent(self) -> Annotation:
         annotation = self.get_annotation()
         next_annotation = self.annotations[self.annotation_index + 1]
+        offset = 1
+        while next_annotation.target.utterance is None:
+            next_annotation = self.annotations[self.annotation_index + offset]
+            offset += 1
         annotation.source.utterance += ' ' + next_annotation.source.utterance
         annotation.target.utterance += ' ' + next_annotation.target.utterance
         annotation.source.subtitles.extend(next_annotation.source.subtitles)

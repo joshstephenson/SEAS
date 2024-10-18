@@ -23,8 +23,8 @@ def main(opts):
     target_text = get_text(target)
 
     # Create Subtitle objects from the file texts
-    source_subs = Subtitles(source_text)
-    target_subs = Subtitles(target_text)
+    source_subs = Subtitles(source_text, is_source=True)
+    target_subs = Subtitles(target_text, is_source=False)
 
     # Now align the subtitles based on timecodes
     pairs = source_subs.align(target_subs)
@@ -33,6 +33,7 @@ def main(opts):
     for pair in pairs:
         if pair.is_longer_than(opts.strict):
             print(pair)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

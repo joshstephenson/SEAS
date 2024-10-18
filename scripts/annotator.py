@@ -11,7 +11,7 @@ import subprocess
 import curses
 from math import ceil
 
-from src.Alignments import Alignments
+from src.alignments import Alignments
 from src.annotation import Annotation
 from src.film import Film
 

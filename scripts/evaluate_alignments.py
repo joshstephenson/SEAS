@@ -1,12 +1,41 @@
 #!/usr/bin/env python
 
 import argparse
+from difflib import SequenceMatcher
+
 from pandas import DataFrame
 from Levenshtein import distance
-
+from nltk import everygrams
 from src.alignment import Alignment
 
 SOFT_THRESHOLD = 0.05
+
+class TermColor:
+    RESET = "\033[0m"
+    RED = "\033[31m"
+    GREEN = "\033[32m"
+    # Yellow = "\033[33m"
+    # Blue = "\033[34m"
+    # Magenta = "\033[35m"
+    # Cyan = "\033[36m"
+    # Gray = "\033[37m"
+    # White = "\033[97m"
+
+def find_most_similar(candidate: Alignment, group: [Alignment]):
+    """
+    Find the most likely alignment based on ngrams
+    """
+    best = None
+    best_overlap = 0
+    for alignment in group:
+        source_match = SequenceMatcher(None, candidate.source, alignment.source).find_longest_match()
+        target_match = SequenceMatcher(None, candidate.target, alignment.target).find_longest_match()
+        overlap = source_match.size + target_match.size
+        if overlap > best_overlap:
+            best_overlap = overlap
+            best = alignment
+
+    return best
 
 
 def meets_accuracy_requirement(prediction: Alignment, gold: Alignment, strict=True):
@@ -14,6 +43,7 @@ def meets_accuracy_requirement(prediction: Alignment, gold: Alignment, strict=Tr
     checks if prediction source and gold source have 95% accuracy based on edit distance
     :param strict: Means one side has to match exactly.
     """
+
     def _meets(prd: str, gld: str):
         if prd == gld:
             return True
@@ -74,15 +104,13 @@ def adjust_for_soft_scoring(gold: [Alignment],
         true_pos.append(q)
 
 
-def print_results(gold, predictions, soft_scoring=False):
+def print_results(gold, predictions, soft_scoring=False, print_pp=False, print_fp=False, print_fn=False):
     true_pos = [a for a in predictions if a in gold]
     false_pos = [a for a in predictions if a not in gold]
     false_neg = [a for a in gold if a not in predictions]
 
-    print(f'True positives before: {len(true_pos)}')
     if soft_scoring:
         adjust_for_soft_scoring(gold, predictions, false_neg, true_pos)
-    print(f'True positives after: {len(true_pos)}')
     gold_length = len(gold)
     true_pos_length = len(true_pos)
     len_predictions = len(predictions)
@@ -92,12 +120,49 @@ def print_results(gold, predictions, soft_scoring=False):
     precision = true_pos_length / len_predictions
     recall = true_pos_length / (true_pos_length + false_neg_length)
 
-    cm = DataFrame([[true_pos_length],
-                    [false_neg_length],
-                    [recall]],
-                   columns=['Positive'])
+    cm = DataFrame([[true_pos_length, false_pos_length, precision],
+                    [false_neg_length, 0, 0],
+                    [recall, 0, 0]],
+                   columns=['Positive', 'Negative', 'Precision'])
     cm.index = ['Positive', 'Negative', 'Recall']
     print(cm)
+    if print_fp:
+        print_false_positives(false_pos, gold)
+    if print_fn:
+        print_false_negatives(false_neg, predictions)
+    if print_pp:
+        print_true_positives(true_pos)
+
+
+def print_true_positives(true_pos):
+    for tp in true_pos:
+        print(f'{tp.source}\n{TermColor.GREEN}{tp.target}{TermColor.RESET}\n')
+
+
+def print_false_positives(false_positives, gold):
+    print("\n################")
+    print("False Positives:\n")
+    for fp in false_positives:
+        partner = find_most_similar(fp, gold)
+        # longest_source = max(len(partner.source), len(fp.source))
+        # print(f'{fp.source} <-> {fp.target}')
+        # print(f'{TermColor.GREEN}{partner.source.rjust(longest_source, " ")} <-> {partner.target}{TermColor.RESET}\n')
+        if fp.source != partner.source:
+            print(f'{fp.source}\n{TermColor.GREEN}{partner.source}{TermColor.RESET}\n')
+        if fp.target != partner.target:
+            print(f'{fp.target}\n{TermColor.GREEN}{partner.target}{TermColor.RESET}\n')
+
+
+def print_false_negatives(false_negatives, predictions):
+    print("\n################")
+    print("False Negatives:\n")
+    for fn in false_negatives:
+        partner = find_most_similar(fn, predictions)
+        if fn.source != partner.source:
+            print(f'{partner.source}\n{TermColor.GREEN}{fn.source}{TermColor.RESET}')
+        if fn.target != partner.target:
+            print(f'{partner.target}\n{TermColor.GREEN}{fn.target}{TermColor.RESET}\n')
+
 
 
 def main(opts):
@@ -110,22 +175,26 @@ def main(opts):
     gold_alignments = gold_lines.split('\n\n')
 
     try:
-        predictions = [Alignment(alignment[0].strip(), alignment[1].strip()) for alignment in [a.split('\n') for a in prediction_alignments]]
+        predictions = [Alignment(alignment[0].strip(), alignment[1].strip()) for alignment in
+                       [a.split('\n') for a in prediction_alignments]]
     except Exception as _:
         print("Error parsing predictions file. The problem appears to be:")
         for i, a in enumerate(prediction_alignments):
             if len(a.split()) != 2:
                 print(f'Line {i}: {a}')
+        exit(1)
 
     try:
-        gold = [Alignment(alignment[0].strip(), alignment[1].strip()) for alignment in [a.split('\n') for a in gold_alignments]]
+        gold = [Alignment(alignment[0].strip(), alignment[1].strip()) for alignment in
+                [a.split('\n') for a in gold_alignments]]
     except Exception as _:
         print("Error parsing predictions file. The problem appears to be:")
         for i, a in enumerate(gold_alignments):
             if len(a.split()) != 2:
                 print(f'Line {i}: {a}')
+        exit(1)
 
-    print_results(gold, predictions, opts.soft)
+    print_results(gold, predictions, opts.soft, opts.true_positives, opts.false_positives, opts.false_negatives)
 
 
 if __name__ == '__main__':
@@ -133,6 +202,9 @@ if __name__ == '__main__':
     parser.add_argument('-g', '--gold-file', required=True)
     parser.add_argument('-a', '--alignments-file', required=True)
     parser.add_argument('-s', '--soft', action='store_true', help='Use soft scoring from Buck & Koehn 2016')
+    parser.add_argument('-fn', '--false-negatives', action='store_true', help='Print false negatives.')
+    parser.add_argument('-fp', '--false-positives', action='store_true', help='Print false positives.')
+    parser.add_argument('-tp', '--true-positives', action='store_true', help='Print true positives.')
     args = parser.parse_args()
 
     # test1 = Alignment('Today was a good day.', '-Hoy fue un buen dia.', [], [])

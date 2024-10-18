@@ -163,7 +163,8 @@ class Subtitle:
         self.is_source = is_source
         self.lines = lines
         parts = self.lines.split('\n')
-        self.index = int(parts[0])
+
+        self.index = int(parts[0].replace('\ufeff', '')) # stripping BOM mark
         self.start, self.end, self.timestring = _parse_time_codes(parts[1])
         self.texts = _sterilize_and_split(parts[2:])
         if self.texts is None:
@@ -190,16 +191,6 @@ class Subtitle:
         # - More than one lowercase character, or
         # - One lowercase and one uppercase character
         return (lower_count > 1) or (lower_count >= 1 and upper_count >= 1)
-
-    def overlap(self, other):
-        """
-        Find the duration of time two subtitles overlap with each other
-        :param other: the other subtitle to compare with self
-        :return: duration of time two subtitles overlap with each other
-        """
-        start = max(self.start, other.start)
-        end = min(self.end, other.end)
-        return end - start
 
     def __str__(self):
         return self.lines

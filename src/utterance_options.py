@@ -1,57 +1,36 @@
 from nltk import sent_tokenize
 from src.subtitle import Subtitle
+from src.utterance import Utterance
 
 
-class SubOptions:
+class UtteranceOptions:
     """
     SubOptions is a class that acts as a wrapper for a list of subtitles.
     It facilitates finding overlap with other lists of subtitles and merging those subtitles when necessary.
     """
-    def __init__(self, options: [Subtitle]):
+    def __init__(self, options: [Utterance]):
         self.options = options
         self.index = 0
 
     def find_common(self, other):
-        """
-        Find target subtitles that are common between this object and other
-        :return: list of target subtitles (typically just one)
-        """
-        common = []
-        for opt in self.options:
-            if opt in other.options:
-                common.append(opt)
-        return common
+        return [opt for opt in self.options if opt in other.options]
 
     def merge(self):
         """
-        Merge all target subtitles (target options) into one
+        Merge all target utterances (target options) into one
         """
         if len(self.options) == 0:
             return
 
-        merged = []
         first = self.options[0]
-        merged.append(first)
-        for other in self.options[1:]:
+        while len(self.options) > 1:
+            other = self.options.pop(1)
             first.merge(other)
-        self.options = merged
 
-    def remove(self, item):
+    def remove(self, item: Utterance):
         self.options.remove(item)
 
-    def sentences(self) -> [str]:
-        text = " ".join(str(s) for s in self.options)
-        sentences = sent_tokenize(text)
-        return sentences
-
-    def remove_last_sentence(self) -> Subtitle:
-        opt: Subtitle = self.options[-1]
-        sentence = self.sentences()[-1]
-        opt.text = opt.text.replace(sentence, '')
-        sub = Subtitle(opt.timestring, sentence)
-        return sub
-
-    def add_option(self, option: Subtitle):
+    def add_option(self, option: Utterance):
         self.options.append(option)
 
     def __len__(self):

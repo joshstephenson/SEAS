@@ -19,16 +19,32 @@ class Utterance:
     def __str__(self):
         return self.text
 
+    def __len__(self):
+        return len(self.text)
+
+    def has_content(self) -> bool:
+        return len(self.text) > 0
+
     def append(self, subtitle: Subtitle):
         self.subtitles.add(subtitle)
         subtitle.utterances.add(self)
 
+    def overlap(self, other: "Utterance"):
+        """
+        Find the duration of time two subtitles overlap with each other
+        :param other: the other subtitle to compare with self
+        :return: duration of time two subtitles overlap with each other
+        """
+        start = max(self.start(), other.start())
+        end = min(self.end(), other.end())
+        return end - start
+
     def merge(self, other):
         """
-        Merge another subtitle with this subtitle. Used when a sentence is spread across multiple subtitles.
+        Merge another utterance with this one. Used when an utterance is spread across multiple subtitles.
         :param other: other subtitle to merge
         """
-        self.text += " " + other.text
+        self.text = " ".join([self.text, other.text]).replace('...', '').strip()
         for subtitle in other.subtitles:
             subtitle.utterances = set([self])
         for subtitle in self.subtitles:

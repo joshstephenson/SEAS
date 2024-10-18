@@ -182,3 +182,5 @@ sentalign
 *.overlap
 *.sent-index
 *eng-spa-vec.txt
+eng-spa-*.txt
+*.results

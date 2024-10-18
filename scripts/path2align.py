@@ -36,12 +36,15 @@ def main(opts):
         # sound_idx and target_idx are arrays
         source_sentence = opts.join_token.join(source_sentences[source_idx])
         target_sentence = opts.join_token.join(target_sentences[target_idx])
-        if len(source_sentence) == 0:
-            source_sentence = "*" * len(target_sentence)
-        elif len(target_sentence) == 0:
-            target_sentence = "*" * len(source_sentence)
-
-        sys.stdout.write(f'{source_sentence}\n{target_sentence}' + "\n\n")
+        if opts.verbose:
+            if len(source_sentence) == 0:
+                source_sentence = "*" * len(target_sentence)
+            elif len(target_sentence) == 0:
+                target_sentence = "*" * len(source_sentence)
+            sys.stdout.write(f'{source_sentence}\n{target_sentence}' + "\n\n")
+        else:
+            if len(source_sentence) and len(target_sentence):
+                sys.stdout.write(f'{source_sentence}\n{target_sentence}' + "\n\n")
 
 
 if __name__ == "__main__":
@@ -50,5 +53,6 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--target', required=True)
     parser.add_argument('-a', '--alignments', required=True)
     parser.add_argument('-j', '--join-token', default=' ', help="The token to join multiple sentences. Default is space.")
+    parser.add_argument('-v', '--verbose', action='store_true', default=False, help="Print alignments even when they're one-sided")
     args = parser.parse_args()
     main(args)

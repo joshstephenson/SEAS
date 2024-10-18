@@ -23,6 +23,9 @@ class Partition:
             end = max(s.end for s in self.subtitles)
             return start, end
 
+        def __str__(self):
+            return ' '.join([str(u).strip() for u in self.utterances])
+
     def __init__(self, index):
         self.index = index
         self.source = Partition.Language(True)
