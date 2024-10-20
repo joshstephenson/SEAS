@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 
 import argparse
+import sys
 from difflib import SequenceMatcher
 
 from pandas import DataFrame
 from Levenshtein import distance
 from nltk import everygrams
 from src.alignment import Alignment
+from src.config import Config
 
 SOFT_THRESHOLD = 0.05
 
@@ -109,7 +111,9 @@ def print_results(gold, predictions, soft_scoring=False, print_pp=False, print_f
     false_pos = [a for a in predictions if a not in gold]
     false_neg = [a for a in gold if a not in predictions]
 
-    if soft_scoring:
+    if soft_scoring:  # FIXME: this doesn't work
+        print("Soft scoring doesn't work. FIXME.")
+        exit()
         adjust_for_soft_scoring(gold, predictions, false_neg, true_pos)
     gold_length = len(gold)
     true_pos_length = len(true_pos)
@@ -178,20 +182,21 @@ def main(opts):
         predictions = [Alignment(alignment[0].strip(), alignment[1].strip()) for alignment in
                        [a.split('\n') for a in prediction_alignments]]
     except Exception as _:
-        print("Error parsing predictions file. The problem appears to be:")
+        sys.stderr.write("Error parsing predictions file. The problem appears to be:\n")
         for i, a in enumerate(prediction_alignments):
-            if len(a.split()) != 2:
-                print(f'Line {i}: {a}')
+            if len(a.split('\n')) != 2:
+                sys.stderr.write(f'Line {i}: {a}\n')
         exit(1)
 
     try:
         gold = [Alignment(alignment[0].strip(), alignment[1].strip()) for alignment in
                 [a.split('\n') for a in gold_alignments]]
     except Exception as _:
-        print("Error parsing predictions file. The problem appears to be:")
+        sys.stdout.write("Error parsing gold file. The problem appears to be:\n")
         for i, a in enumerate(gold_alignments):
-            if len(a.split()) != 2:
-                print(f'Line {i}: {a}')
+            if len(a.split('\n')) != 2:
+                sys.stderr.write(str(len(a.split('\n'))) + ': ')
+                sys.stderr.write(f'Line {i}: {a}\n')
         exit(1)
 
     print_results(gold, predictions, opts.soft, opts.true_positives, opts.false_positives, opts.false_negatives)
@@ -201,7 +206,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-g', '--gold-file', required=True)
     parser.add_argument('-a', '--alignments-file', required=True)
-    parser.add_argument('-s', '--soft', action='store_true', help='Use soft scoring from Buck & Koehn 2016')
+    parser.add_argument('-s', '--soft', action='store_true', default=Config.UseSoftScoring,
+                        help='Use soft scoring from Buck & Koehn 2016')
     parser.add_argument('-fn', '--false-negatives', action='store_true', help='Print false negatives.')
     parser.add_argument('-fp', '--false-positives', action='store_true', help='Print false positives.')
     parser.add_argument('-tp', '--true-positives', action='store_true', help='Print true positives.')

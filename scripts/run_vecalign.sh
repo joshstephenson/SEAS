@@ -3,39 +3,54 @@
 if [ -z "$SUBTITLE_REPO" ]; then
     echo "Please set SUBTITLE_REPO environment variable to the root of this repository."
 fi
-if [ -z "$1" ] || [ -z "$2" ] ; then
-    echo "Usage: $0 [source file] [target file]"
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 [source file] [target file] [-p gap_length]"
     exit 0
 fi
 
-SOURCE="$1"
-TARGET="$2"
-BASE_DIR=$(dirname $(dirname $SOURCE))
-SOURCE_LANG=$(dirname $SOURCE | awk -F/ '{print $NF}')
-TARGET_LANG=$(dirname $TARGET | awk -F/ '{print $NF}')
-#echo "SOURCE: $SOURCE"
-#echo "TARGET: $TARGET"
-echo "Detecting $SOURCE_LANG --> $TARGET_LANG in Dir: $BASE_DIR"
+source="$1"
+target="$2"
+base_dirname=$(dirname $(dirname "$source"))
+source_lang=$(dirname "$source" | awk -F/ '{print $NF}')
+target_lang=$(dirname "$target" | awk -F/ '{print $NF}')
+# Check for suffixes from partitioning subtitles
+suffix=''
+if [[ "$source" =~ .+-[0-9]{3}.srt ]]; then
+    suffix=-$(echo "$source" | awk -F/ '{print $NF}' | sed s/\.srt//g | cut -d- -f2)
+fi
+#echo "source: $source"
+#echo "target: $target"
+echo "Detecting $source_lang --> $target_lang in Dir: $base_dirname"
 
-SOURCE_SENT="${SOURCE/.srt/.sent}"
-TARGET_SENT="${TARGET/.srt/.sent}"
-PATH_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vecalign.path"
-ALIGNMENTS_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vecalign.txt"
+source_sent="${source/.srt/.sent}"
+target_sent="${target/.srt/.sent}"
+path_file="$base_dirname/${source_lang}-${target_lang}-vecalign${suffix}.path"
+alignments_file="$base_dirname/${source_lang}-${target_lang}-vecalign${suffix}.txt"
 
-echo "Extracting sentences..."
-$SUBTITLE_REPO/scripts/srt2sent.py -f "$SOURCE" -i > "$SOURCE_SENT"
-echo "$SOURCE_SENT"
+if grep -E 'ShouldPartitionByGaps.+True' "$SUBTITLE_REPO/src/config.py" ; then
+    echo "Extracting sentences..."
+    $SUBTITLE_REPO/scripts/srt2overlap.py -s "$source" -t "$target"
 
-$SUBTITLE_REPO/scripts/srt2sent.py -f "$TARGET" -i > "$TARGET_SENT"
-echo "$TARGET_SENT"
+    echo "Embedding..."
+    $SUBTITLE_REPO/scripts/sent2path.sh "$source_sent" "$target_sent" --skip-to-embed | grep -v "| INFO |" > "$path_file" #2>/dev/null
+else
+    echo "Extracting source sentences..."
+    $SUBTITLE_REPO/scripts/srt2sent.py -f "$source" -i
+    echo "$source_sent"
+
+    echo "Extracting target sentences..."
+    $SUBTITLE_REPO/scripts/srt2sent.py -f "$target" -i
+    echo "$target_sent"
+
+    echo "Overlapping and embedding..."
+    $SUBTITLE_REPO/scripts/sent2path.sh "$source_sent" "$target_sent" | grep -v "| INFO |" > "$path_file" #2>/dev/null
+fi
 
 if [ -z "$LASER" ]; then
     echo "Please set LASER env var to LASER repository."
     exit 1
 fi
 
-echo "Overlapping, embedding and aligning"
-$SUBTITLE_REPO/scripts/sent2path.sh "$SOURCE_SENT" "$TARGET_SENT" | grep -v "| INFO |" > "$PATH_FILE" 2>/dev/null
-$SUBTITLE_REPO/scripts/path2align.py -s "$SOURCE_SENT" -t "$TARGET_SENT" -a "$PATH_FILE" > "$ALIGNMENTS_FILE" 2>/dev/null
-echo "$PATH_FILE"
-echo "$ALIGNMENTS_FILE"
+$SUBTITLE_REPO/scripts/path2align.py -s "$source_sent" -t "$target_sent" -a "$path_file" > "$alignments_file" #2>/dev/null
+echo "$path_file"
+echo "$alignments_file"

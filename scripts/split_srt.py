@@ -6,30 +6,29 @@ and aligns target subtitle file with same gaps.
 """
 
 import argparse
-from src.helpers import get_text, SRT_TIME_FORMAT
+from src.helpers import get_text, collate_subs, find_in_range, find_partitions_equal_size, find_partitions_by_gap_size
 import regex
 from datetime import datetime
+from src.subtitle import Subtitle, SRT_TIME_FORMAT
 
-# def get_subtitles(contents, offset, is_source) -> [Subtitle]:
-#     subtitles: [Subtitle] = []
-#     previous = None
-#     for sub_content in contents:
-#         if len(sub_content) == 0:
-#             continue
-#         # timecodes are on the 2nd line
-#         contents = sub_content.strip().split("\n")
-#         timecode_string = contents[1]
-#         current = Subtitle(timecode_string, contents[2:])
-#         current.is_source = is_source
-#         # Reset the text because the Subtitle's init class wants to strip newlines
-#         current.text = "\n".join(contents[2:])
-#         # current = TimeCodes(start, end, previous)
-#         subtitles.append(current)
-#         if previous is not None:
-#             current.previous = previous
-#             previous.following = current
-#         previous = current
-#     return subtitles
+
+def get_subtitles(contents, offset, is_source) -> [Subtitle]:
+    subtitles: [Subtitle] = []
+    previous = None
+    for sub_content in contents:
+        if len(sub_content) == 0:
+            continue
+        current = Subtitle(sub_content)
+        current.is_source = is_source
+        # Reset the text because the Subtitle's init class wants to strip newlines
+        current.text = "\n".join(contents[2:])
+        # current = TimeCodes(start, end, previous)
+        subtitles.append(current)
+        if previous is not None:
+            current.previous = previous
+            previous.following = current
+        previous = current
+    return subtitles
 
 
 def print_partitions(partitions, opts):
@@ -45,14 +44,10 @@ def print_partitions(partitions, opts):
             # Write the source subs
             for j, sub in enumerate(s):
                 if sub.is_source:
-                    sf.write(str(source_idx) + '\n')
-                    sf.write(sub.timestring + '\n')
-                    sf.write(sub.text + '\n\n')
+                    sf.write(sub.lines + '\n\n')
                     source_idx += 1
                 else:
-                    tf.write(str(target_idx) + '\n')
-                    tf.write(sub.timestring + '\n')
-                    tf.write(sub.text + '\n\n')
+                    tf.write(sub.lines + '\n\n')
                     target_idx += 1
 
 
@@ -67,8 +62,12 @@ def main(opts):
     source_subs = get_subtitles(source_contents, offset, True)
     target_subs = get_subtitles(target_contents, offset, False)
 
-    partitions = partition(source_subs, target_subs, opts)
-    print_partitions(partitions)
+    collated = collate_subs(source_subs, target_subs)
+    if opts.partition_count:
+        partitions = find_partitions_equal_size(collated, opts.partition_count)
+    else:
+        partitions = find_partitions_by_gap_size(collated, opts.min_gap_length)
+    print_partitions(partitions, opts)
 
 
 if __name__ == "__main__":
@@ -76,6 +75,7 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--source-file', required=True)
     parser.add_argument('-t', '--target-file', required=True)
     parser.add_argument('-g', '--min-gap-length', default=10, type=int, help='Minimum length of time between subtitles')
+    parser.add_argument('-c', '--partition_count', type=int, required=False)
     parser.add_argument('-pg', '--print_gaps', default=False, action="store_true", help='just print out gaps')
     args = parser.parse_args()
 

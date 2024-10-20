@@ -11,11 +11,14 @@ import subprocess
 import curses
 from math import ceil
 
+from regex import regex
+
 from src.alignments import Alignments
 from src.annotation import Annotation
 from src.film import Film
 
 MIN_HIGHLIGHT_LENGTH = 4
+
 
 class CommandCodes:
     DELETE = ord('d')
@@ -73,7 +76,7 @@ def main(opts, alignments):
             _show_side(annotation.source, left_window, longest)
             _show_side(annotation.target, right_window, longest)
 
-            left_window.addstr(full_height-1, 0, f'{film.annotation_index}/{film.total} '
+            left_window.addstr(full_height-1, 0, f'{film.annotation_index+1}/{film.total} '
                                                  f'TOTAL. [-{film.stranded_count} +{film.added}]')
 
             left_window.refresh()
@@ -110,7 +113,7 @@ def main(opts, alignments):
 
         def save_annotations():
             # _, alignments_file = alignment_files(opts.source, opts.target)
-            with open(alignments_file.replace('-vec', '-gold'), 'w', encoding='utf-8') as f:
+            with open(alignments_file.replace('-vecalign', '-gold'), 'w', encoding='utf-8') as f:
                 for annotation in film.annotations:
                     if annotation.has_empty_target() and annotation.has_empty_source():
                         continue
@@ -180,10 +183,16 @@ def alignment_files(source, target) -> (str, str):
     returns a path to the alignments
     and a path to the index file
     """
+    # See if these files are splits
+    match = regex.match(r'\d{4,10}(-\d{3}).srt$', source.split('/')[-1])
+    suffix = ''
+    if len(match.groups()) > 0:
+        suffix = match.group(1)
     source_lang = source.split('/')[-2]
     target_lang = target.split('/')[-2]
     base_dir = source.split("/" + source_lang)[0]
-    return f'{base_dir}/{source_lang}-{target_lang}-vec.path', f'{base_dir}/{source_lang}-{target_lang}-vec.txt'
+    return (f'{base_dir}/{source_lang}-{target_lang}-vecalign{suffix}.path',
+            f'{base_dir}/{source_lang}-{target_lang}-vecalign{suffix}.txt')
 
 
 if __name__ == '__main__':

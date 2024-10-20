@@ -1,4 +1,5 @@
 from datetime import datetime
+from difflib import SequenceMatcher
 from typing import Optional
 
 import regex
@@ -65,7 +66,8 @@ CHARACTER_MARKER_REGEX = r'^([\w.,#\'-]+\s?){1,3}: '
 
 # Matches 2 or more words in all CAPS along with adjacent punctuation
 # CAPITALS_REGEX = r'([A-Z]{2,}[,:.]?\s){2,}[:]?'
-CAPITALS_REGEX = r'[A-Z,]{2,}( [A-Z0-9,]{2,})+'
+# \p{Lu} is unicode for uppercase. Will match accented characters.
+CAPITALS_REGEX = r'[\p{Lu},]{2,}( [\p{Lu}0-9,]{2,})+'
 PARENTHESES_REGEX = r'\(.*\)'
 LEADING_HYPHENS_REGEX = r'^-'
 
@@ -153,6 +155,19 @@ class Subtitle:
             untokenized = [part.strip() for part in joined if len(part)]
             return [s.strip() for u in untokenized for s in sent_tokenize(u)]  # TODO: add other language support
 
+        # def _sorted_by_appearance(lines, texts):
+        #     print('\n', lines, '\n')
+        #     texts_sorted = []
+        #     for text in texts:
+        #         print(text)
+        #         start_index = lines.replace('\n', ' ').index(text)
+        #         if start_index != -1:
+        #             texts_sorted.append((start_index, text))
+        #     texts_sorted.sort(key=lambda x: x[0])
+        #     # print(texts_sorted)
+        #     return [text for _, text in texts_sorted]
+
+
         # subtitles have a many-to-many relationship with utterances
         self.utterances = set()
 
@@ -163,8 +178,7 @@ class Subtitle:
         self.is_source = is_source
         self.lines = lines
         parts = self.lines.split('\n')
-
-        self.index = int(parts[0].replace('\ufeff', '')) # stripping BOM mark
+        self.index = int(parts[0].replace('\ufeff', ''))  # stripping BOM mark
         self.start, self.end, self.timestring = _parse_time_codes(parts[1])
         self.texts = _sterilize_and_split(parts[2:])
         if self.texts is None:

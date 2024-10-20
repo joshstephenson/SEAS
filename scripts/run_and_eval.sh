@@ -18,7 +18,7 @@ run_method() {
 }
 
 evaluate() {
-    ./scripts/evaluate_alignments.py -g "$1" -a "$2" -s # -fp -fn -tp
+    ./scripts/evaluate_alignments.py -g "$1" -a "$2" # -fp -fn -tp
 }
 
 # Main function to process languages and directories
@@ -54,9 +54,12 @@ main() {
         exit 1
     fi
     if run_method "$method" "$source_file" "$target_file" "$output_file"; then
-        evaluate "$gold_file" "$output_file" > "$results_file" 2>/dev/null
-        echo "Results written to: $results_file"
-        cat "$results_file"
+        if evaluate "$gold_file" "$output_file" > "$results_file" ; then
+            echo "Results written to: $results_file"
+            cat "$results_file"
+        else
+            echo "Error with evaluation."
+        fi
     fi
 }
 

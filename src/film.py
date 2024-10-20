@@ -45,12 +45,11 @@ class Film:
         self.added = 0
 
     def previous(self):
-        self.annotation_index -= 1
+        self.annotation_index = max(0, self.annotation_index - 1)
 
     def next(self):
-        self.annotation_index += 1
-        if self.annotation_index == len(self.annotations):
-            self.annotation_index = 0
+        if self.annotation_index < len(self.annotations) - 1:
+            self.annotation_index += 1
 
     def get_annotation(self) -> Annotation:
         return self.annotations[self.annotation_index]

@@ -20,7 +20,7 @@ else
 fi
 
 # Make sure not to match info.txt files
-FILES=$(find -E "$SEARCH_PATH" -type f -regex '.*.(emb|overlap|path|sent|sent-index)$' \! -iname "info.txt")
+FILES=$(find -E "$SEARCH_PATH" -type f  -regex '.*.(emb|overlap|path|sent|sent-index)$' \! -iname "info.txt")
 COUNT=$(echo "$FILES" | wc -l)
 read -n1 -p  "Found $COUNT files to remove. Remove them now?"  CONFIRM
 if [ "$CONFIRM" == 'y' ]; then
@@ -29,3 +29,11 @@ if [ "$CONFIRM" == 'y' ]; then
     done
 fi
 
+FILES=$(find -E "$SEARCH_PATH" -type f  -regex '.*[0-9]{4,10}-[0-9]{3}.srt$')
+COUNT=$(echo "$FILES" | wc -l)
+read -n1 -p  "Found $COUNT subtitle splits to remove. Remove them now?"  CONFIRM
+if [ "$CONFIRM" == 'y' ]; then
+    for FILE in $FILES; do
+        rm -f "$FILE" && echo "Removed $FILE"
+    done
+fi

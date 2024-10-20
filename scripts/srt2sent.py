@@ -34,6 +34,7 @@ def with_file(opts):
         index_output = open(index_file, 'w', encoding='utf-8')
         for utterance in subtitles.utterances:
             # if subtitle.has_content():
+            # sys.stdout.write(utterance.text + '\n')
             output.write(utterance.text + "\n")
             if opts.index:
                 index_output.write(str(sorted([sub.index for sub in utterance.subtitles])) + "\n")
@@ -67,7 +68,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', required=False)
     parser.add_argument('-d', '--directory', required=False)
-    parser.add_argument('-r', '--raw', action="store_true")
+    parser.add_argument('-r', '--raw', action="store_true", default=False)
     parser.add_argument('-i', '--index', action="store_true",
                         help="Include a file that prints the indices associated with each sentence.")
     args = parser.parse_args()

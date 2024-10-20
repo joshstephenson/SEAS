@@ -1,7 +1,7 @@
 import regex
 import sys
 
-from src.helpers import is_not_empty, collate_subs, find_partitions
+from src.helpers import is_not_empty, collate_subs, find_partitions, find_utterances
 from src.subtitle import Subtitle
 from src.utterance_pair import UtterancePair
 from src.utterance_options import UtteranceOptions
@@ -42,34 +42,8 @@ class Subtitles:
                     previous_sub.subsequent = subtitle
                 previous_sub = subtitle
 
-        self.utterances = self.find_utterances()
+        self.utterances = find_utterances(self.subtitles)
 
-    def find_utterances(self):
-        """
-        Finds utterances across subtitles.
-        Cases:
-        1. One subtitle has more than one sentence.
-        2. Two or more subtitles have one sentence spread across them.
-        :return: list of unique utterances linked to their subtitles
-        """
-        utterances = [Utterance(text, [sub]) for sub in self.subtitles for text in sub.texts if is_not_empty(text)]
-        to_delete = []
-        previous = None
-        for current in utterances:
-            if current.ends_utterance():
-                found_boundary = True
-            else:
-                found_boundary = False
-                if previous is None:
-                    previous = current
-            if previous is not None and previous != current:
-                if not current.starts_utterance():
-                    previous.merge(current)
-                    to_delete.append(current)
-            if found_boundary:
-                previous = None
-
-        return [u for u in utterances if u not in to_delete]
 
     def find_utterances_for_sub(self, subtitle) -> list[Utterance]:
         return [u for u in self.utterances if subtitle in u.subtitles]

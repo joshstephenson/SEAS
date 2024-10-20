@@ -3,37 +3,53 @@
 # this script will generate the .path file which is used to align the sentences (see path2align.py).
 #
 if [ -z "$1" ] || [ -z "$2" ] ; then
-    echo "Usage: $0 [source] [target]"
+    echo "Usage: $0 [source] [target] [--skip-to-embed]"
     exit 1
 fi
 
-OVERLAP_SIZE=4
+overlap_size=4
 
-SOURCE="$1"
-TARGET="$2"
+source="$1"
+target="$2"
 
-SOURCE_OVERLAP="${SOURCE/.sent/.overlap}"
-TARGET_OVERLAP="${TARGET/.sent/.overlap}"
+source_overlap="${source/.sent/.overlap}"
+target_overlap="${target/.sent/.overlap}"
 
-SOURCE_EMB="${SOURCE/.sent/.emb}"
-TARGET_EMB="${TARGET/.sent/.emb}"
+source_emb="${source/.sent/.emb}"
+target_emb="${target/.sent/.emb}"
 
-rm -f "$SOURCE_OVERLAP" "$SOURCE_EMB" "$TARGET_OVERLAP" "$TARGET_EMB"
+for arg in "$@"
+do
+    if [ "$arg" == "--skip-to-embed" ]; then
+        skip_to_embed=1
+    fi
+done
 
-./vecalign/overlap.py -n $OVERLAP_SIZE -i "$SOURCE" -o "$SOURCE_OVERLAP"
-echo "Generated overlaps of $OVERLAP_SIZE to $SOURCE_OVERLAP" 1>&2
+if [ -z "$skip_to_embed" ]; then
+    rm -f "$source_overlap" "$source_emb" "$target_overlap" "$target_emb" 2>/dev/null
 
-./vecalign/overlap.py -n $OVERLAP_SIZE -i "$TARGET" -o "$TARGET_OVERLAP"
-echo "Generated overlaps of $OVERLAP_SIZE to $TARGET_OVERLAP" 1>&2
+    ./vecalign/overlap.py -n $overlap_size -i "$source" -o "$source_overlap"
+    echo "Generated overlaps of $overlap_size to $source_overlap" 1>&2
 
-./LASER/tasks/embed/embed.sh "$SOURCE_OVERLAP" "$SOURCE_EMB" 2>/dev/null
-#echo "Generated embeddings to $SOURCE_EMB" 2>/dev/null
+    ./vecalign/overlap.py -n $overlap_size -i "$target" -o "$target_overlap"
+    echo "Generated overlaps of $overlap_size to $target_overlap" 1>&2
+else
+    rm "$source_emb" "$target_emb" 2>/dev/null
+fi
 
-./LASER/tasks/embed/embed.sh "$TARGET_OVERLAP" "$TARGET_EMB" 2>/dev/null
-#echo "Generated embeddings to $TARGET_EMB"
+if [ -z "$LASER" ]; then
+    echo "Please set LASER env var to LASER repository."
+    exit 1
+fi
+
+$LASER/tasks/embed/embed.sh "$source_overlap" "$source_emb" 2>/dev/null
+#echo "Generated embeddings to $source_emb" 2>/dev/null
+
+$LASER/tasks/embed/embed.sh "$target_overlap" "$target_emb" 2>/dev/null
+#echo "Generated embeddings to $target_emb"
 
 ./vecalign/vecalign.py --alignment_max_size 8 \
-    --src "$SOURCE" \
-    --tgt "$TARGET" \
-    --src_embed "$SOURCE_OVERLAP" "$SOURCE_EMB" \
-    --tgt_embed "$TARGET_OVERLAP" "$TARGET_EMB" 2>/dev/null
+    --src "$source" \
+    --tgt "$target" \
+    --src_embed "$source_overlap" "$source_emb" \
+    --tgt_embed "$target_overlap" "$target_emb" 2>/dev/null
