@@ -23,6 +23,12 @@ class Partition:
             end = max(s.end for s in self.subtitles)
             return start, end
 
+        def has_utterances(self) -> bool:
+            return len(self.utterances) > 0
+
+        def has_subtitles(self) -> bool:
+            return len(self.subtitles) > 0
+
         def __str__(self):
             return ' '.join([str(u).strip() for u in self.utterances])
 
@@ -32,6 +38,15 @@ class Partition:
         self.target = Partition.Language(False)
         self.start = 0
         self.end = 0
+
+    def merge(self, other):
+        self.source.subtitles += other.source.subtitles
+        self.source.utterances += other.source.utterances
+        self.target.subtitles += other.target.subtitles
+        self.target.utterances += other.target.utterances
+
+    def gap_between(self, subsequent) -> int:
+        return subsequent.start - self.end
 
     def append(self, subtitle):
         if subtitle.is_source:

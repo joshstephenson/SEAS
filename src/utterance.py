@@ -2,7 +2,9 @@ from regex import regex
 
 from src.subtitle import Subtitle
 
-ENDS_UTTERANCE_REGEX = r'[\!\.\?]$'
+# ENDS_UTTERANCE_REGEX = r'[\!\.\?]$'
+ENDS_UTTERANCE_REGEX = r'(?<!\.)[.!?]\s*\Z'
+TRAILS_OFF_REGEX = r'[.]{3,}\s*\Z'
 STARTS_UTTERANCE_REGEX = r'^[A-Z¿¡-]'
 
 
@@ -44,7 +46,7 @@ class Utterance:
         Merge another utterance with this one. Used when an utterance is spread across multiple subtitles.
         :param other: other subtitle to merge
         """
-        self.text = " ".join([self.text, other.text]).replace('...', '').strip()
+        self.text = " ".join([self.text, other.text]).replace('... ...', '...').strip()
         for subtitle in other.subtitles:
             subtitle.utterances = set([self])
         for subtitle in self.subtitles:
@@ -56,6 +58,9 @@ class Utterance:
 
     def end(self) -> int:
         return max(sub.end for sub in self.subtitles)
+
+    def trails_off(self) -> bool:
+        return regex.search(TRAILS_OFF_REGEX, self.text.strip()) is not None
 
     def ends_utterance(self) -> bool:
         return regex.search(ENDS_UTTERANCE_REGEX, self.text.strip()) is not None

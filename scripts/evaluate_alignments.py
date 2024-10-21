@@ -114,22 +114,27 @@ def print_results(gold, predictions, soft_scoring=False, print_pp=False, print_f
     if soft_scoring:  # FIXME: this doesn't work
         print("Soft scoring doesn't work. FIXME.")
         exit()
-        adjust_for_soft_scoring(gold, predictions, false_neg, true_pos)
+        # adjust_for_soft_scoring(gold, predictions, false_neg, true_pos)
     gold_length = len(gold)
     true_pos_length = len(true_pos)
     len_predictions = len(predictions)
     false_pos_length = len(false_pos)
     false_neg_length = len(false_neg)
 
-    precision = true_pos_length / len_predictions
+    precision = true_pos_length / (true_pos_length + false_pos_length)
     recall = true_pos_length / (true_pos_length + false_neg_length)
+    f1 = 2 * precision * recall / (precision + recall)
 
-    cm = DataFrame([[true_pos_length, false_pos_length, precision],
-                    [false_neg_length, 0, 0],
-                    [recall, 0, 0]],
-                   columns=['Positive', 'Negative', 'Precision'])
-    cm.index = ['Positive', 'Negative', 'Recall']
-    print(cm)
+    # Output as TSV for easy parsing by Bash
+    print('True Positives\tFalse Negatives\tFalse Positives\tRecall\tPrecision\tF1')
+    print(f'{true_pos_length}\t{false_neg_length}\t{false_pos_length}\t{recall}\t{precision}\t{f1}')
+
+    # cm = DataFrame([[true_pos_length, false_pos_length, precision],
+    #                 [false_neg_length, 0, 0],
+    #                 [recall, 0, 0]],
+    #                columns=['Positive', 'Negative', 'Precision'])
+    # cm.index = ['Positive', 'Negative', 'Recall']
+    # print(cm)
     if print_fp:
         print_false_positives(false_pos, gold)
     if print_fn:

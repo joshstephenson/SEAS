@@ -1,3 +1,4 @@
+import copy
 import os
 import string
 
@@ -104,29 +105,29 @@ def collate_subs(first, second):
 
 # def find_utterances(self):
 #     """
-    # Finds utterances across subtitles.
-    # Cases:
-    # 1. One subtitle has more than one sentence.
-    # 2. Two or more subtitles have one sentence spread across them.
-    # :return: list of unique utterances linked to their subtitles
-    # """
-    # utterances = [Utterance(text, [sub]) for sub in self.subtitles for text in sub.texts]
-    # to_delete = []
-    # current = None
-    # for utterance in utterances:
-    #     if regex.search(SENT_BOUNDARIES_REGEX, utterance.text):
-    #         found_boundary = True
-    #     else:
-    #         found_boundary = False
-    #         if current is None:
-    #             current = utterance
-    #     if current is not None and current != utterance:
-    #         current.merge(utterance)
-    #         to_delete.append(utterance)
-    #     if found_boundary:
-    #         current = None
-    #
-    # return [u for u in utterances if u not in to_delete]
+# Finds utterances across subtitles.
+# Cases:
+# 1. One subtitle has more than one sentence.
+# 2. Two or more subtitles have one sentence spread across them.
+# :return: list of unique utterances linked to their subtitles
+# """
+# utterances = [Utterance(text, [sub]) for sub in self.subtitles for text in sub.texts]
+# to_delete = []
+# current = None
+# for utterance in utterances:
+#     if regex.search(SENT_BOUNDARIES_REGEX, utterance.text):
+#         found_boundary = True
+#     else:
+#         found_boundary = False
+#         if current is None:
+#             current = utterance
+#     if current is not None and current != utterance:
+#         current.merge(utterance)
+#         to_delete.append(utterance)
+#     if found_boundary:
+#         current = None
+#
+# return [u for u in utterances if u not in to_delete]
 
 
 def find_in_range(subtitles, start, end):
@@ -189,23 +190,23 @@ def find_utterances(subtitles):
     :return: list of unique utterances linked to their subtitles
     """
     utterances = [Utterance(text, [sub]) for sub in subtitles for text in sub.texts if is_not_empty(text)]
-    to_delete = []
-    previous = None
-    for current in utterances:
-        if current.ends_utterance():
-            found_boundary = True
-        else:
-            found_boundary = False
-            if previous is None:
-                previous = current
-        if previous is not None and previous != current:
-            if not current.starts_utterance():
-                previous.merge(current)
-                to_delete.append(current)
-        if found_boundary:
-            previous = None
+    if len(utterances) == 0:
+        return []
 
-    return [u for u in utterances if u not in to_delete]
+    merged = []
+    queue = copy.copy(utterances)
+    current = queue.pop(0)
+    while queue:
+        if current.ends_utterance() or queue[0].starts_utterance():
+            merged.append(current)
+            current = queue.pop(0)
+        else:
+            current.merge(queue.pop(0))
+
+    # Append the last current utterance
+    merged.append(current)
+
+    return merged
 
 
 def find_partitions_by_gap_size(collated, gap_length):
@@ -242,6 +243,28 @@ def find_partitions_by_gap_size(collated, gap_length):
         partition.source.utterances += find_utterances(partition.source.subtitles)
         partition.target.utterances += find_utterances(partition.target.subtitles)
     return partitions
+
+
+FIVE_SECONDS = 5 * 1e6
+
+
+def merge_ellipsized(partitions: [Partition]) -> [Partition]:
+    queue = copy.copy(partitions)
+    merged = []
+    current = queue.pop(0)
+    while queue:
+        if (current.gap_between(queue[0]) < FIVE_SECONDS and
+                ((current.source.has_utterances() and current.source.utterances[-1].trails_off())
+                 or (current.target.has_utterances() and current.target.utterances[-1].trails_off()))):
+            current.merge(queue.pop(0))
+        else:
+            merged.append(current)
+            current = queue.pop(0)
+
+    # Append the last current utterance
+    merged.append(current)
+
+    return merged
 
 
 def find_partitions_equal_size(subtitles, n, gap_threshold=5 * 1e6):

@@ -8,7 +8,7 @@ import sys
 import regex
 
 from src.config import Config
-from src.helpers import get_text, find_partitions, collate_subs, find_partitions_by_gap_size
+from src.helpers import get_text, find_partitions, collate_subs, find_partitions_by_gap_size, merge_ellipsized
 from src.subtitle import sterilize
 from src.subtitles import Subtitles
 
@@ -50,6 +50,7 @@ def main(opts):
 
     collated = collate_subs(source_subs.subtitles, target_subs.subtitles)
     partitions = find_partitions_by_gap_size(collated, opts.gap_length)
+    partitions = merge_ellipsized(partitions)
 
     source_overlaps = set()
     target_overlaps = set()
@@ -81,20 +82,9 @@ def main(opts):
     for line in target_overlaps:
         target_overlap_file.write(line + '\n')
 
-    # for utterance in subtitles.utterances:
-    #     # if subtitle.has_content():
-    #     sys.stdout.write(utterance.text + '\n')
-    #     output.write(utterance.text + "\n")
-    #     if opts.index:
-    #         index_output.write(str(sorted([sub.index for sub in utterance.subtitles])) + "\n")
-    # output.close()
-    # index_output.close()
-
-    # for out_line in yield_overlaps(lines, num_overlaps):
-    #     output.add(out_line)
-
     close_files([source_sent_file, source_index_file, source_overlap_file,
                  target_sent_file, target_index_file, target_overlap_file])
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

@@ -1,5 +1,6 @@
 class Config:
-    NumOverlaps = 7
     ShouldPartitionByGaps = True
-    GapThreshold = 2
+    NumOverlaps = 7
+    GapThreshold = 1.5
     UseSoftScoring = False
+    AlignmentMaxSize = 8

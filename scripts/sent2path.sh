@@ -48,7 +48,8 @@ $LASER/tasks/embed/embed.sh "$source_overlap" "$source_emb" 2>/dev/null
 $LASER/tasks/embed/embed.sh "$target_overlap" "$target_emb" 2>/dev/null
 #echo "Generated embeddings to $target_emb"
 
-./vecalign/vecalign.py --alignment_max_size 8 \
+alignment_max_size=$(cat "$SUBTITLE_REPO/src/config.py" | grep 'AlignmentMaxSize' | cut -d= -f2 | tr -d ' ')
+./vecalign/vecalign.py --alignment_max_size $alignment_max_size \
     --src "$source" \
     --tgt "$target" \
     --src_embed "$source_overlap" "$source_emb" \
