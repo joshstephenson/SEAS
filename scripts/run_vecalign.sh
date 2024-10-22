@@ -4,7 +4,7 @@ if [ -z "$SUBTITLE_REPO" ]; then
     echo "Please set SUBTITLE_REPO environment variable to the root of this repository."
 fi
 if [ $# -lt 2 ]; then
-    echo "Usage: $0 [source file] [target file] [-p gap_length]"
+    echo "Usage: $0 [source file] [target file]"
     exit 0
 fi
 
@@ -27,9 +27,9 @@ target_sent="${target/.srt/.sent}"
 path_file="$base_dirname/${source_lang}-${target_lang}-vecalign${suffix}.path"
 alignments_file="$base_dirname/${source_lang}-${target_lang}-vecalign${suffix}.txt"
 
-if grep -E 'ShouldPartitionByGaps.+True' "$SUBTITLE_REPO/src/config.py" ; then
-    echo "Extracting sentences..."
-    $SUBTITLE_REPO/scripts/srt2overlap.py -s "$source" -t "$target"
+if [ "$3" != "--skip-partitioning" ] && grep -E 'ShouldPartitionByGaps.+True' "$SUBTITLE_REPO/src/config.py" ; then
+    echo "Extracting sentences directly and overlaps..."
+    $SUBTITLE_REPO/scripts/srt2overlap.py -s "$source" -t "$target" -i
 
     echo "Embedding..."
     $SUBTITLE_REPO/scripts/sent2path.sh "$source_sent" "$target_sent" --skip-to-embed | grep -v "| INFO |" > "$path_file" #2>/dev/null
