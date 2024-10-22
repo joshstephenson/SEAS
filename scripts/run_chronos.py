@@ -8,19 +8,9 @@ from src.helpers import get_text
 from src.subtitles import Subtitles
 
 def main(opts):
-    # find the full path of the file arguments
-    source = os.path.expanduser(opts.source)
-    target = os.path.expanduser(opts.target)
-
-    # Check that these files exist
-    if not os.path.exists(source):
-        raise (Exception(f"source path does not exist: {source}"))
-    if not os.path.exists(target):
-        raise (Exception(f"target path does not exist: {target}"))
-
     # Read the files
-    source_text = get_text(source)
-    target_text = get_text(target)
+    source_text = get_text(opts.source)
+    target_text = get_text(opts.target)
 
     # Create Subtitle objects from the file texts
     source_subs = Subtitles(source_text, is_source=True)
