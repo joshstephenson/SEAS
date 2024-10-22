@@ -43,6 +43,7 @@ def get_alignments_from_file(paths_file, source_sent_file, target_sent_file, sou
     # Using np arrays because they allow passing arrays as indices
     source_sentences = np.array([line.strip() for line in source_file.readlines()])
     target_sentences = np.array([line.strip() for line in target_file.readlines()])
+
     # Lookups for sentence index to subtitle index
     # one to many lookup with keys which correspond to lines in the .sent files
     # and values which are 1 or more subtitle indices.
@@ -72,28 +73,6 @@ def get_alignments_from_file(paths_file, source_sent_file, target_sent_file, sou
         alignments.append(alignment)
 
     return alignments
-
-
-# def get_sentences_with_index(sent_file, index_file) -> [(str, str)]:
-#     with open(sent_file, 'r', encoding='utf-8') as sent_file:
-#         sent_lines = [i.strip() for i in sent_file.readlines()]
-#     with open(index_file, 'r', encoding='utf-8') as index_file:
-#         index_lines = [i.strip() for i in index_file.readlines()]
-#     assert len(sent_lines) == len(index_lines)
-#     return dict(zip(sent_lines, index_lines))
-
-
-def microseconds_to_string(microseconds):
-    milliseconds = int((microseconds / 1e3) % 1e3)
-    seconds = int((microseconds / 1e6) % 60)
-    minutes = int((microseconds / (1e6 * 60)) % 60)
-    hours = int((microseconds / (1e6 * 60 * 60)) % 24)
-
-    hours = str(hours).rjust(2, '0')
-    minutes = str(minutes).rjust(2, '0')
-    seconds = str(seconds).rjust(2, '0')
-    milliseconds = str(milliseconds).rjust(3, '0')
-    return f'{hours}:{minutes}:{seconds},{milliseconds}'
 
 
 def collate_subs(first, second):
@@ -158,29 +137,6 @@ def find_all(subtitles, start, end):
     return found
 
 
-def find_partitions(collated) -> [Partition]:
-    """
-    :param collated: a list of subtitles in source and target langs sorted by subtitle.start
-    :returns: a list of partitions
-    """
-    partitions = []
-    index = 0
-    current_partition = None
-
-    while len(collated) > 0:
-        current_partition = Partition(index)
-        index += 1
-        partitions.append(current_partition)
-        subtitle = collated[0]
-        current_partition.append(subtitle)
-        for related in find_all(collated, subtitle.start, subtitle.end):
-            if related in collated:
-                collated.remove(related)
-            current_partition.append(related)
-
-    return partitions
-
-
 def find_utterances(subtitles):
     """
     Finds utterances across subtitles.
@@ -207,6 +163,29 @@ def find_utterances(subtitles):
     merged.append(current)
 
     return merged
+
+
+def find_partitions(collated) -> [Partition]:
+    """
+    :param collated: a list of subtitles in source and target langs sorted by subtitle.start
+    :returns: a list of partitions
+    """
+    partitions = []
+    index = 0
+    current_partition = None
+
+    while len(collated) > 0:
+        current_partition = Partition(index)
+        index += 1
+        partitions.append(current_partition)
+        subtitle = collated[0]
+        current_partition.append(subtitle)
+        for related in find_all(collated, subtitle.start, subtitle.end):
+            if related in collated:
+                collated.remove(related)
+            current_partition.append(related)
+
+    return partitions
 
 
 def find_partitions_by_gap_size(collated, gap_length):
@@ -245,15 +224,15 @@ def find_partitions_by_gap_size(collated, gap_length):
     return partitions
 
 
-FIVE_SECONDS = 5 * 1e6
+FIVE_SECONDS = 10 * 1e6
 
 
-def merge_ellipsized(partitions: [Partition]) -> [Partition]:
+def merge_ellipsized(partitions: [Partition], threshold_seconds) -> [Partition]:
     queue = copy.copy(partitions)
     merged = []
     current = queue.pop(0)
     while queue:
-        if (current.gap_between(queue[0]) < FIVE_SECONDS and
+        if (current.gap_between(queue[0]) < (threshold_seconds * 1e6) and
                 ((current.source.has_utterances() and current.source.utterances[-1].trails_off())
                  or (current.target.has_utterances() and current.target.utterances[-1].trails_off()))):
             current.merge(queue.pop(0))
