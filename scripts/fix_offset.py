@@ -49,7 +49,7 @@ def delay_and_save(filename, subs, offset):
         for sub in subs:
             f.write(sub.lines + '\n\n')
     seconds = offset / 1e6
-    sys.stderr.write(f'Subtitles adjusted by {seconds:.4f} seconds')
+    sys.stderr.write(f'Subtitles adjusted by {seconds:.4f} seconds\n')
 
 
 def fix_offset(opts, film, offset):
@@ -69,10 +69,10 @@ def fix_offset(opts, film, offset):
 def main(opts, film: Film):
     offset = film.calculated_offset()
     if offset > OFFSET_MIN:
-        sys.stderr.write(f'Calculated offset of {offset} is greater than {OFFSET_MIN}.')
+        sys.stderr.write(f'Calculated offset of {offset} is greater than {OFFSET_MIN}.\n')
         fix_offset(opts, film, offset)
     else:
-        sys.stderr.write(f'Calculated offset of {offset} is not greater than {OFFSET_MIN}')
+        sys.stderr.write(f'Calculated offset of {offset} is not greater than {OFFSET_MIN}\n')
 
 
 if __name__ == '__main__':
