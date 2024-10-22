@@ -46,6 +46,19 @@ def _parse_time_codes(timestring) -> (int, int, str):
         return None
 
 
+def microseconds_to_string(microseconds):
+    milliseconds = int((microseconds / 1e3) % 1e3)
+    seconds = int((microseconds / 1e6) % 60)
+    minutes = int((microseconds / (1e6 * 60)) % 60)
+    hours = int((microseconds / (1e6 * 60 * 60)) % 24)
+
+    hours = str(hours).rjust(2, '0')
+    minutes = str(minutes).rjust(2, '0')
+    seconds = str(seconds).rjust(2, '0')
+    milliseconds = str(milliseconds).rjust(3, '0')
+    return f'{hours}:{minutes}:{seconds},{milliseconds}'
+
+
 ELLIPSES_REGEX = r'[.]{3}'
 CURLY_BRACKET_REGEX = r'{[^{]+?}\s?'
 SQUARE_BRACKET_REGEX = r'\[[^\[]+?\]\s?'
@@ -69,7 +82,8 @@ CHARACTER_MARKER_REGEX = r'^([\w.,#\'-]+\s?){1,3}: '
 # \p{Lu} is unicode for uppercase. Will match accented characters.
 CAPITALS_REGEX = r'[\p{Lu},]{2,}( [\p{Lu}0-9,]{2,})+'
 PARENTHESES_REGEX = r'\(.*\)'
-LEADING_HYPHENS_REGEX = r'^-'
+CHANGE_OF_SPEAKER_REGEX = r'([!?.])\s*(-)\s*(\p{Lu})'
+LEADING_HYPHENS_REGEX = r'\A-\s?'
 
 # Used to transcribe music
 MUSICAL_NOTE = '♪'
@@ -121,7 +135,8 @@ def sterilize(sub_lines: [str]) -> Optional[str]:
     text = regex.sub(SQUARE_BRACKET_REGEX, '', text)
 
     # Remove leading hyphens
-    text = regex.sub(LEADING_HYPHENS_REGEX, '', text)
+    # text = regex.sub(LEADING_HYPHENS_REGEX, '', text)
+    text = regex.sub(CHANGE_OF_SPEAKER_REGEX, r"\1\n\2 \3", text)
 
     # Remove ellipses
     # text = regex.sub(ELLIPSES_REGEX, '', text)
@@ -153,7 +168,7 @@ class Subtitle:
             joined = [part.replace("\n", " ") for part in _parts]
             # return a cleaned version
             untokenized = [part.strip() for part in joined if len(part)]
-            return [s.strip() for u in untokenized for s in sent_tokenize(u)]  # TODO: add other language support
+            return [regex.sub(LEADING_HYPHENS_REGEX, '', s).strip() for u in untokenized for s in sent_tokenize(u)]  # TODO: add other language support
 
         # def _sorted_by_appearance(lines, texts):
         #     print('\n', lines, '\n')
@@ -205,6 +220,14 @@ class Subtitle:
         # - More than one lowercase character, or
         # - One lowercase and one uppercase character
         return (lower_count > 1) or (lower_count >= 1 and upper_count >= 1)
+
+    def delay_timecodes(self, offset):
+        self.start = self.start + offset
+        self.end = self.end + offset
+        self.timestring = f'{microseconds_to_string(self.start)}{TIMECODE_SEPARATOR}{microseconds_to_string(self.end)}'
+        lines = self.lines.split('\n')
+        lines[1] = self.timestring
+        self.lines = '\n'.join(lines)
 
     def __str__(self):
         return self.lines
