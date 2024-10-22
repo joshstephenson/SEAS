@@ -50,7 +50,8 @@ def main(opts):
 
     collated = collate_subs(source_subs.subtitles, target_subs.subtitles)
     partitions = find_partitions_by_gap_size(collated, opts.gap_length)
-    partitions = merge_ellipsized(partitions)
+    if Config.MergeEllipsized > 0:
+        partitions = merge_ellipsized(partitions, Config.MergeEllipsized)
 
     source_overlaps = set()
     target_overlaps = set()
