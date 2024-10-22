@@ -186,7 +186,7 @@ def alignment_files(source, target) -> (str, str):
     # See if these files are splits
     match = regex.match(r'\d{4,10}(-\d{3}).srt$', source.split('/')[-1])
     suffix = ''
-    if len(match.groups()) > 0:
+    if match is not None and len(match.groups()) > 0:
         suffix = match.group(1)
     source_lang = source.split('/')[-2]
     target_lang = target.split('/')[-2]
