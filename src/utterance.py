@@ -46,7 +46,7 @@ class Utterance:
         Merge another utterance with this one. Used when an utterance is spread across multiple subtitles.
         :param other: other subtitle to merge
         """
-        self.text = " ".join([self.text, other.text]).replace('... ...', '...').strip()
+        self.text = " ".join([self.text, other.text]).replace('... ...', '... ').strip()
         for subtitle in other.subtitles:
             subtitle.utterances = set([self])
         for subtitle in self.subtitles:
