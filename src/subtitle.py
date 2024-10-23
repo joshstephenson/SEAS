@@ -173,18 +173,6 @@ class Subtitle:
             untokenized = [part.strip() for part in joined if len(part)]
             return [regex.sub(LEADING_HYPHENS_REGEX, '', s).strip() for u in untokenized for s in sent_tokenize(u)]  # TODO: add other language support
 
-        # def _sorted_by_appearance(lines, texts):
-        #     print('\n', lines, '\n')
-        #     texts_sorted = []
-        #     for text in texts:
-        #         print(text)
-        #         start_index = lines.replace('\n', ' ').index(text)
-        #         if start_index != -1:
-        #             texts_sorted.append((start_index, text))
-        #     texts_sorted.sort(key=lambda x: x[0])
-        #     # print(texts_sorted)
-        #     return [text for _, text in texts_sorted]
-
 
         # subtitles have a many-to-many relationship with utterances
         self.utterances = set()
