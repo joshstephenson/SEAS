@@ -49,6 +49,9 @@ main() {
     source_file=$(find_largest_srt "$source_dir")
     target_file=$(find_largest_srt "$target_dir")
 
+    echo "$source_file"
+    echo "$target_file"
+
     if [ ! -f "$gold_file" ]; then
         echo "No gold file found at $gold_file"
         exit 1

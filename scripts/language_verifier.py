@@ -88,26 +88,36 @@ def process_file(srt, delete_bad=False):
     predicted = str(LANGUAGE_MAP[lang]).split('.')[1]
     if detected is not None and matches_prediction(detected, lang):
         sys.stdout.write(f"Language matched prediction of {predicted}.\n")
+        exit(0)
     else:
         detected = str(detected).split('.')[1] if detected is not None else "None"
+        sys.stderr.write(f"Detected {detected} for file: {srt}\n")
         if delete_bad:
             os.remove(srt)
             sys.stderr.write(f"Removed: {srt}\n")
-        else:
-            sys.stderr.write(f"{srt}\n")
+        exit(1)
 
 def main(opts):
-    directory = os.path.expanduser(opts.directory)
-    directory = os.path.abspath(directory)
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            file = os.path.join(root, file)
-            if file.lower().endswith('.srt'):
-                process_file(file, opts.delete)
+    if opts.directory is not None:
+        directory = os.path.expanduser(opts.directory)
+        directory = os.path.abspath(directory)
+        for root, dirs, files in os.walk(directory):
+            for file in files:
+                file = os.path.join(root, file)
+                if file.lower().endswith('.srt'):
+                    process_file(file, opts.delete)
+    elif opts.file is not None:
+        if opts.file.lower().endswith('.srt'):
+            file = os.path.expanduser(opts.file)
+            process_file(file, opts.delete)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--directory', required=True)
+    parser.add_argument('-d', '--directory', required=False)
+    parser.add_argument('-f', '--file', required=False)
     parser.add_argument('-D', '--delete', default=False, action='store_true')
     args = parser.parse_args()
+    if args.directory is None and args.file is None:
+        parser.error("-d or -f must be used for directory or file")
+        exit(1)
     main(args)

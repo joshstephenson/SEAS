@@ -28,7 +28,7 @@ path_file="$base_dirname/${source_lang}-${target_lang}-vecalign${suffix}.path"
 alignments_file="$base_dirname/${source_lang}-${target_lang}-vecalign${suffix}.txt"
 
 if [ "$3" != "--skip-partitioning" ] && grep -E 'ShouldPartitionByGaps.+True' "$SUBTITLE_REPO/src/config.py" ; then
-    echo "Extracting sentences directly and overlaps..."
+    echo "Extracting sentences directly and overlapping..."
     $SUBTITLE_REPO/scripts/srt2overlap.py -s "$source" -t "$target" -i
 
     echo "Embedding..."

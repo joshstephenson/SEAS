@@ -4,9 +4,7 @@ import argparse
 import sys
 from difflib import SequenceMatcher
 
-from pandas import DataFrame
 from Levenshtein import distance
-from nltk import everygrams
 from src.alignment import Alignment
 from src.config import Config
 
@@ -129,12 +127,6 @@ def print_results(gold, predictions, soft_scoring=False, print_pp=False, print_f
     print('True Positives\tFalse Negatives\tFalse Positives\tRecall\tPrecision\tF1')
     print(f'{true_pos_length}\t{false_neg_length}\t{false_pos_length}\t{recall}\t{precision}\t{f1}')
 
-    # cm = DataFrame([[true_pos_length, false_pos_length, precision],
-    #                 [false_neg_length, 0, 0],
-    #                 [recall, 0, 0]],
-    #                columns=['Positive', 'Negative', 'Precision'])
-    # cm.index = ['Positive', 'Negative', 'Recall']
-    # print(cm)
     if print_fp:
         print_false_positives(false_pos, gold)
     if print_fn:
@@ -197,7 +189,7 @@ def main(opts):
         gold = [Alignment(alignment[0].strip(), alignment[1].strip()) for alignment in
                 [a.split('\n') for a in gold_alignments]]
     except Exception as _:
-        sys.stdout.write("Error parsing gold file. The problem appears to be:\n")
+        sys.stderr.write("Error parsing gold file. The problem appears to be:\n")
         for i, a in enumerate(gold_alignments):
             if len(a.split('\n')) != 2:
                 sys.stderr.write(str(len(a.split('\n'))) + ': ')

@@ -9,10 +9,11 @@ def subs():
     return Subtitles(text)
 
 def test_removes_eight_subtitles(subs):
-    assert len([*subs]) == 9
+    assert len([*subs]) == 6
 
 def test_has_no_brackets(subs):
     for sub in subs:
-        print(sub.text)
         assert '{\an8}' not in sub.text
         assert '[in Mandarin] ' not in sub.text
+        assert '[' not in sub.text
+        assert ']' not in sub.text

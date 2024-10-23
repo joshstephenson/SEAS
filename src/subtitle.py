@@ -75,7 +75,7 @@ QUOTES_REGEX = r'(["“”«»„‟‹›〝〞『』【】「」])(.*?)(["“�
 # OR
 # Person #1: blah blah
 # allows up to three 'words' before a colon and space
-CHARACTER_MARKER_REGEX = r'^([\w.,#\'-]+\s?){1,3}: '
+CHARACTER_MARKER_REGEX = r'^([\w.,#\'-]+\s?){1,3}:\s?'
 
 # Matches 2 or more words in all CAPS along with adjacent punctuation
 # CAPITALS_REGEX = r'([A-Z]{2,}[,:.]?\s){2,}[:]?'
@@ -91,6 +91,8 @@ LEADING_POUND_SIGN = r'^#'
 
 # URL_REGEX = r'((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*'
 URL_REGEX = r'((http|https)\:\/\/)?[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*'
+
+MULTIPLE_ADJACENT_SPACES_REGEX = r' {2,}'
 
 
 def sterilize(sub_lines: [str]) -> Optional[str]:
@@ -108,6 +110,12 @@ def sterilize(sub_lines: [str]) -> Optional[str]:
     if test1 or test2 or test3:
         return None
 
+    # Remove content surrounded by curly brackets
+    text = regex.sub(CURLY_BRACKET_REGEX, '', text)
+
+    # Remove content surrounded by square brackets
+    text = regex.sub(SQUARE_BRACKET_REGEX, '', text)
+
     # Multiple words in all caps are no good
     text = regex.sub(CAPITALS_REGEX, '', text)
 
@@ -116,6 +124,7 @@ def sterilize(sub_lines: [str]) -> Optional[str]:
 
     # Then remove all other HTML with inner content
     text = regex.sub(HTML_REGEX, '', text)
+
 
     # Strip character markers and captions
     text = regex.sub(CHARACTER_MARKER_REGEX, '', text)
@@ -127,12 +136,6 @@ def sterilize(sub_lines: [str]) -> Optional[str]:
 
     # Remove content surrounded by parenthesis
     text = regex.sub(PARENTHESES_REGEX, "", text)
-
-    # Remove content surrounded by curly brackets
-    text = regex.sub(CURLY_BRACKET_REGEX, '', text)
-
-    # Remove content surrounded by square brackets
-    text = regex.sub(SQUARE_BRACKET_REGEX, '', text)
 
     # Remove leading hyphens
     # text = regex.sub(LEADING_HYPHENS_REGEX, '', text)
@@ -198,7 +201,7 @@ class Subtitle:
         self.texts = _sterilize_and_split(parts[2:])
         if self.texts is None:
             self.texts = ['']
-        self.text = " ".join(self.texts)
+        self.text = regex.sub(MULTIPLE_ADJACENT_SPACES_REGEX, ' ', " ".join(self.texts))
 
     def linked_via_utterance(self):
         """
