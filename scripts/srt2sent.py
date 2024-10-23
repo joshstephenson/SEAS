@@ -17,29 +17,19 @@ def with_file(opts):
     if not os.path.exists(file):
         raise (Exception(f"File path does not exist: {file}"))
     text = get_text(file)
-    if opts.raw:
-        text = regex.sub(r'\r', '', text)
-        # Split on 2 or more lines in a row
-        sub_contents = regex.split(r'\n{2,}', text)
-        for sub_text in sub_contents:
-            content = "\n".join(sub_text.splitlines()[2:])
-            content = sterilize(content)
-            if len(content):
-                sys.stdout.write(content + '\n')
-    else:
-        subtitles = Subtitles(text)
-        sent_file = file.replace('.srt', '.sent')
-        index_file = file.replace('.srt', '.sent-index')
-        output = open(sent_file, 'w', encoding='utf-8')
-        index_output = open(index_file, 'w', encoding='utf-8')
-        for utterance in subtitles.utterances:
-            # if subtitle.has_content():
-            # sys.stdout.write(utterance.text + '\n')
-            output.write(utterance.text + "\n")
-            if opts.index:
-                index_output.write(str(sorted([sub.index for sub in utterance.subtitles])) + "\n")
-        output.close()
-        index_output.close()
+    subtitles = Subtitles(text)
+    sent_file = file.replace('.srt', '.sent')
+    index_file = file.replace('.srt', '.sent-index')
+    output = open(sent_file, 'w', encoding='utf-8')
+    index_output = open(index_file, 'w', encoding='utf-8')
+    for utterance in subtitles.utterances:
+        # if subtitle.has_content():
+        # sys.stdout.write(utterance.text + '\n')
+        output.write(utterance.text + "\n")
+        if opts.index:
+            index_output.write(str(sorted([sub.index for sub in utterance.subtitles])) + "\n")
+    output.close()
+    index_output.close()
 
 
 def with_dir(opts):
@@ -68,7 +58,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', required=False)
     parser.add_argument('-d', '--directory', required=False)
-    parser.add_argument('-r', '--raw', action="store_true", default=False)
     parser.add_argument('-i', '--index', action="store_true",
                         help="Include a file that prints the indices associated with each sentence.")
     args = parser.parse_args()
