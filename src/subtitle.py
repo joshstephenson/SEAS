@@ -75,7 +75,7 @@ QUOTES_REGEX = r'(["“”«»„‟‹›〝〞『』【】「」])(.*?)(["“�
 # OR
 # Person #1: blah blah
 # allows up to three 'words' before a colon and space
-CHARACTER_MARKER_REGEX = r'^([\w.,#\'-]+\s?){1,3}:\s?'
+CHARACTER_MARKER_REGEX = r'^([\w.,#\'-]+\s?){1,3}: '
 
 # Matches 2 or more words in all CAPS along with adjacent punctuation
 # CAPITALS_REGEX = r'([A-Z]{2,}[,:.]?\s){2,}[:]?'

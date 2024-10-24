@@ -42,10 +42,10 @@ if [ -z "$LASER" ]; then
     exit 1
 fi
 
-$LASER/tasks/embed/embed.sh "$source_overlap" "$source_emb" 2>/dev/null
+$LASER/tasks/embed/embed.sh "$source_overlap" "$source_emb" #2>/dev/null
 #echo "Generated embeddings to $source_emb" 2>/dev/null
 
-$LASER/tasks/embed/embed.sh "$target_overlap" "$target_emb" 2>/dev/null
+$LASER/tasks/embed/embed.sh "$target_overlap" "$target_emb" #2>/dev/null
 #echo "Generated embeddings to $target_emb"
 
 alignment_max_size=$(cat "$SUBTITLE_REPO/src/config.py" | grep 'AlignmentMaxSize' | cut -d= -f2 | tr -d ' ')
@@ -53,4 +53,4 @@ alignment_max_size=$(cat "$SUBTITLE_REPO/src/config.py" | grep 'AlignmentMaxSize
     --src "$source" \
     --tgt "$target" \
     --src_embed "$source_overlap" "$source_emb" \
-    --tgt_embed "$target_overlap" "$target_emb" 2>/dev/null
+    --tgt_embed "$target_overlap" "$target_emb" #2>/dev/null

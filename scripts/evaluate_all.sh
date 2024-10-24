@@ -55,7 +55,7 @@ count=0
 
 printf "%-15s  %-15s  %-15s  %-15s  %-10s %-10s %-10s\n" "Title" "True Positives" "False Negatives" "False Positives" "Recall" "Precision" "F-1"
 for dir in "$SUBTITLE_REPO/gold/"*; do
-    "$SUBTITLE_REPO/scripts/run_and_eval.sh" vecalign "$dir" "$source" "$target" 2>&1 >/dev/null
+    "$SUBTITLE_REPO/scripts/run_and_eval.sh" vecalign "$dir" "$source" "$target" >/dev/null 2>/dev/null
     results=$( tail -n1 "$dir/$source-$target-vecalign.results")
     title=$(ellipsize "$(basename "$dir")")
     recall=$(echo "$results" | cut -f4)

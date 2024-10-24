@@ -28,13 +28,7 @@ class Subtitles:
 
         previous_sub = None
         for sub_content in sub_contents:
-            # Save the raw text in case we need to recreate it
-            subtitle = None
-            # try:
             subtitle = Subtitle(sub_content, is_source)
-            # except ValueError as e:
-            #     sys.stderr.write(f'Value error in subtitle timestring "{sub_content}": {e}\n')
-
             if subtitle is not None:
                 self.subtitles.append(subtitle)
                 if previous_sub is not None:
