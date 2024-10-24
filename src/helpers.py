@@ -21,7 +21,7 @@ def get_text(filename):
         with open(filename, 'r', encoding='utf-8') as source_file:
             srt_text = source_file.read()
     except UnicodeDecodeError as _:
-        sys.stderr.write(f'UTF-8 decoding failed. Will try latin-1 encoding.' + '\n')
+        sys.stderr.write(f'UTF-8 decoding failed. Using Latin-1.' + '\n')
         with open(filename, 'r', encoding='latin-1') as source_file:
             srt_text = source_file.read()
     return srt_text
