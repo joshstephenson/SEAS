@@ -26,15 +26,8 @@ do
 done
 
 if [ -z "$skip_to_embed" ]; then
-    rm -f "$source_overlap" "$source_emb" "$target_overlap" "$target_emb" 2>/dev/null
-
     ./vecalign/overlap.py -n $overlap_size -i "$source" -o "$source_overlap"
-    echo "Generated overlaps of $overlap_size to $source_overlap" 1>&2
-
     ./vecalign/overlap.py -n $overlap_size -i "$target" -o "$target_overlap"
-    echo "Generated overlaps of $overlap_size to $target_overlap" 1>&2
-else
-    rm "$source_emb" "$target_emb" 2>/dev/null
 fi
 
 if [ -z "$LASER" ]; then
@@ -42,15 +35,20 @@ if [ -z "$LASER" ]; then
     exit 1
 fi
 
-$LASER/tasks/embed/embed.sh "$source_overlap" "$source_emb" #2>/dev/null
-#echo "Generated embeddings to $source_emb" 2>/dev/null
+$LASER/tasks/embed/embed.sh "$source_overlap" "$source_emb" 2>/dev/null
+if [ ! -s "$source_emb" ]; then
+    echo "Failed to generate embeddings for source: $source_emb"
+    exit 1
+fi
 
-$LASER/tasks/embed/embed.sh "$target_overlap" "$target_emb" #2>/dev/null
-#echo "Generated embeddings to $target_emb"
-
+$LASER/tasks/embed/embed.sh "$target_overlap" "$target_emb" 2>/dev/null
+if [ ! -s "$target_emb" ]; then
+    echo "Failed to generate embeddings for target: $target_emb"
+    exit 1
+fi
 alignment_max_size=$(cat "$SUBTITLE_REPO/src/config.py" | grep 'AlignmentMaxSize' | cut -d= -f2 | tr -d ' ')
-./vecalign/vecalign.py --alignment_max_size $alignment_max_size \
+./vecalign/vecalign.py --alignment_max_size "$alignment_max_size" \
     --src "$source" \
     --tgt "$target" \
     --src_embed "$source_overlap" "$source_emb" \
-    --tgt_embed "$target_overlap" "$target_emb" #2>/dev/null
+    --tgt_embed "$target_overlap" "$target_emb" 2>/dev/null

@@ -29,7 +29,7 @@ def detect_language(text):
     return language
 
 
-def matches_prediction(language:Language, predicted:str):
+def matches_prediction(language: Language, predicted: str):
     return LANGUAGE_MAP[predicted] == language
 
 
@@ -41,7 +41,6 @@ class Languages:
         else:
             lang_name = str(lang_code)
         return lang_name.split('.')[-1].lower()
-
 
     @classmethod
     def get_language_code(cls, language_name):

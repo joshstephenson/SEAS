@@ -38,6 +38,7 @@ main() {
         export PYTHONPATH=$(pwd)
     fi
     directory=$2
+    ./scripts/cleanup.sh "$directory"
     source_lang=$3
     target_lang=$4
     gold_file="$directory/$source_lang-$target_lang-gold.txt"

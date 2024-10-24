@@ -35,15 +35,27 @@ if [ "$3" != "--skip-partitioning" ] && grep -E 'ShouldPartitionByGaps.+True' "$
     $SUBTITLE_REPO/scripts/sent2path.sh "$source_sent" "$target_sent" --skip-to-embed | grep -v "| INFO |" > "$path_file" #2>/dev/null
 else
     echo "Extracting source sentences..."
-    $SUBTITLE_REPO/scripts/srt2sent.py -f "$source" -i
+    "$SUBTITLE_REPO/scripts/srt2sent.py" -f "$source" -i -l "$source_lang" #2>/dev/null
+    if [ ! -s "$source_sent" ]; then
+        echo "Error creating source sentence file."
+        exit 1
+    fi
     echo "$source_sent"
 
     echo "Extracting target sentences..."
-    $SUBTITLE_REPO/scripts/srt2sent.py -f "$target" -i
+    "$SUBTITLE_REPO/scripts/srt2sent.py" -f "$target" -i -l "$target_lang" #2>/dev/null
+    if [ ! -s "$target_sent" ]; then
+        echo "Error creating target sentence file."
+        exit 1
+    fi
     echo "$target_sent"
 
     echo "Overlapping and embedding..."
-    $SUBTITLE_REPO/scripts/sent2path.sh "$source_sent" "$target_sent" | grep -v "| INFO |" > "$path_file" #2>/dev/null
+    "$SUBTITLE_REPO/scripts/sent2path.sh" "$source_sent" "$target_sent" | grep -v "| INFO |" > "$path_file" #2>/dev/null
+    if [ ! -s "$path_file" ]; then
+        echo "Error creating path file."
+        exit 1
+    fi
 fi
 
 if [ -z "$LASER" ]; then
