@@ -1,7 +1,8 @@
 class Config:
-    ShouldPartitionByGaps = True
+    Sterilize = True
+    ShouldPartitionByGaps = False
     NumOverlaps = 6
     GapThreshold = 3
     UseSoftScoring = False
     AlignmentMaxSize = 8
-    MergeEllipsized = 5
+    MergeEllipsized = 0

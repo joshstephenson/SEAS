@@ -12,8 +12,9 @@ class Film:
         def __init__(self, srt_file, is_source=True):
             self.is_source = is_source
             self.label = srt_file.split('/')[-1].split('.')[0]
+            self.language_code = srt_file.split('/')[-2]
             text = get_text(srt_file)
-            self.subtitles = Subtitles(text, is_source).subtitles
+            self.subtitles = Subtitles(text, self.language_code, is_source).subtitles
 
     def __init__(self, source_file, target_file, alignments: Alignments, ignore_stranded=False):
         self.source = Film.Language(source_file, is_source=True)
@@ -21,7 +22,14 @@ class Film:
         self.alignments = alignments
         stranded_subs = [sub.index for sub in self.source.subtitles]
         self.annotations = []
+        for sub in self.source.subtitles:
+            print(sub.lines)
+            print(sub.index)
+        for sub in self.target.subtitles:
+            print(sub.lines)
+            print(sub.index)
         for alignment in self.alignments.alignments:
+            print(alignment.source_ids)
             alignment.source_subs = [sub for sub in self.source.subtitles if sub.index in alignment.source_ids]
             alignment.target_subs = [sub for sub in self.target.subtitles if sub.index in alignment.target_ids]
             self.annotations.append(Annotation(alignment.source_subs,

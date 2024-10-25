@@ -24,7 +24,7 @@ def get_text(filename):
         sys.stderr.write(f'UTF-8 decoding failed. Using Latin-1.' + '\n')
         with open(filename, 'r', encoding='latin-1') as source_file:
             srt_text = source_file.read()
-    return srt_text
+    return srt_text.replace('\ufeff', '')  # Removing Byte Order Mark
 
 
 def get_ids_from_str(id_string):
@@ -306,3 +306,8 @@ def is_not_empty(text):
     """
     text = text.translate(str.maketrans('', '', string.punctuation)).strip()
     return len(text) > 0
+
+
+def get_language_code_from_path(path):
+    parts = path.split('/')
+    return parts[-2]

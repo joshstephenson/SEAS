@@ -205,10 +205,10 @@ if __name__ == '__main__':
 
     source_sent, source_sent_index = sent_files_for_srt(args.source)
     target_sent, target_sent_index = sent_files_for_srt(args.target)
-    if not os.path.exists(source_sent) or not os.path.exists(target_sent):
+    paths_file, alignments_file = alignment_files(args.source, args.target)
+    if not os.path.exists(alignments_file) or not os.path.exists(source_sent) or not os.path.exists(target_sent):
         run_vecalign(args)
 
-    paths_file, alignments_file = alignment_files(args.source, args.target)
     if not os.path.exists(alignments_file):
         print(f"Failure running vecalign.\nFile does not exist: {alignments_file}")
         exit(1)

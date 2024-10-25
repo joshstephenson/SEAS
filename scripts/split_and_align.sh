@@ -28,7 +28,7 @@ echo "SOURCE: $SOURCE"
 echo "TARGET: $TARGET"
 
 # Remove old splits
-yes | $SUBTITLE_REPO/scripts/cleanup.sh "$BASE_DIR"
+$SUBTITLE_REPO/scripts/cleanup.sh "$BASE_DIR"
 
 # Now split them
 $SUBTITLE_REPO/scripts/split_srt.py -s "$SOURCE" -t "$TARGET" -g "$SPLIT_GAP_LENGTH"
@@ -38,7 +38,7 @@ SOURCE_FILES=$(find -E "$BASE_DIR/$SOURCE_LANG" -iregex '.+-[0-9]{3}.srt' | sort
 # First do the align script for timecode-based alignments
 # We don't split the files for this
 TIME_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-timecode.txt"
-$SUBTITLE_REPO/scripts/timecode_align.py -s "$SOURCE" -t "$TARGET" > "$TIME_FILE"
+$SUBTITLE_REPO/scripts/run_chronos.py -s "$SOURCE" -t "$TARGET" > "$TIME_FILE"
 
 for SOURCE in ${SOURCE_FILES[@]}; do
     INFIX=$(echo $SOURCE | cut -d- -f2 | cut -d. -f1)
@@ -46,48 +46,52 @@ for SOURCE in ${SOURCE_FILES[@]}; do
     SOURCE_SENT="${SOURCE/.srt/.sent}"
     TARGET_SENT="${TARGET/.srt/.sent}"
 #    TIME_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-timecode-${INFIX}.txt"
-    VEC_ALIGN_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vec-${INFIX}.path"
-    VEC_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vec-${INFIX}.txt"
+    PATH_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vecalign-${INFIX}.path"
+    ALIGNMENTS_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vecalign-${INFIX}.txt"
 #    echo "$SOURCE"
 #    echo "$TARGET"
 #    echo "$SOURCE_SENT"
 #    echo "$TARGET_SENT"
 #    echo "$TIME_FILE"
-#    echo "$VEC_ALIGN_FILE"
-#    echo "$VEC_FILE"
-    echo ""
-
-    if [ ! -s "$SOURCE_SENT" ]; then
-        "$SUBTITLE_REPO/scripts/srt2sent.py" -f "$SOURCE" > "$SOURCE_SENT"
-    fi
-    echo "$SOURCE_SENT"
-    if [ ! -s "$TARGET_SENT" ]; then
-        "$SUBTITLE_REPO/scripts/srt2sent.py" -f "$TARGET" > "$TARGET_SENT"
-    fi
+#    echo "$PATH_FILE"
+#    echo "$ALIGNMENTS_FILE"
 
     # Skip this Split because it doesn't have any subtitles to align
-    if [ ! -s "$SOURCE_SENT" ] || [ ! -s "$TARGET_SENT" ]; then
+    if [ ! -s "$SOURCE" ] || [ ! -s "$TARGET" ]; then
         echo "SKIPPING ${INFIX}" >&2
         continue
+    else
+        "$SUBTITLE_REPO/scripts/srt2sent.py" -f "$SOURCE" -l "$SOURCE_LANG" > "$SOURCE_SENT"
+        "$SUBTITLE_REPO/scripts/srt2sent.py" -f "$TARGET" -l "$TARGET_LANG" > "$TARGET_SENT"
+        # Even though the subtitle file wasn't empty, the sent file still can be if everything was scrubbed in preprocessing
+        if [ ! -s "$SOURCE_SENT" ] || [ ! -s "$TARGET_SENT" ]; then
+            echo "SKIPPING ${INFIX} after sentence generation." >&2
+            continue
+        fi
     fi
     echo "SPLIT: $INFIX"
 
     echo "$TARGET_SENT"
-    if [ ! -s "$VEC_ALIGN_FILE" ]; then
-        "$SUBTITLE_REPO/scripts/sent2path.sh" "$SOURCE_SENT" "$TARGET_SENT" | grep -v "| INFO |" > "$VEC_ALIGN_FILE" #2>/dev/null
+    if [ ! -s "$PATH_FILE" ]; then
+        if ! "$SUBTITLE_REPO/scripts/sent2path.sh" "$SOURCE_SENT" "$TARGET_SENT" | grep -v "| INFO |" > "$PATH_FILE"; then
+            echo "Failed to generated path file."
+            exit 1
+        fi
     fi
-    echo "$VEC_ALIGN_FILE"
-    if [ ! -s "$VEC_FILE" ]; then
-        "$SUBTITLE_REPO/scripts/path2align.py" -s "$SOURCE_SENT" -t "$TARGET_SENT" -a "$VEC_ALIGN_FILE" > "$VEC_FILE"
+    echo "$PATH_FILE"
+    if [ ! -s "$ALIGNMENTS_FILE" ]; then
+        if ! "$SUBTITLE_REPO/scripts/path2align.py" -s "$SOURCE_SENT" -t "$TARGET_SENT" -a "$PATH_FILE" > "$ALIGNMENTS_FILE"; then
+            echo "Failed to generate alignments f ile."
+            exit 1
+        fi
     fi
 done
-
-VEC_FILE="$BASE_DIR/$SOURCE_LANG-$TARGET_LANG-vec.txt"
+ALIGNMENTS_FILE="$BASE_DIR/$SOURCE_LANG-$TARGET_LANG-vecalign.txt"
 GOLD_FILE="$BASE_DIR/$SOURCE_LANG-$TARGET_LANG-gold.txt"
 
 # Combine the vector alignments
-cat "$BASE_DIR/$SOURCE_LANG-$TARGET_LANG"-vec-*.txt > "$VEC_FILE"
+cat "$BASE_DIR/$SOURCE_LANG-$TARGET_LANG"-vecalign-*.txt > "$ALIGNMENTS_FILE"
 
-"$SUBTITLE_REPO/scripts/results_analyzer.py" -f "$TIME_FILE" "$VEC_FILE" -o "$GOLD_FILE" -a
+#"$SUBTITLE_REPO/scripts/results_analyzer.py" -f "$TIME_FILE" "$ALIGNMENTS_FILE" -o "$GOLD_FILE" -a
 
 

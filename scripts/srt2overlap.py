@@ -9,6 +9,7 @@ import regex
 
 from src.config import Config
 from src.helpers import get_text, find_partitions, collate_subs, find_partitions_by_gap_size, merge_ellipsized
+from src.languages import Languages
 from src.subtitle import sterilize
 from src.subtitles import Subtitles
 
@@ -36,14 +37,16 @@ def open_associated_files(srt_filename) -> (str, str, str):
             open(srt_filename.replace('.srt', '.sent-index'), 'w', encoding='utf-8'),
             open(srt_filename.replace('.srt', '.overlap'), 'w', encoding='utf-8'))
 
+def get_language_from_file(srt_filename):
+    return Languages.get_language_name(srt_filename.split('/')[-2])
 
 def main(opts):
     sys.stderr.write(f'Overlap size: {opts.num_overlaps}, Gap length: {opts.gap_length}' + '\n')
     source_text = get_text(opts.source)
     target_text = get_text(opts.target)
 
-    source_subs = Subtitles(source_text, is_source=True)
-    target_subs = Subtitles(target_text, is_source=False)
+    source_subs = Subtitles(source_text, get_language_from_file(opts.source), is_source=True)
+    target_subs = Subtitles(target_text, get_language_from_file(opts.target), is_source=False)
 
     source_sent_file, source_index_file, source_overlap_file = open_associated_files(opts.source)
     target_sent_file, target_index_file, target_overlap_file = open_associated_files(opts.target)

@@ -1,6 +1,7 @@
 import regex
 import sys
 
+from src.config import Config
 from src.helpers import is_not_empty, collate_subs, find_partitions, find_utterances
 from src.subtitle import Subtitle
 from src.utterance_pair import UtterancePair
@@ -15,7 +16,7 @@ class Subtitles:
     on timecodes.
     """
 
-    def __init__(self, text, is_source=True):
+    def __init__(self, text, language, is_source=True, sterilize=Config.Sterilize):
         self.is_source = is_source
         # First strip bad carriage returns:
         text = regex.sub(r'\r', '', text).strip()
@@ -28,7 +29,8 @@ class Subtitles:
 
         previous_sub = None
         for sub_content in sub_contents:
-            subtitle = Subtitle(sub_content, is_source)
+            subtitle = Subtitle(sub_content, language, is_source, should_sterilize=sterilize,
+                                find_sentence_boundaries=True)
             if subtitle is not None:
                 self.subtitles.append(subtitle)
                 if previous_sub is not None:
@@ -37,7 +39,6 @@ class Subtitles:
                 previous_sub = subtitle
 
         self.utterances = find_utterances(self.subtitles)
-
 
     def find_utterances_for_sub(self, subtitle) -> list[Utterance]:
         return [u for u in self.utterances if subtitle in u.subtitles]

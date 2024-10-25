@@ -1,3 +1,4 @@
+import string
 from datetime import datetime
 from difflib import SequenceMatcher
 from typing import Optional
@@ -5,6 +6,9 @@ from typing import Optional
 import regex
 from nltk import sent_tokenize
 import sys
+
+from src.config import Config
+from src.languages import Languages
 
 TIMECODE_SEPARATOR = ' --> '
 TIMECODE_LINE_REGEX = r'(\d{2}:\d{2}:\d{2},\d{3}).+(\d{2}:\d{2}:\d{2},\d{3})'
@@ -102,13 +106,13 @@ def sterilize(sub_lines: [str]) -> Optional[str]:
     """
     text = '||'.join(sub_lines)
     if len(text) == 0:
-        return None
+        return ''
     # Completely invalidate subtitles with the musical notes, leading # or URLs
     test1 = MUSICAL_NOTE in text
     test2 = regex.match(LEADING_POUND_SIGN, text) is not None
     test3 = regex.search(URL_REGEX, text, regex.MULTILINE) is not None
     if test1 or test2 or test3:
-        return None
+        return ''
 
     # Remove content surrounded by curly brackets
     text = regex.sub(CURLY_BRACKET_REGEX, '', text)
@@ -124,7 +128,6 @@ def sterilize(sub_lines: [str]) -> Optional[str]:
 
     # Then remove all other HTML with inner content
     text = regex.sub(HTML_REGEX, '', text)
-
 
     # Strip character markers and captions
     text = regex.sub(CHARACTER_MARKER_REGEX, '', text)
@@ -157,7 +160,15 @@ class Subtitle:
     Subtitle represents a single visual text element in a movie in just one language
     """
 
-    def __init__(self, lines, is_source=True):
+    def __init__(self, lines, language, is_source=True, should_sterilize=Config.Sterilize,
+                 find_sentence_boundaries=True):
+        """
+        :param lines: the raw lines of subtitles. The first line is index, second is timestamps and the rest are the
+        content
+        :param is_source: is the source or target of the subtitles for alignment
+        :param should_sterilize: to sterilize subtitle contents
+        """
+
         def _sterilize_and_split(sub_text: [str]):
             text = sterilize(sub_text)
             return _split_multiple_speakers(text) if text is not None else None
@@ -171,8 +182,8 @@ class Subtitle:
             joined = [part.replace("\n", " ") for part in _parts]
             # return a cleaned version
             untokenized = [part.strip() for part in joined if len(part)]
-            return [regex.sub(LEADING_HYPHENS_REGEX, '', s).strip() for u in untokenized for s in sent_tokenize(u)]  # TODO: add other language support
-
+            return [regex.sub(LEADING_HYPHENS_REGEX, '', s).strip() for u in untokenized for s in
+                    sent_tokenize(u, self.language)]
 
         # subtitles have a many-to-many relationship with utterances
         self.utterances = set()
@@ -181,15 +192,28 @@ class Subtitle:
         self.previous = None
         self.subsequent = None
 
+        self.language = Languages.get_language_name(language)
         self.is_source = is_source
         self.lines = lines
+
         parts = self.lines.split('\n')
-        self.index = int(parts[0].replace('\ufeff', ''))  # stripping BOM mark
+        if len(parts[0]) > 0:
+            parts[0]
+            self.index = int(parts[0])  # stripping BOM mark
+        else:
+            print(len(parts[0]))
+            print(parts[0].isdigit())
+            raise Exception(f'Invalid subtitle: {self.lines}')
         self.start, self.end, self.timestring = _parse_time_codes(parts[1])
-        self.texts = _sterilize_and_split(parts[2:])
-        if self.texts is None:
-            self.texts = ['']
-        self.text = regex.sub(MULTIPLE_ADJACENT_SPACES_REGEX, ' ', " ".join(self.texts))
+        if should_sterilize:
+            self.text = sterilize(parts[2:])
+            if find_sentence_boundaries:
+                self.texts = _sterilize_and_split(parts[2:])
+                if self.texts is None:
+                    self.texts = ['']
+                self.text = regex.sub(MULTIPLE_ADJACENT_SPACES_REGEX, ' ', " ".join(self.texts))
+        else:
+            self.text = '\n'.join(self.lines.split('\n')[2:])
 
     def linked_via_utterance(self):
         """
@@ -201,11 +225,13 @@ class Subtitle:
         return adjacent
 
     def has_content(self):
-        self.text = self.text.strip()
+        if self.text is None:
+            return False
+        text = self.text.translate(str.maketrans('', '', string.punctuation)).replace(' ', '')
         # return regex.match(r'[[:lower:]]{2,}', self.text) is not None
         # Count the number of lowercase and uppercase letters in the string
-        lower_count = sum(1 for char in self.text if char.islower())
-        upper_count = sum(1 for char in self.text if char.isupper())
+        lower_count = sum(1 for char in text if char.islower())
+        upper_count = sum(1 for char in text if char.isupper())
 
         # The string must be either:
         # - More than one lowercase character, or
