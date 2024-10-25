@@ -176,11 +176,8 @@ gui.py
 sentalign
 3_Body_Problem_Countdown
 3_Body_Problem_Countdown-cleaned/
-*.path
-*.sent
 *.emb
 *.overlap
-*.sent-index
 *eng-spa-vec.txt
 eng-spa-*.txt
 *.results

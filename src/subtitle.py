@@ -97,6 +97,7 @@ LEADING_POUND_SIGN = r'^#'
 URL_REGEX = r'((http|https)\:\/\/)?[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*'
 
 MULTIPLE_ADJACENT_SPACES_REGEX = r' {2,}'
+OTHER_CHARS_TO_STRIP = r'[…*]'
 
 
 def sterilize(sub_lines: [str]) -> Optional[str]:
@@ -177,7 +178,7 @@ class Subtitle:
             # multiple speakers are demarcated with hyphen at the beginning of a line:
             # - I was home all night.
             # - I don't believe you.
-            _parts = regex.split(r'(^|\n)-\s*', sub_text)
+            _parts = regex.split(r'(^|\n)[-*]\s*', sub_text)
             # Join each individual speaker's words
             joined = [part.replace("\n", " ") for part in _parts]
             # return a cleaned version
@@ -198,20 +199,24 @@ class Subtitle:
 
         parts = self.lines.split('\n')
         if len(parts[0]) > 0:
-            parts[0]
-            self.index = int(parts[0])  # stripping BOM mark
+            self.index = int(parts[0])
         else:
             print(len(parts[0]))
             print(parts[0].isdigit())
             raise Exception(f'Invalid subtitle: {self.lines}')
         self.start, self.end, self.timestring = _parse_time_codes(parts[1])
         if should_sterilize:
-            self.text = sterilize(parts[2:])
+
             if find_sentence_boundaries:
                 self.texts = _sterilize_and_split(parts[2:])
                 if self.texts is None:
                     self.texts = ['']
-                self.text = regex.sub(MULTIPLE_ADJACENT_SPACES_REGEX, ' ', " ".join(self.texts))
+                else:
+                    # more data stripping
+                    self.text = regex.sub(MULTIPLE_ADJACENT_SPACES_REGEX, ' ', ' '.join(self.texts))
+                    self.text = regex.sub(OTHER_CHARS_TO_STRIP, '', self.text)
+            else:
+                self.text = sterilize(parts[2:])
         else:
             self.text = '\n'.join(self.lines.split('\n')[2:])
 

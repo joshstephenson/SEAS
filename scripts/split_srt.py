@@ -6,6 +6,8 @@ and aligns target subtitle file with same gaps.
 """
 
 import argparse
+import sys
+
 from src.helpers import get_text, collate_subs, find_in_range, find_partitions_equal_size, find_partitions_by_gap_size, \
     get_language_code_from_path
 import regex
@@ -69,6 +71,9 @@ def main(opts):
         partitions = find_partitions_equal_size(collated, opts.partition_count)
     else:
         partitions = find_partitions_by_gap_size(collated, opts.min_gap_length)
+    if len(partitions) == 0:
+        sys.stderr.write(f'Gap size is too large' + '\n')
+        exit(1)
     print_partitions(partitions, opts)
 
 

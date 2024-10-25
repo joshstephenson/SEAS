@@ -22,14 +22,7 @@ class Film:
         self.alignments = alignments
         stranded_subs = [sub.index for sub in self.source.subtitles]
         self.annotations = []
-        for sub in self.source.subtitles:
-            print(sub.lines)
-            print(sub.index)
-        for sub in self.target.subtitles:
-            print(sub.lines)
-            print(sub.index)
         for alignment in self.alignments.alignments:
-            print(alignment.source_ids)
             alignment.source_subs = [sub for sub in self.source.subtitles if sub.index in alignment.source_ids]
             alignment.target_subs = [sub for sub in self.target.subtitles if sub.index in alignment.target_ids]
             self.annotations.append(Annotation(alignment.source_subs,

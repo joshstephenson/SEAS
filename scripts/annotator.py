@@ -9,6 +9,7 @@ import argparse
 import os.path
 import subprocess
 import curses
+import sys
 from math import ceil
 
 from regex import regex
@@ -170,10 +171,6 @@ def main(opts, alignments):
     curses.wrapper(draw_ui, film.source.label, film.target.label)
 
 
-def run_vecalign(opts):
-    subprocess.run(['./scripts/run_vecalign.sh', opts.source, opts.target])
-
-
 def sent_files_for_srt(srt_file) -> (str, str):
     return srt_file.replace('.srt', '.sent'), srt_file.replace('.srt', '.sent-index')
 
@@ -206,11 +203,9 @@ if __name__ == '__main__':
     source_sent, source_sent_index = sent_files_for_srt(args.source)
     target_sent, target_sent_index = sent_files_for_srt(args.target)
     paths_file, alignments_file = alignment_files(args.source, args.target)
-    if not os.path.exists(alignments_file) or not os.path.exists(source_sent) or not os.path.exists(target_sent):
-        run_vecalign(args)
-
-    if not os.path.exists(alignments_file):
-        print(f"Failure running vecalign.\nFile does not exist: {alignments_file}")
+    if not os.path.exists(paths_file) or not os.path.exists(source_sent) or not os.path.exists(target_sent):
+        sys.stderr.write("Please run scripts/run_vecalign first." + '\n')
         exit(1)
+
     alignments = Alignments(paths_file, source_sent, source_sent_index, target_sent, target_sent_index)
     main(args, alignments)

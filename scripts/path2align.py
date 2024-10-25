@@ -16,11 +16,11 @@ def get_ids_from_str(id_string):
 
 
 def main(opts):
-    alignments_file = open(opts.alignments, 'r', encoding='utf-8')
+    path_file = open(opts.path_file, 'r', encoding='utf-8')
     source_file = open(opts.source, 'r', encoding='utf-8')
     target_file = open(opts.target, 'r', encoding='utf-8')
-    alignments = [a.strip() for a in alignments_file.readlines()]
-    alignments_file.close()
+    paths = [a.strip() for a in path_file.readlines()]
+    path_file.close()
 
     # Using np arrays because they allow passing arrays as indices
     source_sentences = np.array([l.strip() for l in source_file.readlines()])
@@ -29,8 +29,8 @@ def main(opts):
     source_file.close()
     target_file.close()
 
-    for line in alignments:
-        parts = line.split(':')
+    for path in paths:
+        parts = path.split(':')
         source_idx = get_ids_from_str(parts[0])
         target_idx = get_ids_from_str(parts[1])
         # sound_idx and target_idx are arrays
@@ -49,9 +49,9 @@ def main(opts):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--source', required=True)
-    parser.add_argument('-t', '--target', required=True)
-    parser.add_argument('-a', '--alignments', required=True)
+    parser.add_argument('-s', '--source', required=True, help='Source .sent file.')
+    parser.add_argument('-t', '--target', required=True, help='Target .sent file.')
+    parser.add_argument('-p', '--path-file', required=True, help='.path file with alignments')
     parser.add_argument('-j', '--join-token', default=' ', help="The token to join multiple sentences. Default is space.")
     parser.add_argument('-v', '--verbose', action='store_true', default=False, help="Print alignments even when they're one-sided")
     args = parser.parse_args()

@@ -20,4 +20,19 @@ else
 fi
 
 # Make sure not to match info.txt, .*gold.txt or original subtitles which have 4-10 digit names
-find -E "$SEARCH_PATH" -type f ! -iregex '.+gold.txt' ! -iname 'info.txt' ! -iregex '.*[0-9]{4,10}.srt' -exec rm -f {} \;
+find -E "$SEARCH_PATH" -type f \
+    ! -iregex '.+gold.txt' \
+    ! -iname 'info.txt' \
+    ! -iregex '.+vecalign.path' \
+    ! -iregex '.*[0-9]{4,10}.srt' \
+    ! -iregex '.*[0-9]{4,10}.sent' \
+    ! -iregex '.*[0-9]{4,10}.sent-index' \
+    -exec rm -f {} \;
+
+if [ "$2" == "-a" ]; then
+    find -E "$SEARCH_PATH" -type f \
+    ! -iregex '.+gold.txt' \
+    ! -iname 'info.txt' \
+    ! -iregex '.*[0-9]{4,10}.srt' \
+    -exec rm -f {} \;
+fi

@@ -3,23 +3,28 @@
 if [ -z "$SUBTITLE_REPO" ]; then
     echo "Please set SUBTITLE_REPO environment variable to the root of this repository."
 fi
-if [ $# -lt 2 ]; then
-    echo "Usage: $0 [source file] [target file]"
+if [ $# -lt 3 ]; then
+    echo "Usage: $0 [dirname] [source lang code] [target lang code]"
     exit 0
 fi
 
-source="$1"
-target="$2"
-base_dirname=$(dirname $(dirname "$source"))
-source_lang=$(dirname "$source" | awk -F/ '{print $NF}')
-target_lang=$(dirname "$target" | awk -F/ '{print $NF}')
+find_largest_srt() {
+    local directory=$1
+    find "$directory" -name "*.srt" -exec ls -lS {} + | head -n1 | awk -F' ' '{print $NF}'
+}
+
+base_dirname="$1"
+source_lang="$2"
+target_lang="$3"
+source=$(find_largest_srt "$base_dirname/$source_lang")
+target=$(find_largest_srt "$base_dirname/$target_lang")
 # Check for suffixes from partitioning subtitles
 suffix=''
 if [[ "$source" =~ .+-[0-9]{3}.srt ]]; then
     suffix=-$(echo "$source" | awk -F/ '{print $NF}' | sed s/\.srt//g | cut -d- -f2)
 fi
-#echo "source: $source"
-#echo "target: $target"
+echo "source: $source"
+echo "target: $target"
 echo "Detecting $source_lang --> $target_lang in Dir: $base_dirname"
 
 source_sent="${source/.srt/.sent}"
@@ -63,6 +68,6 @@ if [ -z "$LASER" ]; then
     exit 1
 fi
 
-$SUBTITLE_REPO/scripts/path2align.py -s "$source_sent" -t "$target_sent" -a "$path_file" > "$alignments_file" #2>/dev/null
+$SUBTITLE_REPO/scripts/path2align.py -s "$source_sent" -t "$target_sent" -p "$path_file" > "$alignments_file" #2>/dev/null
 echo "$path_file"
 echo "$alignments_file"

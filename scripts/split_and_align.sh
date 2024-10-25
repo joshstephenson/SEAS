@@ -10,88 +10,89 @@
 if [ -z "$SUBTITLE_REPO" ]; then
     echo "Please set SUBTITLE_REPO environment variable to the root of this repository."
 fi
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] ; then
+if [ "$#" -ne 4 ] ; then
     echo "Usage: $0 [title dir] [source lang code] [target lang code] [split gap length]"
     exit 0
 fi
 
-BASE_DIR="$1"
-SOURCE_LANG="$2"
-TARGET_LANG="$3"
-SPLIT_GAP_LENGTH="$4"
+base_dir="$1"
+source_lang="$2"
+target_lang="$3"
+split_gap_length="$4"
 
 # Find subtitle files
 # Subtile files are 8 or more digits with an .srt extension
-SOURCE=$(find -E "$BASE_DIR/$SOURCE_LANG" -iregex ".+[0-9]{8,}.srt" -exec ls -S {} \; | tail -n 1)
-TARGET=$(find -E "$BASE_DIR/$TARGET_LANG" -iregex ".+[0-9]{8,}.srt" -exec ls -S {} \; | tail -n 1)
-echo "SOURCE: $SOURCE"
-echo "TARGET: $TARGET"
+source=$(find -E "$base_dir/$source_lang" -iregex ".+[0-9]{8,}.srt" -exec ls -S {} \; | tail -n 1)
+target=$(find -E "$base_dir/$target_lang" -iregex ".+[0-9]{8,}.srt" -exec ls -S {} \; | tail -n 1)
+echo "source: $source"
+echo "target: $target"
 
 # Remove old splits
-$SUBTITLE_REPO/scripts/cleanup.sh "$BASE_DIR"
+$SUBTITLE_REPO/scripts/cleanup.sh "$base_dir"
 
 # Now split them
-$SUBTITLE_REPO/scripts/split_srt.py -s "$SOURCE" -t "$TARGET" -g "$SPLIT_GAP_LENGTH"
+$SUBTITLE_REPO/scripts/split_srt.py -s "$source" -t "$target" -g "$split_gap_length"
 
-SOURCE_FILES=$(find -E "$BASE_DIR/$SOURCE_LANG" -iregex '.+-[0-9]{3}.srt' | sort)
+#source_files=$(find -E "$base_dir/$source_lang" -iregex '.+-[0-9]{3}.srt' | sort)
+mapfile -t source_files < <(find -E "$base_dir/$source_lang" -iregex '.+-[0-9]{3}.srt' | sort)
+echo "Generated ${#source_files[@]} splits"
 
 # First do the align script for timecode-based alignments
 # We don't split the files for this
-TIME_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-timecode.txt"
-$SUBTITLE_REPO/scripts/run_chronos.py -s "$SOURCE" -t "$TARGET" > "$TIME_FILE"
+time_file="$base_dir/${source_lang}-${target_lang}-chronos.txt"
+$SUBTITLE_REPO/scripts/run_chronos.py -s "$source" -t "$target" > "$time_file"
 
-for SOURCE in ${SOURCE_FILES[@]}; do
-    INFIX=$(echo $SOURCE | cut -d- -f2 | cut -d. -f1)
-    TARGET="$(find -E "$BASE_DIR/$TARGET_LANG" -iregex ".+[0-9]{8,}-$INFIX.srt" -exec ls -S {} \; | tail -n 1)"
-    SOURCE_SENT="${SOURCE/.srt/.sent}"
-    TARGET_SENT="${TARGET/.srt/.sent}"
-#    TIME_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-timecode-${INFIX}.txt"
-    PATH_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vecalign-${INFIX}.path"
-    ALIGNMENTS_FILE="$BASE_DIR/${SOURCE_LANG}-${TARGET_LANG}-vecalign-${INFIX}.txt"
-#    echo "$SOURCE"
-#    echo "$TARGET"
-#    echo "$SOURCE_SENT"
-#    echo "$TARGET_SENT"
-#    echo "$TIME_FILE"
-#    echo "$PATH_FILE"
-#    echo "$ALIGNMENTS_FILE"
+for source in "${source_files[@]}"; do
+    infix=$(echo $source | cut -d- -f2 | cut -d. -f1)
+    target="$(find -E "$base_dir/$target_lang" -iregex ".+[0-9]{8,}-$infix.srt" -exec ls -S {} \; | tail -n 1)"
+    source_sent="${source/.srt/.sent}"
+    target_sent="${target/.srt/.sent}"
+    path_file="$base_dir/${source_lang}-${target_lang}-vecalign-${infix}.path"
+    alignments_file="$base_dir/${source_lang}-${target_lang}-vecalign-${infix}.txt"
+#    echo "$source"
+#    echo "$target"
+#    echo "$source_sent"
+#    echo "$target_sent"
+#    echo "$time_file"
+#    echo "$path_file"
+#    echo "$alignments_file"
 
     # Skip this Split because it doesn't have any subtitles to align
-    if [ ! -s "$SOURCE" ] || [ ! -s "$TARGET" ]; then
-        echo "SKIPPING ${INFIX}" >&2
+    if [ ! -s "$source" ] || [ ! -s "$target" ]; then
+        echo "SKIPPING ${infix}" >&2
         continue
     else
-        "$SUBTITLE_REPO/scripts/srt2sent.py" -f "$SOURCE" -l "$SOURCE_LANG" > "$SOURCE_SENT"
-        "$SUBTITLE_REPO/scripts/srt2sent.py" -f "$TARGET" -l "$TARGET_LANG" > "$TARGET_SENT"
+        "$SUBTITLE_REPO/scripts/srt2sent.py" -f "$source" -l "$source_lang" > "$source_sent"
+        "$SUBTITLE_REPO/scripts/srt2sent.py" -f "$target" -l "$target_lang" > "$target_sent"
         # Even though the subtitle file wasn't empty, the sent file still can be if everything was scrubbed in preprocessing
-        if [ ! -s "$SOURCE_SENT" ] || [ ! -s "$TARGET_SENT" ]; then
-            echo "SKIPPING ${INFIX} after sentence generation." >&2
+        if [ ! -s "$source_sent" ] || [ ! -s "$target_sent" ]; then
+            echo "SKIPPING ${infix} after sentence generation." >&2
             continue
         fi
     fi
-    echo "SPLIT: $INFIX"
+    echo "SPLIT: $infix"
 
-    echo "$TARGET_SENT"
-    if [ ! -s "$PATH_FILE" ]; then
-        if ! "$SUBTITLE_REPO/scripts/sent2path.sh" "$SOURCE_SENT" "$TARGET_SENT" | grep -v "| INFO |" > "$PATH_FILE"; then
+    echo "$target_sent"
+    if [ ! -s "$path_file" ]; then
+        if ! "$SUBTITLE_REPO/scripts/sent2path.sh" "$source_sent" "$target_sent" | grep -v "| INFO |" > "$path_file"; then
             echo "Failed to generated path file."
             exit 1
         fi
     fi
-    echo "$PATH_FILE"
-    if [ ! -s "$ALIGNMENTS_FILE" ]; then
-        if ! "$SUBTITLE_REPO/scripts/path2align.py" -s "$SOURCE_SENT" -t "$TARGET_SENT" -a "$PATH_FILE" > "$ALIGNMENTS_FILE"; then
+    echo "$path_file"
+    if [ ! -s "$alignments_file" ]; then
+        if ! "$SUBTITLE_REPO/scripts/path2align.py" -s "$source_sent" -t "$target_sent" -p "$path_file" > "$alignments_file"; then
             echo "Failed to generate alignments f ile."
             exit 1
         fi
     fi
 done
-ALIGNMENTS_FILE="$BASE_DIR/$SOURCE_LANG-$TARGET_LANG-vecalign.txt"
-GOLD_FILE="$BASE_DIR/$SOURCE_LANG-$TARGET_LANG-gold.txt"
+alignments_file="$base_dir/$source_lang-$target_lang-vecalign.txt"
+gold_file="$base_dir/$source_lang-$target_lang-gold.txt"
 
 # Combine the vector alignments
-cat "$BASE_DIR/$SOURCE_LANG-$TARGET_LANG"-vecalign-*.txt > "$ALIGNMENTS_FILE"
+cat "$base_dir/$source_lang-$target_lang"-vecalign-*.txt > "$alignments_file"
 
-#"$SUBTITLE_REPO/scripts/results_analyzer.py" -f "$TIME_FILE" "$ALIGNMENTS_FILE" -o "$GOLD_FILE" -a
+#"$SUBTITLE_REPO/scripts/results_analyzer.py" -f "$time_file" "$alignments_file" -o "$gold_file" -a
 
 
