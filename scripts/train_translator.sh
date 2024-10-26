@@ -70,7 +70,7 @@ fi
 echo ""
 mkdir -p "$dir/tokens"
 # Now tokenize the files with the tokenizer
-find -E "$dir" -iregex ".+\.($source|$target)" | grep -v 'tok' | grep -v 'all' | while read -r file; do
+find "$dir" | grep -E ".+\.($source|$target)" | grep -v 'tok' | grep -v 'all' | while read -r file; do
     line_count=$(wc -l < "$file" | tr -d ' ')
     base_file=$(basename "$file")
     base="${base_file%.*}"
