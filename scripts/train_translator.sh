@@ -2,6 +2,7 @@
 
 if [ -z "$SUBTITLE_REPO" ]; then
     echo "Please set SUBTITLE_REPO environment variable to the root of this repository."
+    exit 1
 fi
 usage() {
     echo "Usage: $0 [alignments filename]"
