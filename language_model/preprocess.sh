@@ -100,3 +100,4 @@ if [ "$count" -eq 0 ]; then
         --destdir="$dir/preprocessed" \
             || exit 1
 fi
+echo "Done preprocessing. Ready for training."
