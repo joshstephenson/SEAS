@@ -100,12 +100,3 @@ if [ "$count" -eq 0 ]; then
         --destdir="$dir/preprocessed" \
             || exit 1
 fi
-
-# Train the model
-fairseq-train \
-    "$dir/preprocessed" \
-    --arch transformer \
-    --dropout 0.2 \
-    --scoring sacrebleu \
-    --max-tokens=8192 \
-    --optimizer=adam
