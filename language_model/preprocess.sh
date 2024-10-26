@@ -56,30 +56,48 @@ if [ ! -s "$dir/train.$source" ]; then
 fi
 
 # Now we can tokenize them
-MODEL_FILE="$dir/$source-$target.model"
-VOCAB_FILE="$dir/$source-$target.vocab"
-if [ ! -s "$MODEL_FILE" ] || [ ! -s "$VOCAB_FILE" ]; then
+source_model_file="$dir/$source.model"
+target_model_file="$dir/$target.model"
+source_vocab_file="$dir/$source.vocab"
+target_vocab_file="$dir/$target.vocab"
+if [ ! -s "$source_model_file" ] || [ ! -s "$target_model_file" ]; then
     echo "Training tokenizer..."
-    cat "$dir/all.$source" "$dir/all.$target" >> "$dir/all.both"
     "$SUBTITLE_REPO/spm/spm_train.py" \
-        --input="$dir/all.both" \
-        --model-prefix="$dir/$source-$target" \
+        --input="$dir/all.$source" \
+        --model-prefix="$dir/$source" \
         || exit 1
-    rm "$dir/all.both"
+    "$SUBTITLE_REPO/spm/spm_train.py" \
+        --input="$dir/all.$target" \
+        --model-prefix="$dir/$target" \
+        || exit 1
 fi
 echo ""
 mkdir -p "$dir/tokens"
 # Now tokenize the files with the tokenizer
-find "$dir" | grep -E ".+\.($source|$target)" | grep -v 'tok' | grep -v 'all' | while read -r file; do
+find "$dir" | grep -E ".+\.$source" | grep -v 'tok' | grep -v 'all' | while read -r file; do
     line_count=$(wc -l < "$file" | tr -d ' ')
     base_file=$(basename "$file")
-    base="${base_file%.*}"
-    ext="${base_file##*.}"
-    tokens_file="$dir/tokens/${base}.tok.${ext}"
+    tokens_file="$dir/tokens/${base_file//.$source/.tok.$source}"
     if [ ! -s "$tokens_file" ]; then
         echo "Encoding $file..."
         "$SUBTITLE_REPO/spm/spm_encode.py" \
-        --model="$MODEL_FILE" \
+        --model="$source_model_file" \
+        --input="$file" \
+        --output="$tokens_file" \
+        --line-count="$line_count" \
+            || exit 1
+    fi
+done
+
+find "$dir" | grep -E ".+\.$target" | grep -v 'tok' | grep -v 'all' | while read -r file; do
+    line_count=$(wc -l < "$file" | tr -d ' ')
+    base_file=$(basename "$file")
+    base="${base_file%.*}"
+    tokens_file="$dir/tokens/${base_file//.$target/.tok.$target}"
+    if [ ! -s "$tokens_file" ]; then
+        echo "Encoding $file..."
+        "$SUBTITLE_REPO/spm/spm_encode.py" \
+        --model="$target_model_file" \
         --input="$file" \
         --output="$tokens_file" \
         --line-count="$line_count" \
@@ -88,9 +106,10 @@ find "$dir" | grep -E ".+\.($source|$target)" | grep -v 'tok' | grep -v 'all' | 
 done
 
 # Fairseq preprocessing
+echo "Preprocessing..."
+mkdir -p "$dir/preprocessed"
 count=$(ls "$dir/preprocessed" | wc -l)
-if [ "$count" -eq 0 ]; then
-    mkdir -p "$dir/preprocessed"
+if [ "$count" -lt 2 ]; then
     fairseq-preprocess \
         --source-lang "$source" \
         --target-lang "$target" \
@@ -98,6 +117,7 @@ if [ "$count" -eq 0 ]; then
         --validpref="$dir/tokens/valid.tok" \
         --testpref="$dir/tokens/test.tok" \
         --destdir="$dir/preprocessed" \
+        --optimizer="adam" \
             || exit 1
 fi
 echo "Done preprocessing. Ready for training."
