@@ -9,6 +9,8 @@ dir="$SUBTITLE_REPO/language_model/data"
 # Train the model
 fairseq-train \
     "$dir/preprocessed" \
+    --source-lang="eng" \
+    --target-lang="spa" \
     --arch transformer \
     --dropout 0.2 \
     --scoring sacrebleu \
