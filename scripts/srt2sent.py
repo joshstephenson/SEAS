@@ -4,12 +4,9 @@ Extract sentences from SRT file after preprocessing. Writes to STDOUT.
 """
 import argparse
 import os
-import regex
-from nltk import sent_tokenize
 
 from src.helpers import get_text
 from src.languages import Languages
-from src.subtitle import sterilize
 from src.subtitles import Subtitles
 
 

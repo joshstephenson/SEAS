@@ -244,6 +244,9 @@ class Subtitle:
         return (lower_count > 1) or (lower_count >= 1 and upper_count >= 1)
 
     def delay_timecodes(self, offset):
+        """
+        :param offset: offset in microseconds
+        """
         self.start = self.start + offset
         self.end = self.end + offset
         self.timestring = f'{microseconds_to_string(self.start)}{TIMECODE_SEPARATOR}{microseconds_to_string(self.end)}'

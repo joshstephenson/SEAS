@@ -10,14 +10,12 @@ from regex import regex
 
 from src.alignments import Alignments
 from src.film import Film
-from src.helpers import get_text
+from src.helpers import get_text, get_language_code_from_path
 from src.subtitles import Subtitles
-
-OFFSET_MIN = 2 * 1e6
 
 
 def run_vecalign(opts):
-    subprocess.check_output(['./scripts/run_vecalign.sh', opts.source, opts.target, '--skip-partitioning'])
+    subprocess.check_output(['./scripts/run_vecalign.sh', opts.source, opts.target, '--skip-partitioning', '>&2'])
 
 
 def sent_files_for_srt(srt_file) -> (str, str):
@@ -57,8 +55,8 @@ def fix_offset(opts, film, offset):
     target_text = get_text(opts.target)
 
     # Create Subtitle objects from the file texts
-    source_subs = Subtitles(source_text, is_source=True)
-    target_subs = Subtitles(target_text, is_source=False)
+    source_subs = Subtitles(source_text, language=get_language_code_from_path(opts.source), is_source=True)
+    target_subs = Subtitles(target_text, language=get_language_code_from_path(opts.target), is_source=False)
 
     # We won't ever advance subtitles, only delay them
     if offset > 0:
@@ -66,13 +64,14 @@ def fix_offset(opts, film, offset):
     else:  # push source subtitles forward
         delay_and_save(opts.source, source_subs, offset)
 
+
 def main(opts, film: Film):
     offset = film.calculated_offset()
-    if offset > OFFSET_MIN:
-        sys.stderr.write(f'Calculated offset of {offset} is greater than {OFFSET_MIN}.\n')
+    if offset > opts.tolerance * 1e6:
+        sys.stderr.write(f'Calculated offset of {offset} is greater than {opts.tolerance}.\n')
         fix_offset(opts, film, offset)
     else:
-        sys.stderr.write(f'Calculated offset of {offset} is not greater than {OFFSET_MIN}\n')
+        sys.stderr.write(f'Calculated offset of {offset} is not greater than {opts.tolerance}\n')
 
 
 if __name__ == '__main__':
@@ -80,8 +79,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--source', required=True, help='Source subtitle file.')
     parser.add_argument('-t', '--target', required=True, help='Target subtitle file.')
-    parser.add_argument('-i', '--ignore-empty', required=False, action='store_true',
-                        help='Don\'t print subtitles with no valid content.')
+    parser.add_argument('--tolerance', default=2, type=float, help='Seconds to allow before correcting.')
+
     args = parser.parse_args()
 
     source_sent, source_sent_index = sent_files_for_srt(args.source)
@@ -90,8 +89,8 @@ if __name__ == '__main__':
     run_vecalign(args)
 
     paths_file, alignments_file = alignment_files(args.source, args.target)
-    if not os.path.exists(alignments_file):
-        print(f"Failure running vecalign.\nFile does not exist: {alignments_file}")
+    if not os.path.exists(paths_file):
+        print(f"Failure running vecalign.\nFile does not exist: {paths_file}")
         exit(1)
     alignments = Alignments(paths_file, source_sent, source_sent_index, target_sent, target_sent_index)
     film = Film(args.source, args.target, alignments)

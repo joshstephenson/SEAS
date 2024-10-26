@@ -32,17 +32,14 @@ gold_file="$base_dir/${source_lang}-${target_lang}.gold"
 if [ ! -s "$time_file" ]; then
     $SUBTITLE_REPO/scripts/run_chronos.py -s "$source" -t "$target" > "$time_file"
 fi
-echo "$time_file"
 #
 # That was fast, now do the embedding method
 if [ ! -s "$source_sent" ]; then
     $SUBTITLE_REPO/scripts/srt2sent.py -f "$source" -l "$source_lang" > "$source_sent"
 fi
-echo "$source_sent"
 if [ ! -s "$target_sent" ]; then
     $SUBTITLE_REPO/scripts/srt2sent.py -f "$target" -l "$target_lang" > "$target_sent"
 fi
-echo "$target_sent"
 if [ ! -s "$path_file" ]; then
     $SUBTITLE_REPO/scripts/sent2path.sh "$source_sent" "$target_sent" | grep -v "| INFO |" > "$path_file" #2>/dev/null
 fi

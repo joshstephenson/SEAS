@@ -6,19 +6,30 @@
 # title).
 # At the end it will find the longest alignment file and delete the rest leaving just eng-spa.txt
 #
-FINDPATH=$1
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 [directory] [source lang] [target lang]"
+    exit 1
+fi
+findpath="$1"
+source_lang="$2"
+target_lang="$3"
+find_best="$4"
 
-if [ ! -d "$FINDPATH" ]; then
+stderrfile=/tmp/corpus_generator.err
+corpus_file="$findpath/all.txt"
+rm "$corpus_file" 2>/dev/null
+
+if [ ! -d "$findpath" ]; then
     echo "You must provide the path to the directory of one of the years of films."
     exit 1
 fi
 
 has_language_support() {
-    DIR="$1"; shift
-    LANGS="$@"
-    for LANG in $LANGS; do
-        if [ ! -d "$DIR/$LANG" ]; then
-#            echo "Doesn't have $LANG"
+    dir="$1"; shift
+    langs="$@"
+    for lang in $langs; do
+        if [ ! -d "$dir/$lang" ]; then
+#            echo "Doesn't have $lang"
             return 1
         fi
     done
@@ -26,68 +37,78 @@ has_language_support() {
 }
 
 first_srt_for() {
-    DIR="$1"
-    LANG="$2"
-    echo $(find "$DIR/$LANG/" -iname "*.srt" | head -n 1)
+    dir="$1"
+    lang="$2"
+    find "$dir/$lang" -name "*.srt" -exec ls -lS {} + | head -n1 | awk -F' ' '{print $NF}'
 }
 
 all_srt_for() {
-    DIR="$1"
-    LANG="$2"
-    echo $(find "$DIR/$LANG/" -iname "*.srt")
+    dir="$1"
+    lang="$2"
+    echo $(find "$dir/$lang/" -iname "*.srt")
 }
 
-TEMPFILE=/tmp/corpus_counter.tmp
-STDERRFILE=/tmp/corpus_generator.err
-echo 0 > $TEMPFILE
-find "$FINDPATH" -d 1 -type d | while read -r DIR; do
-    TITLE=$(head -n1 "$DIR/info.txt" | sed 's/^TITLE: //')
-#    echo "Looking for language support for film: $TITLE"
-
-    if has_language_support "$DIR" eng spa; then
-        COUNT=1
-        GENERATED=()
-        for ENG_FILE in $(all_srt_for "$DIR" "eng"); do
-            for SPA_FILE in $(all_srt_for "$DIR" "spa"); do
-                echo "$ENG_FILE"
-                echo "$SPA_FILE"
-                OUT_FILE="$DIR/eng_spa-$COUNT.txt"
-                # Run the alignment script
-                if ./align.py \
-                    -s "$ENG_FILE" \
-                    -t "$SPA_FILE"  > "$OUT_FILE" ; then # 2> "$STDERRFILE"
-                    GENERATED+=("$OUT_FILE")
-                    COUNT=$((COUNT+1))
-                else
-                    exit 1
-                    # If alignment fails, remove the output file
-                    rm -f "$OUT_FILE"
-                    if grep 'No module named' "$STDERRFILE"; then
-                        echo "You need to activate the python environment"
-                        exit 1
-                    fi
+run_best_alignments() {
+    dir="$1"
+    source_lang="$2"
+    target_lang="$3"
+    longest=
+    for source_file in $(all_srt_for "$dir" "$source_lang"); do
+        for target_file in $(all_srt_for "$dir" "$target_lang"); do
+            ./scripts/run_vecalign.sh "$source_file" "$target_file" 2> "$stderrfile"
+            out_file="$dir/$source_lang-$target_lang-vecalign.txt"
+            # fix_offset also runs run_vecalign, so we should have the alignments file already
+            if [ -s "$out_file" ]; then
+                count=$(wc -l < "$out_file")
+                if [ -z "$longest" ] || [ "$count" -gt "$longest" ]; then
+                    echo "Longest alignments: $count" >&2
+                    longest="$count"
+                    keeper="${out_file//.txt/_keeper.txt}"
+                    cp "$out_file" "$keeper"
                 fi
-            done
-        done
-
-        # Save the largest file
-        if [ "${#GENERATED[@]}" -ne 0 ]; then
-            LARGEST=$(ls -S "${GENERATED[@]}" | head -n 1)
-            NEW="${LARGEST//-*.txt/.txt}"
-            mv "$LARGEST" "$NEW"
-            if [ -s "$NEW" ]; then
-                for FILE in "${GENERATED[@]}"; do
-                    if [ -f "$FILE" ]; then
-                        rm -f "$FILE"
-                    fi
-                done
-                SHORT_PATH="$(basename "$DIR")/$(basename "$NEW")"
-                echo "Saved (1/${#GENERATED[@]}) to: $SHORT_PATH"
-                TOTAL=$[$(cat $TEMPFILE) + 1]
-                echo $TOTAL > $TEMPFILE
+            else
+                # If alignment fails, remove the output file
+                rm -f "$out_file"
+                if grep 'No module named' "$stderrfile"; then
+                    echo "You need to activate the python environment" >&2
+                else
+                    echo "Error occurred running vecalign" >&2
+                    cat "$stderrfile"
+                fi
+                exit 1
             fi
+        done
+    done
+    mv "$keeper" "$out_file"
+    cat "$out_file" >> "$corpus_file"
+}
+
+run_simple_alignments() {
+    dir="$1"
+    source_lang="$2"
+    target_lang="$3"
+    title="$4"
+    source_file=$(first_srt_for "$dir" "$source_lang")
+    target_file=$(first_srt_for "$dir" "$target_lang")
+#    echo "$source_file"
+#    echo "$target_file"
+    ./scripts/run_vecalign.sh "$source_file" "$target_file" 2> "$stderrfile"
+    out_file="$dir/$source_lang-$target_lang-vecalign.txt"
+    if [ -s "$out_file" ]; then
+        cat "$out_file" >> "$corpus_file"
+        count=$(echo "$(wc -l < "$out_file")" / 3 | bc )
+        count2=$(echo "$(wc -l < "$corpus_file")" / 3 | bc )
+        echo "Appending $count from $title. Total: $count2."
+    fi
+}
+
+find "$findpath" -d 1 -type d | sort | while read -r dir; do
+    title=$(head -n1 "$dir/info.txt" | sed 's/^title: //')
+    if has_language_support "$dir" "$source_lang" "$target_lang"; then
+        if [ -n "$find_best" ]; then
+            run_best_alignments "$dir" "$source_lang" "$target_lang"
+        else
+            run_simple_alignments "$dir" "$source_lang" "$target_lang" "$title"
         fi
     fi
 done
-
-echo "Aligned $(cat $TEMPFILE) Movies in eng -> spa"
