@@ -118,6 +118,7 @@ if [ "$count" -lt 2 ]; then
         --testpref="$dir/tokens/test.tok" \
         --destdir="$dir/preprocessed" \
         --optimizer="adam" \
+        --find-unused-parameters \
             || exit 1
 fi
 echo "Done preprocessing. Ready for training."
