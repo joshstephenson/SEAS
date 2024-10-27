@@ -14,6 +14,6 @@ fairseq-train \
     --arch transformer \
     --dropout 0.2 \
     --scoring sacrebleu \
-    --max-tokens=8192 \
+    --max-tokens=4096 \
     --find-unused-parameters \
     --optimizer=adam
