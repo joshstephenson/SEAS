@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+seed=1234
+
 if [ -z "$SUBTITLE_REPO" ]; then
     echo "Please set SUBTITLE_REPO environment variable to the root of this repository."
     exit 1
@@ -120,11 +122,15 @@ if [ "$count" -lt 2 ]; then
     fairseq-preprocess \
         --source-lang "$source" \
         --target-lang "$target" \
+        --srcdict="$source_vocab_file" \
+        --tgtdict="$target_vocab_file" \
+        --seed "$seed" \
+        --thresholdsrc=1 \
+        --thresholdtgt=1 \
         --trainpref="$dir/tokens/train.tok" \
         --validpref="$dir/tokens/valid.tok" \
         --testpref="$dir/tokens/test.tok" \
         --destdir="$dir/preprocessed" \
-        --optimizer="adam" \
             || exit 1
 fi
 echo "Done preprocessing. Ready for training."
