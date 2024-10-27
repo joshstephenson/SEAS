@@ -66,10 +66,17 @@ if [ ! -s "$source_model_file" ] || [ ! -s "$target_model_file" ]; then
         --input="$dir/all.$source" \
         --model-prefix="$dir/$source" \
         || exit 1
+    # Omitting special tokens <unk>, <s>, </s> replace all numbers in 2nd column with 100
+    tail -n +4 "$source_vocab_file" | cut -f 1 | sed "s/$/ 100/g" > "${source_vocab_file}.tmp"
+    mv -f "${source_vocab_file}.tmp" "$source_vocab_file"
+
     "$SUBTITLE_REPO/spm/spm_train.py" \
         --input="$dir/all.$target" \
         --model-prefix="$dir/$target" \
         || exit 1
+    # Omitting special tokens <unk>, <s>, </s> replace all numbers in 2nd column with 100
+    tail -n +4 "$target_vocab_file" | cut -f 1 | sed "s/$/ 100/g" > "${target_vocab_file}.tmp"
+    mv -f "${target_vocab_file}.tmp" "$target_vocab_file"
 fi
 echo ""
 mkdir -p "$dir/tokens"
