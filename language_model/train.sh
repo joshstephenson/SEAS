@@ -15,4 +15,5 @@ fairseq-train \
     --dropout 0.2 \
     --scoring sacrebleu \
     --max-tokens=8192 \
+    --find-unused-parameters \
     --optimizer=adam
