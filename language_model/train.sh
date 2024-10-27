@@ -25,7 +25,7 @@ CUDA_VISIBLE_DEVICES=0 fairseq-train \
     --encoder-normalize-before \
     --encoder-ffn-embed-dim=1024 \
     --decoder-layers=6 \
-    --decoder-embed-dim=256
+    --decoder-embed-dim=256 \
     --decoder-attention-heads=8 \
     --decoder-normalize-before \
     --decoder-ffn-embed-dim=1024 \
