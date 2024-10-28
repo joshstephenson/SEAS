@@ -22,14 +22,14 @@ if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
             || exit 1
 fi
 
-grep '^H-' "$dir/predictions-spa.txt" | \
-    # strip the first 2 characters
-    cut -c 3- | \
-    # sort them numerically
-    sort -n -k 1 | \
-    # print only the last field
-    awk -F '\t' '{print $NF}' | \
-    # Remove whitespace and then replace underscores with whitespace (order here matters)
-    sed -e 's/[[:space:]]*//g' -e 's/[▁_]/ /g' | \
-    # Strip leading whitespace from the tokenization above and redirect to prediction file
-    sed -e 's/^ //g' #> "${PRED_FILE}"
+#grep '^H-' "$dir/predictions-spa.txt" | \
+#    # strip the first 2 characters
+#    cut -c 3- | \
+#    # sort them numerically
+#    sort -n -k 1 | \
+#    # print only the last field
+#    awk -F '\t' '{print $NF}' | \
+#    # Remove whitespace and then replace underscores with whitespace (order here matters)
+#    sed -e 's/[[:space:]]*//g' -e 's/[▁_]/ /g' | \
+#    # Strip leading whitespace from the tokenization above and redirect to prediction file
+#    sed -e 's/^ //g' #> "${PRED_FILE}"
