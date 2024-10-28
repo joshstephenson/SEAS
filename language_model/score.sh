@@ -17,7 +17,7 @@ if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
         --gen-subset="test" \
         --beam=5 \
         --batch-size=256 \
-        grep '^H-' | cut -c 3- | awk -F '\t' '{print $NF}' \
+        | grep '^H-' | cut -c 3- | awk -F '\t' '{print $NF}' \
             > "$dir/predictions-spa.txt" \
             || exit 1
 fi
