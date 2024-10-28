@@ -16,7 +16,7 @@ if [ ! -s "$dir/predictions-spa.txt" ]; then
             || exit 1
 else
     echo "$dir/predictions-spa.txt exists."
-    read -pr "Do you want to proceed?" confirm
+    read -p "Do you want to proceed? (y/n) " confirm
     if [ "$confirm" != 'y' ]; then
         exit 0
     fi
