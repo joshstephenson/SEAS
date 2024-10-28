@@ -105,10 +105,12 @@ run_simple_alignments() {
 find "$findpath" -d 1 -type d | sort | while read -r dir; do
     title=$(head -n1 "$dir/info.txt" | sed 's/^title: //')
     if has_language_support "$dir" "$source_lang" "$target_lang"; then
-        if [ -n "$find_best" ]; then
-            run_best_alignments "$dir" "$source_lang" "$target_lang"
-        else
-            run_simple_alignments "$dir" "$source_lang" "$target_lang" "$title"
+        if [ ! -s "$dir/$source_lang-$target_lang-vecalign.txt" ]; then
+            if [ -n "$find_best" ]; then
+                run_best_alignments "$dir" "$source_lang" "$target_lang"
+            else
+                run_simple_alignments "$dir" "$source_lang" "$target_lang" "$title"
+            fi
         fi
     fi
 done

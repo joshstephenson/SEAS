@@ -208,3 +208,6 @@ language_model/data/preprocessed/dict.spa.txt
 language_model/data/preprocessed/dict.eng.txt
 language_model/data/eng.vocab
 language_model/data/eng.model
+checkpoints
+language_model/data/predictions-spa.txt
+predictions-spa-cleaned.txt
