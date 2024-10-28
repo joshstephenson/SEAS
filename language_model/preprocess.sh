@@ -63,55 +63,37 @@ target_model_file="$dir/$target.model"
 source_vocab_file="$dir/$source.vocab"
 target_vocab_file="$dir/$target.vocab"
 if [ ! -s "$source_model_file" ] || [ ! -s "$target_model_file" ]; then
-    echo "Training tokenizer..."
-    "$SUBTITLE_REPO/spm/spm_train.py" \
-        --input="$dir/all.$source" \
-        --model-prefix="$dir/$source" \
-        || exit 1
-    # Omitting special tokens <unk>, <s>, </s> replace all numbers in 2nd column with 100
-    tail -n +4 "$source_vocab_file" | cut -f 1 | sed "s/$/ 100/g" > "${source_vocab_file}.tmp"
-    mv -f "${source_vocab_file}.tmp" "$source_vocab_file"
-
-    "$SUBTITLE_REPO/spm/spm_train.py" \
-        --input="$dir/all.$target" \
-        --model-prefix="$dir/$target" \
-        || exit 1
-    # Omitting special tokens <unk>, <s>, </s> replace all numbers in 2nd column with 100
-    tail -n +4 "$target_vocab_file" | cut -f 1 | sed "s/$/ 100/g" > "${target_vocab_file}.tmp"
-    mv -f "${target_vocab_file}.tmp" "$target_vocab_file"
+    for set in $source $target; do
+        echo "Training $set tokenizer..."
+        "$SUBTITLE_REPO/spm/spm_train.py" \
+            --input="$dir/all.$set" \
+            --model-prefix="$dir/$set" \
+            --vocab-size=16000 \
+            || exit 1
+        # Omitting special tokens <unk>, <s>, </s> replace all numbers in 2nd column with 100
+        tail -n +4 "${dir}/${set}.vocab" | cut -f 1 | sed "s/$/ 100/g" > "${dir}/${set}.vocab.tmp"
+        mv -f "${dir}/${set}.vocab.tmp" "${dir}/${set}.vocab"
+    done
 fi
-echo ""
-mkdir -p "$dir/tokens"
-# Now tokenize the files with the tokenizer
-find "$dir" | grep -E ".+\.$source" | grep -v 'tok' | grep -v 'all' | while read -r file; do
-    line_count=$(wc -l < "$file" | tr -d ' ')
-    base_file=$(basename "$file")
-    tokens_file="$dir/tokens/${base_file//.$source/.tok.$source}"
-    if [ ! -s "$tokens_file" ]; then
-        echo "Encoding $file..."
-        "$SUBTITLE_REPO/spm/spm_encode.py" \
-        --model="$source_model_file" \
-        --input="$file" \
-        --output="$tokens_file" \
-        --line-count="$line_count" \
-            || exit 1
-    fi
-done
+echo -e "\nFinished training tokenizers: $source $target"
 
-find "$dir" | grep -E ".+\.$target" | grep -v 'tok' | grep -v 'all' | while read -r file; do
-    line_count=$(wc -l < "$file" | tr -d ' ')
-    base_file=$(basename "$file")
-    base="${base_file%.*}"
-    tokens_file="$dir/tokens/${base_file//.$target/.tok.$target}"
-    if [ ! -s "$tokens_file" ]; then
-        echo "Encoding $file..."
-        "$SUBTITLE_REPO/spm/spm_encode.py" \
-        --model="$target_model_file" \
-        --input="$file" \
-        --output="$tokens_file" \
-        --line-count="$line_count" \
-            || exit 1
-    fi
+# Now tokenize the files with the tokenizer
+mkdir -p "$dir/tokens"
+for set in $source $target; do
+    find "$dir" | grep -E ".+\.$set" | grep -v '.tok.' | grep -v 'all' | while read -r file; do
+        line_count=$(wc -l < "$file" | tr -d ' ')
+        base_file=$(basename "$file")
+        tokens_file="$dir/tokens/${base_file//.$set/.tok.$set}"
+        if [ ! -s "$tokens_file" ]; then
+            echo "Encoding $file..."
+            "$SUBTITLE_REPO/spm/spm_encode.py" \
+            --model="${dir}/${set}.model" \
+            --input="$file" \
+            --output="$tokens_file" \
+            --line-count="$line_count" \
+                || exit 1
+        fi
+    done
 done
 
 # Fairseq preprocessing

@@ -10,7 +10,7 @@ dir="$SUBTITLE_REPO/language_model/data"
 # Train the model
 CUDA_VISIBLE_DEVICES=0 fairseq-train \
     "$dir/preprocessed" \
-    --max-epoch=50 \
+    --max-epoch=70 \
     --seed=1234 \
     --activation-fn="relu" \
     --source-lang="eng" \
@@ -34,7 +34,6 @@ CUDA_VISIBLE_DEVICES=0 fairseq-train \
     --warmup-updates=4000 \
     --warmup-init-lr='1e-07' \
     --label-smoothing=0.1 \
-    --dropout=0.3 \
     --weight-decay=0.0001 \
     --criterion=label_smoothed_cross_entropy \
     --label-smoothing=0.1 \
