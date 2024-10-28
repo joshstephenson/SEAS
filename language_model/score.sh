@@ -12,8 +12,8 @@ fi
 
 if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
     fairseq-interactive \
+        "$dir/preprocessed" \
         --input="$dir/test.$source" \
-        --data="$dir/preprocessed" \
         --source-lang="eng" \
         --target-lang="spa" \
         --path="./checkpoints/checkpoint_best.pt" \
