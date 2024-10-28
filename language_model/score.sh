@@ -15,6 +15,7 @@ if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
     rm -f "$pred_file" 2>/dev/null
     cat "$dir/tokens/test.tok.$source" | head -n 1000 \
     | fairseq-interactive \
+        "$dir/preprocessed" \
         --source-lang="$source" \
         --target-lang="$target" \
         --path="./checkpoints/checkpoint_best.pt" \
