@@ -11,7 +11,7 @@ if [ -s "$dir/predictions-spa.txt" ]; then
 fi
 
 if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
-    cat "$dir/"
+    cat "$dir/test.$source"
     fairseq-interactive \
         "$dir/preprocessed" \
         --source-lang="eng" \
