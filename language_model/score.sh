@@ -11,17 +11,17 @@ if [ -s "$dir/predictions-spa.txt" ]; then
 fi
 
 if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
-    cat "$dir/test.$source" | \
-    fairseq-interactive \
+    cat "$dir/test.$source" \
+    | fairseq-interactive \
         "$dir/preprocessed" \
         --source-lang="eng" \
         --target-lang="spa" \
         --path="./checkpoints/checkpoint_best.pt" \
         --beam=5 \
         --batch-size=256 \
-        --buffer-size=2000 | \
-        grep '^H-' | cut -c 3- | awk -F '\t' '{print $NF}' \
-            > "$dir/predictions-spa.txt" \
+        --buffer-size=2000 \
+    | grep '^H-' | cut -c 3- | awk -F '\t' '{print $NF}' \
+    > "$dir/predictions-spa.txt" \
             || exit 1
 fi
 
