@@ -17,7 +17,6 @@ if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
         --source-lang="eng" \
         --target-lang="spa" \
         --path="./checkpoints/checkpoint_best.pt" \
-        --gen-subset="test" \
         --beam=5 \
         --batch-size=256 \
         --buffer-size=2000 | \
