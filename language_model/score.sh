@@ -3,27 +3,31 @@
 dir="$SUBTITLE_REPO/language_model/data"
 source="eng"
 target="spa"
+pred_file="$dir/predictions-spa.txt"
 
-if [ -s "$dir/predictions-spa.txt" ]; then
-    echo "$dir/predictions-spa.txt exists."
+if [ -s "$pred_file" ]; then
+    echo "$pred_file exists."
     # shellcheck disable=SC2162
     read -p "Do you want to proceed? (y/n) " confirm
 fi
 
 if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
-    fairseq-interactive \
-        "$dir/preprocessed" \
-        --input="$dir/test.$source" \
-        --source-lang="eng" \
-        --target-lang="spa" \
+    rm -f "$pred_file" 2>/dev/null
+    cat "$dir/tokens/test.tok.$source" | head -n 1000 \
+    | fairseq-interactive \
+        --source-lang="$source" \
+        --target-lang="$target" \
         --path="./checkpoints/checkpoint_best.pt" \
         --beam=5 \
         --batch-size=256 \
         --buffer-size=2000 \
-    | grep -P "D-[0-9]+" | cut -f3 \
-    > "$dir/predictions-spa.txt" \
+    | grep '^H-' | cut -c 3- | awk -F '\t' '{print $NF}' \
+    > "$pred_file" \
             || exit 1
 fi
+
+head -n 1000 "$dir/test.$source" > reference.$source
+sacrebleu reference.$source -i "$pred_file" -m bleu
 
 #grep '^H-' "$dir/predictions-spa.txt" | \
 #    # strip the first 2 characters
