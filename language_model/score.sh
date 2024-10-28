@@ -2,7 +2,13 @@
 
 dir="$SUBTITLE_REPO/language_model/data"
 
-if [ ! -s "$dir/predictions-spa.txt" ]; then
+if [ -s "$dir/predictions-spa.txt" ]; then
+    echo "$dir/predictions-spa.txt exists."
+    # shellcheck disable=SC2162
+    read -p "Do you want to proceed? (y/n) " confirm
+fi
+
+if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
     fairseq-interactive \
         "$dir/preprocessed" \
         --source-lang="eng" \
@@ -14,12 +20,6 @@ if [ ! -s "$dir/predictions-spa.txt" ]; then
         grep '^H-' | cut -c 3- | awk -F '\t' '{print $NF}' \
             > "$dir/predictions-spa.txt" \
             || exit 1
-else
-    echo "$dir/predictions-spa.txt exists."
-    read -p "Do you want to proceed? (y/n) " confirm
-    if [ "$confirm" != 'y' ]; then
-        exit 0
-    fi
 fi
 
 grep '^H-' "$dir/predictions-spa.txt" | \
