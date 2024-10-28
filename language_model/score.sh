@@ -20,7 +20,7 @@ if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
         --beam=5 \
         --batch-size=256 \
         --buffer-size=2000 \
-    | grep -P "D-[0-9]+" target.txt | cut -f3 \
+    | grep -P "D-[0-9]+" | cut -f3 \
     > "$dir/predictions-spa.txt" \
             || exit 1
 fi
