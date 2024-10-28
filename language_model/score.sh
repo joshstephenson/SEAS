@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 dir="$SUBTITLE_REPO/language_model/data"
+source="eng"
+target="spa"
 
 if [ -s "$dir/predictions-spa.txt" ]; then
     echo "$dir/predictions-spa.txt exists."
@@ -9,6 +11,7 @@ if [ -s "$dir/predictions-spa.txt" ]; then
 fi
 
 if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
+    cat "$dir/"
     fairseq-interactive \
         "$dir/preprocessed" \
         --source-lang="eng" \
@@ -17,7 +20,7 @@ if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
         --gen-subset="test" \
         --beam=5 \
         --batch-size=256 \
-        --buffer-size=256 \
+        --buffer-size=2000 \
         | grep '^H-' | cut -c 3- | awk -F '\t' '{print $NF}' \
             > "$dir/predictions-spa.txt" \
             || exit 1
