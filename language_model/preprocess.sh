@@ -69,6 +69,7 @@ if [ ! -s "$source_model_file" ] || [ ! -s "$target_model_file" ]; then
             --input="$dir/all.$set" \
             --model-prefix="$dir/$set" \
             --vocab-size=16000 \
+            --model-type='bpe' \
             || exit 1
         # Omitting special tokens <unk>, <s>, </s> replace all numbers in 2nd column with 100
         tail -n +4 "${dir}/${set}.vocab" | cut -f 1 | sed "s/$/ 100/g" > "${dir}/${set}.vocab.tmp"
