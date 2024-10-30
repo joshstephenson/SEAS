@@ -19,7 +19,6 @@ CUDA_VISIBLE_DEVICES=0 fairseq-train \
     --dropout=0.2 \
     --attention-dropout=0.2 \
     --lr=0.0005 \
-    --scoring=scarebleu \
     --encoder-layers=6 \
     --encoder-embed-dim=256 \
     --encoder-attention-heads=8 \
