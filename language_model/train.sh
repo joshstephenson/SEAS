@@ -32,7 +32,7 @@ CUDA_VISIBLE_DEVICES=0 fairseq-train \
     --share-decoder-input-output-embed \
     --lr-scheduler=inverse_sqrt \
     --warmup-updates=4000 \
-    --warmup-init-lr='1e-07' \
+    --warmup-init-lr='1e-06' \
     --weight-decay=0.0001 \
     --criterion=label_smoothed_cross_entropy \
     --label-smoothing=0.05 \
@@ -43,7 +43,7 @@ CUDA_VISIBLE_DEVICES=0 fairseq-train \
     --max-update=400000 \
     --update-freq=8 \
     --patience=5 \
-    --stop-min-lr='1e-06' \
+    --stop-min-lr='1e-07' \
     --eval-bleu \
     --eval-bleu-print-samples \
     --eval-bleu-remove-bpe \
