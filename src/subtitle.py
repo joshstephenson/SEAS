@@ -69,7 +69,7 @@ SQUARE_BRACKET_REGEX = r'\[[^\[]+?\]\s?'
 MULTIPLE_SPACES = r'[\s]+'
 
 # We only want to replace the italics tags, not the text inside
-ITALICS_REGEX = r'</?[iI]>'
+ITALICS_OR_BOLD_REGEX = r'</?[iIbB]>'
 # But for all other HTML we want to strip everything inside too
 HTML_REGEX = r'<.*>'
 QUOTES_REGEX = r'(["“”«»„‟‹›〝〞『』【】「」])(.*?)(["“”«»„‟‹›〝〞『』【】「」])'  # r'"[^"]+?"'
@@ -124,8 +124,8 @@ def sterilize(sub_lines: [str]) -> Optional[str]:
     # Multiple words in all caps are no good
     text = regex.sub(CAPITALS_REGEX, '', text)
 
-    # First strip italics tags
-    text = regex.sub(ITALICS_REGEX, '', text)
+    # First strip italic and bold tags
+    text = regex.sub(ITALICS_OR_BOLD_REGEX, '', text)
 
     # Then remove all other HTML with inner content
     text = regex.sub(HTML_REGEX, '', text)

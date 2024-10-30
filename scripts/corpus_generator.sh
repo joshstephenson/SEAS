@@ -10,6 +10,15 @@ if [ "$#" -ne 3 ]; then
     echo "Usage: $0 [directory] [source lang] [target lang]"
     exit 1
 fi
+if [ -z "$PYTHONPATH" ]; then
+    echo "You must set the PYTHONPATH environment variable."
+    exit 1
+fi
+if [ -z "$LASER" ]; then
+    echo "Please set LASER env var to LASER repository."
+    exit 1
+fi
+
 findpath="$1"
 source_lang="$2"
 target_lang="$3"
@@ -17,7 +26,12 @@ find_best="$4"
 
 stderrfile=/tmp/corpus_generator.err
 corpus_file="$findpath/all.txt"
-rm "$corpus_file" 2>/dev/null
+lines=$(wc -l < "$corpus_file")
+if [ -s "$corpus_file" ]; then
+    echo "Corpus file exists: $corpus_file"
+    echo "Lines: $lines"
+    sleep 1
+fi
 
 if [ ! -d "$findpath" ]; then
     echo "You must provide the path to the directory of one of the years of films."
@@ -29,7 +43,7 @@ has_language_support() {
     langs="$@"
     for lang in $langs; do
         if [ ! -d "$dir/$lang" ]; then
-#            echo "Doesn't have $lang"
+            echo "$(basename "$dir") doesn't have support for $lang" >&2
             return 1
         fi
     done
@@ -55,7 +69,7 @@ run_best_alignments() {
     longest=
     for source_file in $(all_srt_for "$dir" "$source_lang"); do
         for target_file in $(all_srt_for "$dir" "$target_lang"); do
-            ./scripts/run_vecalign.sh "$source_file" "$target_file" 2> "$stderrfile"
+            ./scripts/run_vecalign.sh "$source_file" "$target_file" 2> "$stderrfile" || continue
             out_file="$dir/$source_lang-$target_lang-vecalign.txt"
             # fix_offset also runs run_vecalign, so we should have the alignments file already
             if [ -s "$out_file" ]; then
@@ -92,7 +106,7 @@ run_simple_alignments() {
     target_file=$(first_srt_for "$dir" "$target_lang")
 #    echo "$source_file"
 #    echo "$target_file"
-    ./scripts/run_vecalign.sh "$source_file" "$target_file" 2> "$stderrfile"
+    ./scripts/run_vecalign.sh "$source_file" "$target_file" 2> "$stderrfile" || return 1
     out_file="$dir/$source_lang-$target_lang-vecalign.txt"
     if [ -s "$out_file" ]; then
         cat "$out_file" >> "$corpus_file"
@@ -111,6 +125,8 @@ find "$findpath" -d 1 -type d | sort | while read -r dir; do
             else
                 run_simple_alignments "$dir" "$source_lang" "$target_lang" "$title"
             fi
+        else
+            echo "Skipping $dir"
         fi
     fi
 done
