@@ -43,6 +43,7 @@ CUDA_VISIBLE_DEVICES=0 fairseq-train \
     --max-update=400000 \
     --update-freq=8 \
     --patience=5 \
+    --stop-min-lr='1e-06' \
     --save-interval=1 \
     --no-epoch-checkpoints \
     || exit 1
