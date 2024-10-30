@@ -13,7 +13,7 @@ fi
 
 if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
     rm -f "$pred_file" 2>/dev/null
-    cat "$dir/tokens/test.tok.$source" | head -n 1000 \
+    cat "$dir/tokens/test.tok.$source" \
     | fairseq-interactive \
         "$dir/preprocessed" \
         --source-lang="$source" \
@@ -28,8 +28,8 @@ if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
             || exit 1
 fi
 
-head -n 1000 "$dir/test.$source" > reference.$source
-sacrebleu reference.$source -i "$pred_file" -m bleu
+#head -n 1000 "$dir/test.$source" > reference.$source
+sacrebleu "$dir/test.$source" -i "$pred_file" -m bleu
 
 #grep '^H-' "$dir/predictions-spa.txt" | \
 #    # strip the first 2 characters
