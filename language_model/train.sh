@@ -10,7 +10,7 @@ dir="$SUBTITLE_REPO/language_model/data"
 # Train the model
 CUDA_VISIBLE_DEVICES=0 fairseq-train \
     "$dir/preprocessed" \
-    --max-epoch=70 \
+    --max-epoch=100 \
     --seed=1234 \
     --activation-fn="relu" \
     --source-lang="eng" \
