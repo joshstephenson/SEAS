@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 seed=1234
+vocab_size=32000
 
 if [ -z "$SUBTITLE_REPO" ]; then
     echo "Please set SUBTITLE_REPO environment variable to the root of this repository."
@@ -68,7 +69,7 @@ if [ ! -s "$source_model_file" ] || [ ! -s "$target_model_file" ]; then
         "$SUBTITLE_REPO/spm/spm_train.py" \
             --input="$dir/all.$set" \
             --model-prefix="$dir/$set" \
-            --vocab-size=16000 \
+            --vocab-size="$vocab_size" \
             --model-type='bpe' \
             || exit 1
         # Omitting special tokens <unk>, <s>, </s> replace all numbers in 2nd column with 100
