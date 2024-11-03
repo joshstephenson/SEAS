@@ -45,7 +45,6 @@ CUDA_VISIBLE_DEVICES=0 fairseq-train \
     --patience=5 \
     --stop-min-lr='1e-07' \
     --eval-bleu \
-    --eval-bleu-print-samples \
     --eval-bleu-remove-bpe \
     --save-interval=1 \
     --no-epoch-checkpoints \
