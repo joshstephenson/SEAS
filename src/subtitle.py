@@ -90,7 +90,7 @@ CHANGE_OF_SPEAKER_REGEX = r'([!?.])\s*(-)\s*(\p{Lu})'
 LEADING_HYPHENS_REGEX = r'\A-\s?'
 
 # Used to transcribe music
-MUSICAL_NOTE = '♪'
+MUSICAL_NOTE = r'[♪♫♬]'
 LEADING_POUND_SIGN = r'^#'
 
 # URL_REGEX = r'((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*'
@@ -109,10 +109,11 @@ def sterilize(sub_lines: [str]) -> Optional[str]:
     if len(text) == 0:
         return ''
     # Completely invalidate subtitles with the musical notes, leading # or URLs
-    test1 = MUSICAL_NOTE in text
-    test2 = regex.match(LEADING_POUND_SIGN, text) is not None
-    test3 = regex.search(URL_REGEX, text, regex.MULTILINE) is not None
-    if test1 or test2 or test3:
+    if regex.match(MUSICAL_NOTE, text) is not None:
+        return ''
+    if regex.match(LEADING_POUND_SIGN, text) is not None:
+        return ''
+    if regex.search(URL_REGEX, text, regex.MULTILINE) is not None:
         return ''
 
     # Remove content surrounded by curly brackets
