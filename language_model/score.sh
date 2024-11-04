@@ -15,7 +15,8 @@ pred_file="$dir/wmt13-en-es.pred"
 if [ ! -s "$source_tok_file" ]; then
     sacrebleu -t wmt13 -l en-es --echo src > "$source_file"
     # Now tokenize the input
-    lines=((wc -l < "$source_file" | tr -d ' '))
+    echo "Tokenizing WMT13..."
+    lines=$(wc -l < "$source_file" | tr -d ' ')
     "$SUBTITLE_REPO/spm/spm_encode.py" \
                 --model="${dir}/eng.model" \
                 --input="$source_file" \
@@ -24,6 +25,7 @@ if [ ! -s "$source_tok_file" ]; then
                     || exit 1
 fi
 
+echo "Generating translations for WMT13..."
 cat "$source_tok_file" \
 | fairseq-interactive \
     "$dir/preprocessed" \
