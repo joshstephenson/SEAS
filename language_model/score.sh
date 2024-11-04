@@ -1,15 +1,29 @@
 #!/usr/bin/env bash
+if [ -z "$SUBTITLE_REPO" ]; then
+    echo "Please set the SUBTITLE_REPO environment."
+    exit 1
+fi
+
 dir="$SUBTITLE_REPO/language_model/data"
 source="eng"
 target="spa"
+source_file="wmt13-en-es.src"
 pred_file="$dir/wmt13-en-es.pred"
 
 # Download the test set if it doesn't already exist
 if [ ! -s "wmt13-en-es.eng" ]; then
-    sacrebleu -t wmt13 -l en-es --echo src > wmt13-en-es.src
+    sacrebleu -t wmt13 -l en-es --echo src > "$source_file"
 fi
 
-cat "wmt13-en-es.src" \
+# Now tokenize the input
+"$SUBTITLE_REPO/spm/spm_encode.py" \
+            --model="${dir}/eng.model" \
+            --input="$source_file" \
+            --output="${source_file}.tok" \
+            --line-count="$((wc -l < "$source_file"))" \
+                || exit 1
+
+cat "${source_file}.tok" \
 | fairseq-interactive \
     "$dir/preprocessed" \
     --source-lang="$source" \
