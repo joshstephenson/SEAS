@@ -40,4 +40,4 @@ cat "$source_tok_file" \
 > "$pred_file" \
         || exit 1
 
-sacrebleu -t wmt13 -l en-es < "language_model/data/predictions-spa.txt"
+sacrebleu -t wmt13 -l en-es < "$pred_file"
