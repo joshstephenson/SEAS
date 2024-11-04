@@ -44,4 +44,6 @@ cat "$source_tok_file" \
     --buffer-size=2000 \
     --remove-bpe=sentencepiece \
 | grep '^H-' | cut -c 3- | awk -F '\t' '{print $NF}' \
-| sacrebleu -t "$sacreset_ref" -l en-es
+> "$pred_file" \
+    || exit 1
+cat "$pred_file" | sacrebleu -t "$sacreset_ref" -l en-es -m bleu chrf ter
