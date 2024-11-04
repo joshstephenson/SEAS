@@ -8,22 +8,23 @@ dir="$SUBTITLE_REPO/language_model/data"
 source="eng"
 target="spa"
 source_file="wmt13-en-es.src"
+source_tok_file="wmt13-en-es.tok.src"
 pred_file="$dir/wmt13-en-es.pred"
 
 # Download the test set if it doesn't already exist
-if [ ! -s "wmt13-en-es.eng" ]; then
+if [ ! -s "$source_tok_file" ]; then
     sacrebleu -t wmt13 -l en-es --echo src > "$source_file"
+    # Now tokenize the input
+    lines=((wc -l < "$source_file" | tr -d ' '))
+    "$SUBTITLE_REPO/spm/spm_encode.py" \
+                --model="${dir}/eng.model" \
+                --input="$source_file" \
+                --output="$source_tok_file" \
+                --line-count="$lines" \
+                    || exit 1
 fi
 
-# Now tokenize the input
-"$SUBTITLE_REPO/spm/spm_encode.py" \
-            --model="${dir}/eng.model" \
-            --input="$source_file" \
-            --output="${source_file}.tok" \
-            --line-count="$((wc -l < "$source_file"))" \
-                || exit 1
-
-cat "${source_file}.tok" \
+cat "$source_tok_file" \
 | fairseq-interactive \
     "$dir/preprocessed" \
     --source-lang="$source" \
