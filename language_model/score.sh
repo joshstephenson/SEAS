@@ -4,18 +4,25 @@ if [ -z "$SUBTITLE_REPO" ]; then
     exit 1
 fi
 
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 [sacrebleu test set]. Options are:"
+    sacrebleu --list -l en-es
+    exit 1
+fi
+
 dir="$SUBTITLE_REPO/language_model/data"
+sacreset="wmt12"
 source="eng"
 target="spa"
-source_file="wmt13-en-es.src"
-source_tok_file="wmt13-en-es.tok.src"
-pred_file="$dir/wmt13-en-es.pred"
+source_file="$sacreset-en-es.src"
+source_tok_file="$sacreset-en-es.tok.src"
+pred_file="$dir/$sacreset-en-es.pred"
 
 # Download the test set if it doesn't already exist
 if [ ! -s "$source_tok_file" ]; then
-    sacrebleu -t wmt13 -l en-es --echo src > "$source_file"
+    sacrebleu -t "$sacreset" -l en-es --echo src > "$source_file"
     # Now tokenize the input
-    echo "Tokenizing WMT13..."
+    echo "Tokenizing $sacreset..."
     lines=$(wc -l < "$source_file" | tr -d ' ')
     "$SUBTITLE_REPO/spm/spm_encode.py" \
                 --model="${dir}/eng.model" \
@@ -25,7 +32,7 @@ if [ ! -s "$source_tok_file" ]; then
                     || exit 1
 fi
 
-echo "Generating translations for WMT13..."
+echo "Generating translations for $sacreset..."
 cat "$source_tok_file" \
 | fairseq-interactive \
     "$dir/preprocessed" \
