@@ -9,7 +9,8 @@ if [ $# -lt 1 ]; then
     sacrebleu --list -l en-es
     exit 1
 fi
-sacreset="$1"
+sacreset_ref="$1"
+sacreset=$(echo "$sacreset_ref" | tr '/' '_')
 dir="$SUBTITLE_REPO/language_model/data"
 source="eng"
 target="spa"
