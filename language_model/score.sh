@@ -9,13 +9,12 @@ if [ $# -lt 1 ]; then
     sacrebleu --list -l en-es
     exit 1
 fi
-
+sacreset="$1"
 dir="$SUBTITLE_REPO/language_model/data"
-sacreset="wmt12"
 source="eng"
 target="spa"
-source_file="$sacreset-en-es.src"
-source_tok_file="$sacreset-en-es.tok.src"
+source_file="$dir/$sacreset-en-es.src"
+source_tok_file="$dir/$sacreset-en-es.tok.src"
 pred_file="$dir/$sacreset-en-es.pred"
 
 # Download the test set if it doesn't already exist
