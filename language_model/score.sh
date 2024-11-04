@@ -20,7 +20,7 @@ pred_file="$dir/$sacreset-en-es.pred"
 
 # Download the test set if it doesn't already exist
 if [ ! -s "$source_tok_file" ]; then
-    sacrebleu -t "$sacreset" -l en-es --echo src > "$source_file"
+    sacrebleu -t "$sacreset_ref" -l en-es --echo src > "$source_file"
     # Now tokenize the input
     echo "Tokenizing $sacreset..."
     lines=$(wc -l < "$source_file" | tr -d ' ')
