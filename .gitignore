@@ -212,3 +212,6 @@ checkpoints
 language_model/data/predictions-spa.txt
 predictions-spa-cleaned.txt
 all-filtered.txt
+wmt18-en-es.src
+wmt13-en-es.src
+language_model/data/wmt13-en-es.pred
