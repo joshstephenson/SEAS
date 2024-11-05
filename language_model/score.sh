@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
-if [ -z "$SUBTITLE_REPO" ]; then
-    echo "Please set the SUBTITLE_REPO environment."
-    exit 1
-fi
+source "$(dirname $0)/base.sh"
 
 if [ $# -lt 1 ]; then
     echo "Usage: $0 [sacrebleu test set]. Options are:"
@@ -11,12 +8,10 @@ if [ $# -lt 1 ]; then
 fi
 sacreset_ref="$1"
 sacreset=$(echo "$sacreset_ref" | tr '/' '_')
-dir="$SUBTITLE_REPO/language_model/data"
-source="eng"
-target="spa"
-source_file="$dir/$sacreset-en-es.src"
-source_tok_file="$dir/$sacreset-en-es.tok.src"
-pred_file="$dir/$sacreset-en-es.pred"
+mkdir -p "$DIR/sacrebleu"
+source_file="$DIR/sacrebleu/$sacreset-en-es.src"
+source_tok_file="$DIR/sacrebleu/$sacreset-en-es.tok.src"
+pred_file="$DIR/sacrebleu/$sacreset-en-es.pred"
 
 # Download the test set if it doesn't already exist
 if [ ! -s "$source_tok_file" ]; then
@@ -25,7 +20,7 @@ if [ ! -s "$source_tok_file" ]; then
     echo "Tokenizing $sacreset..."
     lines=$(wc -l < "$source_file" | tr -d ' ')
     "$SUBTITLE_REPO/spm/spm_encode.py" \
-                --model="${dir}/eng.model" \
+                --model="$DIR/eng.model" \
                 --input="$source_file" \
                 --output="$source_tok_file" \
                 --line-count="$lines" \
@@ -35,15 +30,16 @@ fi
 echo "Generating translations for $sacreset..."
 cat "$source_tok_file" \
 | fairseq-interactive \
-    "$dir/preprocessed" \
-    --source-lang="$source" \
-    --target-lang="$target" \
-    --path="./checkpoints/checkpoint_best.pt" \
-    --beam=5 \
-    --batch-size=256 \
-    --buffer-size=2000 \
+    "$PREPROCESSED_DIR" \
+    --source-lang="$SOURCE" \
+    --target-lang="$TARGET" \
+    --path="$SAVE_DIR/checkpoint_best.pt" \
+    --beam="$BEAM" \
+    --batch-size="$BATCH_SIZE" \
+    --buffer-size="$BUFFER_SIZE" \
     --remove-bpe=sentencepiece \
 | grep '^H-' | cut -c 3- | awk -F '\t' '{print $NF}' \
 > "$pred_file" \
     || exit 1
-cat "$pred_file" | sacrebleu -t "$sacreset_ref" -l en-es -m bleu chrf ter
+cat "$pred_file" | sacrebleu -t "$sacreset_ref" -l en-es -m bleu chrf ter > "$DIR/sacrebleu.results.txt"
+cat "$DIR/sacrebleu.results.txt"

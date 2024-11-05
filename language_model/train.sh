@@ -1,51 +1,51 @@
 #!/usr/bin/env bash
+source "$(dirname $0)/base.sh"
 
-seed=1234
 if [ -z "$SUBTITLE_REPO" ]; then
     echo "Please set SUBTITLE_REPO environment variable to the root of this repository."
     exit 1
 fi
 
-dir="$SUBTITLE_REPO/language_model/data"
 # Train the model
 CUDA_VISIBLE_DEVICES=0 fairseq-train \
-    "$dir/preprocessed" \
-    --max-epoch=100 \
-    --seed=1234 \
-    --activation-fn="relu" \
-    --source-lang="eng" \
-    --target-lang="spa" \
-    --arch transformer \
-    --dropout=0.2 \
-    --attention-dropout=0.2 \
-    --lr=0.0005 \
-    --encoder-layers=6 \
-    --encoder-embed-dim=256 \
-    --encoder-attention-heads=8 \
-    --encoder-normalize-before \
-    --encoder-ffn-embed-dim=1024 \
-    --decoder-layers=6 \
-    --decoder-embed-dim=256 \
-    --decoder-attention-heads=8 \
-    --decoder-normalize-before \
-    --decoder-ffn-embed-dim=1024 \
+    "$DIR/preprocessed" \
+    --save-dir="$SAVE_DIR" \
+    --max-epoch="$MAX_EPOCHS" \
+    --seed="$SEED" \
+    --activation-fn="$ACTIVATION" \
+    --source-lang="$SOURCE" \
+    --target-lang="$TARGET" \
+    --arch "$ARCHITECTURE" \
+    --dropout="$DROPOUT" \
+    --attention-dropout="$DROPOUT" \
+    --lr="$LEARNING_RATE" \
+    --encoder-layers="$LAYERS" \
+    --encoder-embed-dim="$EMBED_DIM" \
+    --encoder-attention-heads="$HEADS" \
+    --encoder-ffn-embed-dim="$HIDDEN_DIM" \
+    --decoder-layers="$LAYERS" \
+    --decoder-embed-dim="$EMBED_DIM" \
+    --decoder-attention-heads="$HEADS" \
+    --decoder-ffn-embed-dim="$HIDDEN_DIM" \
+    --warmup-updates="$WARMUP" \
+    --warmup-init-lr="$INIT_LEARNING_RATE" \
+    --weight-decay="$WEIGHT_DECAY" \
+    --criterion="$CRITERION" \
+    --label-smoothing="$LABEL_SMOOTHING" \
+    --scoring="$SCORING" \
+    --optimizer="$OPTIMIZER" \
+    --clip-norm="$CLIP_NORM" \
+    --max-tokens="$MAX_TOKENS" \
+    --max-update="$MAX_UPDATES" \
+    --update-freq="$UPDATE_FREQUENCY" \
+    --patience="$PATIENCE" \
+    --stop-min-lr="$STOP_MIN_LEARNING_RATE" \
+    --save-interval="$SAVE_INTERVAL" \
     --share-decoder-input-output-embed \
     --lr-scheduler=inverse_sqrt \
-    --warmup-updates=4000 \
-    --warmup-init-lr='1e-06' \
-    --weight-decay=0.0001 \
-    --criterion=label_smoothed_cross_entropy \
-    --label-smoothing=0.05 \
-    --scoring=bleu \
-    --optimizer=adam \
-    --clip-norm=1.0 \
-    --max-tokens=3000 \
-    --max-update=400000 \
-    --update-freq=8 \
-    --patience=5 \
-    --stop-min-lr='1e-07' \
     --eval-bleu \
     --eval-bleu-remove-bpe \
-    --save-interval=1 \
     --no-epoch-checkpoints \
+    --encoder-normalize-before \
+    --decoder-normalize-before \
     || exit 1

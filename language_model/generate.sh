@@ -1,29 +1,25 @@
 #!/usr/bin/env bash
+source "$(dirname $0)/base.sh"
 
-dir="$SUBTITLE_REPO/language_model/data"
-source="eng"
-target="spa"
-pred_file="$dir/predictions-spa.txt"
-
-if [ -s "$pred_file" ]; then
-    echo "$pred_file exists."
+if [ -s "$PRED_FILE" ]; then
+    echo "$PRED_FILE exists."
     # shellcheck disable=SC2162
     read -p "Do you want to proceed? (y/n) " confirm
 fi
 
 if [ -z "$confirm" ] || [ "$confirm" == 'y' ]; then
-    rm -f "$pred_file" 2>/dev/null
-    cat "$dir/tokens/test.tok.$source" \
+    rm -f "$PRED_FILE" 2>/dev/null
+    cat "$TOKENS_DIR/test.tok.$SOURCE" \
     | fairseq-interactive \
-        "$dir/preprocessed" \
-        --source-lang="$source" \
-        --target-lang="$target" \
-        --path="./checkpoints/checkpoint_best.pt" \
-        --beam=5 \
-        --batch-size=256 \
-        --buffer-size=2000 \
+        "$PREPROCESSED_DIR" \
+        --source-lang="$SOURCE" \
+        --target-lang="$TARGET" \
+        --path="$SAVE_DIR/checkpoint_best.pt" \
+        --beam="$BEAM" \
+        --batch-size="$BATCH_SIZE" \
+        --buffer-size="$BUFFER_SIZE" \
         --remove-bpe=sentencepiece \
     | grep '^H-' | cut -c 3- | awk -F '\t' '{print $NF}' \
-    > "$pred_file" \
+    > "$PRED_FILE" \
             || exit 1
 fi

@@ -220,6 +220,7 @@ class Subtitle:
                 self.text = sterilize(parts[2:])
         else:
             self.text = '\n'.join(self.lines.split('\n')[2:])
+            self.texts = [self.text]
 
     def linked_via_utterance(self):
         """
