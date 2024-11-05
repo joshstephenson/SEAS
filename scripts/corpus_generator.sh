@@ -26,8 +26,8 @@ find_best="$4"
 
 stderrfile=/tmp/corpus_generator.err
 corpus_file="$findpath/all.txt"
-lines=$(wc -l < "$corpus_file")
 if [ -s "$corpus_file" ]; then
+    lines=$(wc -l < "$corpus_file")
     echo "Corpus file exists: $corpus_file"
     echo "Lines: $lines"
     sleep 1
@@ -106,6 +106,7 @@ run_simple_alignments() {
     target_file=$(first_srt_for "$dir" "$target_lang")
 #    echo "$source_file"
 #    echo "$target_file"
+
     ./scripts/run_vecalign.sh "$source_file" "$target_file" 2> "$stderrfile" || return 1
     out_file="$dir/$source_lang-$target_lang-vecalign.txt"
     if [ -s "$out_file" ]; then
@@ -113,6 +114,8 @@ run_simple_alignments() {
         count=$(echo "$(wc -l < "$out_file")" / 3 | bc )
         count2=$(echo "$(wc -l < "$corpus_file")" / 3 | bc )
         echo "Appending $count from $title. Total: $count2."
+    else
+        echo "Failed to generate alignments: $out_file"
     fi
 }
 
@@ -126,7 +129,7 @@ find "$findpath" -d 1 -type d | sort | while read -r dir; do
                 run_simple_alignments "$dir" "$source_lang" "$target_lang" "$title"
             fi
         else
-            echo "Skipping $dir"
+            echo "Skipping $dir. $source_lang-$target_lang-vecalign.txt exists."
         fi
     fi
 done
