@@ -14,9 +14,13 @@ from math import ceil
 
 from regex import regex
 
-from src.alignments import Alignments
-from src.annotation import Annotation
-from src.film import Film
+try:
+    from src.alignments import Alignments
+    from src.annotation import Annotation
+    from src.film import Film
+except ModuleNotFoundError as _:
+    print("Please set and export PYTHONPATH environment to the root of this repository.")
+    exit(1)
 
 MIN_HIGHLIGHT_LENGTH = 4
 
