@@ -171,12 +171,9 @@ bad_subs.txt
 vecalign
 LASER
 results
-gold.txt
 sentalign
 *.emb
 *.overlap
-*eng-spa-vec.txt
-eng-spa-*.txt
 *.results
 language_model/data/valid.spa
 language_model/data/valid.eng
