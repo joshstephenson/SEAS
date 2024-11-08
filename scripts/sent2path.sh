@@ -23,11 +23,10 @@ fi
 
 source_overlap="${source/.sent/.overlap}"
 target_overlap="${target/.sent/.overlap}"
-rm -f "$source_overlap" "$target_overlap" 2>/dev/null
+
 
 source_emb="${source/.sent/.emb}"
 target_emb="${target/.sent/.emb}"
-rm -f "$source_emb" "$target_emb" 2>/dev/null
 
 for arg in "$@"
 do
@@ -37,6 +36,7 @@ do
 done
 
 if [ -z "$skip_to_embed" ]; then
+    rm -f "$source_overlap" "$target_overlap" 2>/dev/null
     "$SUBTITLE_REPO/vecalign/overlap.py" -n $overlap_size -i "$source" -o "$source_overlap" 2>/dev/null
     "$SUBTITLE_REPO/vecalign/overlap.py" -n $overlap_size -i "$target" -o "$target_overlap" 2>/dev/null
 fi
@@ -45,6 +45,8 @@ if [ -z "$LASER" ]; then
     echo "Please set LASER env var to LASER repository." >&2
     exit 1
 fi
+
+rm -f "$source_emb" "$target_emb" 2>/dev/null
 
 "$LASER/tasks/embed/embed.sh" "$source_overlap" "$source_emb" 2>/dev/null
 if [ ! -s "$source_emb" ]; then
