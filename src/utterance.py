@@ -33,7 +33,7 @@ class Utterance:
 
     def overlap(self, other: "Utterance"):
         """
-        Find the duration of time two subtitles overlap with each other
+        Find the duration of time two utterances overlap with each other
         :param other: the other subtitle to compare with self
         :return: duration of time two subtitles overlap with each other
         """

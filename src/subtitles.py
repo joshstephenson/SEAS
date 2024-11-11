@@ -30,7 +30,7 @@ class Subtitles:
         previous_sub = None
         for sub_content in sub_contents:
             subtitle = Subtitle(sub_content, language, is_source, should_sterilize=sterilize,
-                                find_sentence_boundaries=True)
+                                find_sentence_boundaries=Config.FindSentenceBoundaries)
             if subtitle is not None:
                 self.subtitles.append(subtitle)
                 if previous_sub is not None:
@@ -103,6 +103,9 @@ class Subtitles:
         If more than one subtitle was found, select the one with the largest overlap
         :returns: option with the largest overlap with source subtitle
         """
+        # If options is list[Utterance], change to list[Subtitle]
+        if isinstance(options[0], Utterance):
+            options = [sub for utt in options for sub in utt.subtitles]
         overlap = 0
         best = None
         for option in options:

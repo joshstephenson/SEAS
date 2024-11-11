@@ -1,6 +1,7 @@
 class Config:
     Sterilize = True
-    ShouldPartitionByGaps = False
+    FindSentenceBoundaries = True
+    ShouldPartitionByGaps = True
     NumOverlaps = 6
     GapThreshold = 3
     UseSoftScoring = False

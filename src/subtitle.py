@@ -219,8 +219,12 @@ class Subtitle:
             else:
                 self.text = sterilize(parts[2:])
         else:
-            self.text = '\n'.join(self.lines.split('\n')[2:])
-            self.texts = [self.text]
+            if find_sentence_boundaries:
+                self.texts = _split_multiple_speakers('\n'.join(parts[2:]))
+                self.text = ' '.join(self.texts)
+            else:
+                self.text = '\n'.join(self.lines.split('\n')[2:])
+                self.texts = [self.text]
 
     def linked_via_utterance(self):
         """
@@ -255,6 +259,16 @@ class Subtitle:
         lines = self.lines.split('\n')
         lines[1] = self.timestring
         self.lines = '\n'.join(lines)
+
+    def overlap(self, other: "Subtitle"):
+        """
+        Find the duration of time two subtitles overlap with each other
+        :param other: the other subtitle to compare with self
+        :return: duration of time two subtitles overlap with each other
+        """
+        start = max(self.start, other.start)
+        end = min(self.end, other.end)
+        return end - start
 
     def __str__(self):
         return self.lines
