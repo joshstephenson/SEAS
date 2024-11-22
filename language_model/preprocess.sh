@@ -30,6 +30,9 @@ target_file="$2"
 #    done < "$filename"
 #fi
 
+cp "$source_file" "$IN_DIR/all.$SOURCE"
+cp "$target_file" "$IN_DIR/all.$TARGET"
+
 # Now generate the splits
 if [ ! -s "$IN_DIR/train.$SOURCE" ]; then
     # Get the total number of lines
