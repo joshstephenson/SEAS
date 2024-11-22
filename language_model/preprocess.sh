@@ -6,28 +6,29 @@ usage() {
     exit 1
 }
 
-if [ "$#" -lt 1 ] || [ ! -f "$1" ]; then
+if [ "$#" -lt 2 ] || [ ! -f "$1" ] || [ ! -f "$2" ]; then
     usage
 fi
-filename="$1"
+source_file="$1"
+target_file="$2"
 
-source_file="$IN_DIR/all.$SOURCE"
-target_file="$IN_DIR/all.$TARGET"
-echo "$source_file"
-if [ ! -s "$source_file" ]; then
-    count=1
-    echo "Extracting alignments..."
-    # Alignments are in a single file in lines of 3. The first line is the SOURCE file
-    # The second line is the TARGET and the third is an empty line for separation.
-    while read -r line; do
-        if (( count % 3 == 1 )); then
-            echo "$line" >> "$source_file"
-        elif (( count % 3 == 2 )); then
-            echo "$line" >> "$target_file"
-        fi
-        ((count++))
-    done < "$filename"
-fi
+#source_file="$IN_DIR/all.$SOURCE"
+#target_file="$IN_DIR/all.$TARGET"
+#echo "$source_file"
+#if [ ! -s "$source_file" ]; then
+#    count=1
+#    echo "Extracting alignments..."
+#    # Alignments are in a single file in lines of 3. The first line is the SOURCE file
+#    # The second line is the TARGET and the third is an empty line for separation.
+#    while read -r line; do
+#        if (( count % 3 == 1 )); then
+#            echo "$line" >> "$source_file"
+#        elif (( count % 3 == 2 )); then
+#            echo "$line" >> "$target_file"
+#        fi
+#        ((count++))
+#    done < "$filename"
+#fi
 
 # Now generate the splits
 if [ ! -s "$IN_DIR/train.$SOURCE" ]; then
