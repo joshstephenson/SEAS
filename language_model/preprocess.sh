@@ -2,7 +2,7 @@
 source "$(dirname $0)/base.sh"
 
 usage() {
-    echo "Usage: $0 [alignments filename]"
+    echo "Usage: $0 [source file] [target file]"
     exit 1
 }
 
