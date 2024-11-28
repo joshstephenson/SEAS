@@ -1,4 +1,4 @@
-# SubtitleAlignment
+# Subtitle Alignment
  
 ## About
 Applying state-of-the-art sentence alignment tools to subtitle extraction and alignment, achieving a substantial improvement in subtitle alignment quality. Leveraging sentence embeddings, dynamic programming, cosine similarity, and partitioning we attained F1 scores exceeding 93\% and estimate an overall improvement of 31\% based on other subtitle alignment techniques.
