@@ -91,7 +91,7 @@ CHANGE_OF_SPEAKER_REGEX = r'([!?.])\s*(-)\s*(\p{Lu})'
 LEADING_HYPHENS_REGEX = r'\A-\s?'
 
 # Used to transcribe music
-MUSICAL_NOTE = r'[♪♫♬]'
+MUSICAL_NOTE = r'.*[♪♫♬].*'
 LEADING_POUND_SIGN = r'^#'
 
 # URL_REGEX = r'((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*'

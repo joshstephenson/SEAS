@@ -25,10 +25,11 @@ target_lang="$3"
 find_best="$4"
 
 stderrfile=/tmp/corpus_generator.err
-corpus_file="$findpath/all.txt"
-if [ -s "$corpus_file" ]; then
-    lines=$(wc -l < "$corpus_file")
-    echo "Corpus file exists: $corpus_file"
+corpus_source="$findpath/all.$source_lang"
+corpus_target="$findpath/all.$target_lang"
+if [ -s "$corpus_source" ]; then
+    lines=$(wc -l < "$corpus_source")
+    echo "Corpus files exists: $corpus_source, $corpus_target"
     echo "Lines: $lines"
     sleep 1
 fi
@@ -94,7 +95,7 @@ run_best_alignments() {
         done
     done
     mv "$keeper" "$out_file"
-    cat "$out_file" >> "$corpus_file"
+    cat "$out_file" >> "$corpus_source"
 }
 
 run_simple_alignments() {
@@ -110,9 +111,22 @@ run_simple_alignments() {
     ./scripts/run_vecalign.sh "$source_file" "$target_file" 2> "$stderrfile" || return 1
     out_file="$dir/$source_lang-$target_lang-vecalign.txt"
     if [ -s "$out_file" ]; then
-        cat "$out_file" >> "$corpus_file"
+        count=1
+        echo "Splitting alignments..."
+
+        # Alignments are in a single file in lines of 3. The first line is the SOURCE file
+        # The second line is the TARGET and the third is an empty line for separation.
+        while read -r line; do
+            if (( count % 3 == 1 )); then
+                echo "$line" >> "$corpus_source"
+            elif (( count % 3 == 2 )); then
+                echo "$line" >> "$corpus_target"
+            fi
+            ((count++))
+        done < "$out_file"
+
         count=$(echo "$(wc -l < "$out_file")" / 3 | bc )
-        count2=$(echo "$(wc -l < "$corpus_file")" / 3 | bc )
+        count2=$(wc -l < "$corpus_source")
         echo "Appending $count from $title. Total: $count2."
     else
         echo "Failed to generate alignments: $out_file"
