@@ -214,3 +214,5 @@ language_model/data/wmt13-en-es.pred
 language_model/data/wmt*
 covost/covost.es_en.tsv.tar.gz
 covost/covost.es_en.tsv
+language_model/data/all.eng
+language_model/data/all.spa

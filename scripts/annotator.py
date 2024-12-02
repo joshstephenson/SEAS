@@ -14,15 +14,17 @@ from math import ceil
 
 from regex import regex
 
-# try:
-from src.alignments import Alignments
-from src.annotation import Annotation
-from src.film import Film
-# except ModuleNotFoundError as _:
-#     print("Please set and export PYTHONPATH environment to the root of this repository.")
-#     exit(1)
+try:
+    from src.alignments import Alignments
+    from src.annotation import Annotation
+    from src.film import Film
+except ModuleNotFoundError as e:
+    print(f'Error: {e}')
+    print("Please set and export PYTHONPATH environment to the root of this repository.")
+    print("Also make sure to activate the python environment.")
+    exit(1)
 
-MIN_HIGHLIGHT_LENGTH = 4
+MIN_HIGHLIGHT_LENGTH = 1
 
 
 class CommandCodes:
@@ -116,9 +118,34 @@ def main(opts, alignments):
             film.join_annotation_with_subsequent()
             show_annotation(annotation)
 
+        def confirm_save():
+            # Get screen dimensions
+            h, w = stdscr.getmaxyx()
+
+            # Create a centered window for the prompt
+            prompt_height, prompt_width = 7, 40
+            start_y, start_x = (h - prompt_height) // 2, (w - prompt_width) // 2
+            prompt_win = stdscr.subwin(prompt_height, prompt_width, start_y, start_x)
+
+            # Create a border and display the message
+            prompt_win.box()
+            prompt_win.addstr(1, 2, "Do you want to save changes?")
+            prompt_win.addstr(3, 4, "[Y] Yes")
+            prompt_win.addstr(4, 4, "[N] No")
+            prompt_win.refresh()
+
+            while True:
+                key = prompt_win.getch()
+                if key in (ord('y'), ord('Y')):
+                    return True
+                elif key in (ord('n'), ord('N')):
+                    prompt_win.clear()
+                    return False
+
         def save_annotations():
             # _, alignments_file = alignment_files(opts.source, opts.target)
-            with open(alignments_file.replace('-vecalign', '-gold'), 'w', encoding='utf-8') as f:
+            gold_file = alignments_file.replace('-vecalign', '-gold')
+            with open(gold_file, 'w', encoding='utf-8') as f:
                 for annotation in film.annotations:
                     if annotation.has_empty_target() and annotation.has_empty_source():
                         continue
@@ -132,7 +159,7 @@ def main(opts, alignments):
                         f.write(annotation.target.utterance + '\n')
                     f.write('\n')
             curses.endwin()
-            print(f'Saved annotations to: {alignments_file}')
+            print(f'Saved annotations to: {gold_file}')
             exit(0)
 
         k = 0
@@ -165,7 +192,8 @@ def main(opts, alignments):
                 case CommandCodes.SPLIT:
                     split_annotation(annotation)
                 case CommandCodes.SAVE:
-                    save_annotations()
+                    if confirm_save():
+                        save_annotations()
                 case CommandCodes.JOIN:
                     join_annotation(annotation)
                 case _:

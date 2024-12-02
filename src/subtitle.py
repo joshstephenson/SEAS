@@ -69,7 +69,8 @@ SQUARE_BRACKET_REGEX = r'\[[^\[]+?\]\s?'
 MULTIPLE_SPACES = r'[\s]+'
 
 # We only want to replace the italics tags, not the text inside
-ITALICS_OR_BOLD_REGEX = r'</?[iIbB]>'
+# ITALICS_OR_BOLD_REGEX = r'</?[iIbB]>'
+ITALICS_OR_BOLD_REGEX = r'</?(i|b|font(?: color=\"[^\"]*\")?)>'
 # But for all other HTML we want to strip everything inside too
 HTML_REGEX = r'<.*>'
 QUOTES_REGEX = r'(["“”«»„‟‹›〝〞『』【】「」])(.*?)(["“”«»„‟‹›〝〞『』【】「」])'  # r'"[^"]+?"'
