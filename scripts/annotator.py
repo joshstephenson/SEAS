@@ -24,7 +24,7 @@ except ModuleNotFoundError as e:
     print("Also make sure to activate the python environment.")
     exit(1)
 
-MIN_HIGHLIGHT_LENGTH = 1
+MIN_HIGHLIGHT_LENGTH = 3
 
 
 class CommandCodes:

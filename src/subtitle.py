@@ -91,7 +91,7 @@ CHANGE_OF_SPEAKER_REGEX = r'([!?.])\s*(-)\s*(\p{Lu})'
 LEADING_HYPHENS_REGEX = r'\A-\s?'
 
 # Used to transcribe music
-MUSICAL_NOTE = r'.*[♪♫♬].*'
+MUSICAL_NOTE = r'[♪♫♬]'
 LEADING_POUND_SIGN = r'^#'
 
 # URL_REGEX = r'((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*'
@@ -110,9 +110,9 @@ def sterilize(sub_lines: [str]) -> Optional[str]:
     if len(text) == 0:
         return ''
     # Completely invalidate subtitles with the musical notes, leading # or URLs
-    if regex.match(MUSICAL_NOTE, text) is not None:
+    if regex.search(MUSICAL_NOTE, text) is not None:
         return ''
-    if regex.match(LEADING_POUND_SIGN, text) is not None:
+    if regex.search(LEADING_POUND_SIGN, text) is not None:
         return ''
     if regex.search(URL_REGEX, text, regex.MULTILINE) is not None:
         return ''
