@@ -1112,7 +1112,7 @@ Ye Wenjie.
 Du hast Fieber.
 
 I am Lei Zhicheng, Political Commissar of Red Coast Base.
-Wir sind noch nicht da, schlaf weiter. Ich bin Zhicheng Lei, Politkommissar der Basis Rotes Ufer.
+Ich bin Zhicheng Lei, Politkommissar der Basis Rotes Ufer.
 
 This is Yang Weining, Chief Engineer of Red Coast Base.
 Das ist Weining Yang, Chefingenieur der Basis Rotes Ufer.
@@ -1357,13 +1357,10 @@ Raketen?
 Everybody has missiles.
 Raketen hat jeder.
 
-BN20197F, checked and confirmed. Test transmission in ten. Nine. Eight.
-BN20197F.
+BN20197F, checked and confirmed.
+BN20197F. Bestätigt.
 
-Seven.
-Bestätigt.
-
-Six. Five. Four. Three.
+Test transmission in ten. Nine. Eight. Seven. Six. Five.
 Testübertragung in zehn, neun, acht, sieben, sechs, fünf, vier, drei, zwei, eins.
 
 Two. One. Begin transmission.
@@ -1663,8 +1660,11 @@ Irgendwer steckt dahinter.
 You just have to dig.
 Man muss nur graben.
 
-My Lord, we can help you. I think they're real.
-Mein Herr, wir können euch helfen. Ich glaube, sie sind echt.
+My Lord, we can help you.
+Mein Herr, wir können euch helfen.
+
+I think they're real.
+Ich glaube, sie sind echt.
 
 And they're coming.
 Und sie kommen.

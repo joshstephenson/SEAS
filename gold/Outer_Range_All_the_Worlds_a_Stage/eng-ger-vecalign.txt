@@ -322,7 +322,7 @@ Chinlund.
 Another one behind the wheel.
 Ein anderer hinterm Steuer.
 
-Oh! Drink this.
+Drink this.
 Trink.
 
 Nah, drink the whole thing.
@@ -829,11 +829,8 @@ Ok.
 I lived in the 1880s for four years.
 Ich lebte vier Jahre lang in den 1880ern.
 
-Met Shoshone, hunted with them, made friends... was accepted by them.
-Traf Shoshonen. Jagte mit ihnen. Freundete mich an. Wurde von ihnen akzeptiert.
-
-While I was there, I met a boy named Royal... who saved my life.
-Als ich da war, traf ich einen Jungen namens Royal, der mir das Leben rettete.
+Met Shoshone, hunted with them, made friends... was accepted by them. While I was there, I met a boy named Royal... who saved my life.
+Traf Shoshonen. Jagte mit ihnen. Freundete mich an. Wurde von ihnen akzeptiert. Als ich da war, traf ich einen Jungen namens Royal, der mir das Leben rettete.
 
 And I'm bettin' he was you.
 Und ich wette, das warst du.
@@ -910,10 +907,10 @@ Harlan sprach von Sauriern in Höhlen.
 A guy I arrested told me about people disappearing.
 Mein Verhafteter sprach davon, dass Leute verschwinden.
 
-That mountain that just vanished and reappeared. Hmm.
+That mountain that just vanished and reappeared.
 Der Berg, der einfach verschwand und zurückkam.
 
-You have someone you can talk to?
+Hmm. You have someone you can talk to?
 Kannst du mit jemandem reden?
 
 Talk to?
@@ -949,8 +946,11 @@ Ich versuche es.
 First lie is the hardest... then it just gets easier. My family's broken now because of it.
 Die erste Lüge ist am schwersten. Dann wird es leichter. Meine Familie ist deswegen jetzt zerbrochen.
 
-Tell the truth... before it's too late.
-Sag die Wahrheit. Bevor es zu spät ist.
+Tell the truth...
+Sag die Wahrheit.
+
+before it's too late.
+Bevor es zu spät ist.
 
 I have a feeling you and I are gonna be havin' more of these conversations, Royal.
 Ich hab das Gefühl, du und ich werden öfter so miteinander reden.
@@ -1021,13 +1021,13 @@ Lewis?
 The fuck you want?
 Was zum Teufel willst du?
 
-Get down now.
+Get down now. Oh.
 Geh runter.
 
-Oh.
+Oh. Now.
 Sofort.
 
-Oh. Now. Autumn, stay there.
+Autumn, stay there.
 Autumn, bleib da.
 
 What are you doing back here?
@@ -1312,7 +1312,7 @@ Es ist kompliziert.
 Just make sure he's outta here before Royal gets home.
 Sieh zu, dass er weg ist, bevor Royal heimkommt.
 
-Won't be long. Oh.
+Won't be long.
 Es dauert nicht lange.
 
 What are you doing here?

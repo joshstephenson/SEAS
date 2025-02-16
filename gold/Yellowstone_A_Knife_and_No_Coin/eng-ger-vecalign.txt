@@ -70,10 +70,13 @@ Du gehörst zu dieser Ranch bis zu deinem Tod.
 What did he say?
 Was hat er gesagt?
 
-About my daughter. What did he say? Um...
-Über meine Tochter. Was hat er gesagt?
+About my daughter.
+Über meine Tochter.
 
-You killed him over it. It must have been pretty bad. He...
+What did he say?
+Was hat er gesagt?
+
+Um... You killed him over it. It must have been pretty bad. He...
 Er ist deswegen tot, also war es wohl was Schlimmes.
 
 He talked about her... He...
@@ -106,8 +109,11 @@ Aber das hat er nicht. Sondern meine Tochter, was dich gestört hat.
 Which leads me to my next question...
 Und das führt mich zu meiner nächsten Frage.
 
-Is something going on between you and my daughter? Hmm, yeah.
-Läuft da was zwischen dir und meiner Tochter? Ja.
+Is something going on between you and my daughter?
+Läuft da was zwischen dir und meiner Tochter?
+
+Hmm, yeah.
+Ja.
 
 That sure makes things a lot clearer.
 Das erklärt so einiges.
@@ -118,8 +124,11 @@ Arbeitest du für mich, kämpfst du nur, um jemanden auf der Ranch zu beschütze
 And you will be surprised how much fighting you'll have to do.
 Es wird dich überraschen, wie oft du kämpfen musst.
 
-It surprises the hell out of me. A long time ago, cowboys would drift in and get work on some outfit, then disappear.
-Das überrascht mich auch immer wieder. Vor langer Zeit kamen Cowboys her, übernahmen ein paar Jobs und verschwanden wieder.
+It surprises the hell out of me.
+Das überrascht mich auch immer wieder.
+
+A long time ago, cowboys would drift in and get work on some outfit, then disappear.
+Vor langer Zeit kamen Cowboys her, übernahmen ein paar Jobs und verschwanden wieder.
 
 A few months later, a whole chunk of the herd would disappear.
 Ein paar Monate später war dann ein Teil der Herde verschwunden.
@@ -139,8 +148,11 @@ Das bedeutet jetzt also, dass du dich an die Ranch bindest. Für den Rest deines
 And this ranch is committing itself to you.
 Die Ranch bindet sich aber auch an dich.
 
-You will have a home till the day you die... or this ranch is no more.
-Du hast dann bis an dein Lebensende ein Zuhause. Oder bis es die Ranch nicht mehr gibt.
+You will have a home till the day you die...
+Du hast dann bis an dein Lebensende ein Zuhause.
+
+or this ranch is no more.
+Oder bis es die Ranch nicht mehr gibt.
 
 Hm. Now... that is something worth fighting for.
 Also, dafür lohnt es sich zu kämpfen.
@@ -205,7 +217,7 @@ Willkommen.
 Let's deal the kid in.
 Jetzt teil mal aus.
 
-Hell yeah. Hell yeah. Why do cowboys get up at three in the morning if breakfast is served at six?
+Why do cowboys get up at three in the morning if breakfast is served at six?
 Wieso stehen Cowboys um 3 auf, wenn es erst um 6 Frühstück gibt?
 
 Gotta get the horses saddled.
@@ -277,13 +289,13 @@ Na los.
 Hup.
 Rein mit ihnen.
 
-Cowboys win!
+Hup!
 Ruhig.
 
 Hup!
 Ganz ruhig.
 
-Hup! Easy... Hey, easy. I feel sorry for the cowboy who's gotta to break you.
+Easy... Hey, easy. I feel sorry for the cowboy who's gotta to break you.
 Der Cowboy, der dich zureiten muss, tut mir leid.
 
 All right.
@@ -388,10 +400,10 @@ Okay. Eifersucht steht dir.
 Hey, I didn't say stop rubbing.
 Wieso hörst du auf?
 
-Your work day ain't over, Jimmy.
+Your work day ain't over, Jimmy. Yeah.
 Der Job ist noch nicht erledigt.
 
-Yeah. Oh, thank you.
+Oh, thank you.
 Danke.
 
 Mm-hmm. Don't litter, baby.
@@ -791,7 +803,7 @@ Thank you.
 Danke.
 
 He can't point to a single code or conduct violation.
-Herr Gouverneur! Er kann kein einziges Fehlverhalten nennen.
+Er kann kein einziges Fehlverhalten nennen.
 
 He talks about litigation and damages but no litigation has been filed so there's no damages to consider.
 Er spricht von Schadenersatz, aber es gibt noch keine Klage, es gibt also keinen.
@@ -1411,13 +1423,16 @@ Das hat er deutlich gemacht.
 Yes, I believe he has.
 Ja, das hat er.
 
-If there is a place our enemies go and nobody ever knows they went, Dad, and they will never come back... then I think that's the place for Jamie.
-Wenn es einen Ort gibt, an dem unsere Feinde landen, und niemand weiß, dass sie dort sind, und sie nie wiederkommen... Dann ist das der richtige Ort für Jamie.
+If there is a place our enemies go and nobody ever knows they went, Dad, and they will never come back...
+Wenn es einen Ort gibt, an dem unsere Feinde landen, und niemand weiß, dass sie dort sind, und sie nie wiederkommen...
 
-What do you think, Daddy? Ow.
+then I think that's the place for Jamie.
+Dann ist das der richtige Ort für Jamie.
+
+What do you think, Daddy?
 Was meinst du, Daddy?
 
-Sorry.
+Ow. Sorry.
 Entschuldige.
 
 I bet.
@@ -1516,7 +1531,7 @@ Weißt du?
 Yeah, that's what I was thinking, too.
 Ja. Genau das habe ich auch gedacht.
 
-Hey, hey, hey. What's so funny?
+What's so funny?
 Was ist denn so lustig?
 
 What?
@@ -1604,5 +1619,5 @@ Okay, we'll take a look at it then.
 Gut, dann sehen wir es uns an.
 
 Kayce, bring up another load.
-Kayce! Es geht weiter! DR.
+Kayce! Es geht weiter!
 

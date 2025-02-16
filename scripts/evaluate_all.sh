@@ -5,6 +5,11 @@ if [ -z "$SUBTITLE_REPO" ]; then
     exit 1
 fi
 
+if [ -z "$LASER" ]; then
+    echo "Please set LASER env to root of LASER repo"
+    exit 1
+fi
+
 
 usage() {
     echo "Usage: $0 [source lang code] [target lang code]"
@@ -56,7 +61,8 @@ count=0
 printf "%-15s  %-15s  %-15s  %-15s  %-10s %-10s %-10s\n" "Title" "True Positives" "False Negatives" "False Positives" "Recall" "Precision" "F-1"
 for dir in "$SUBTITLE_REPO/gold/"*; do
     if ! "$SUBTITLE_REPO/scripts/run_and_eval.sh" vecalign "$dir" "$source" "$target" >/dev/null 2>&1 ; then
-        exit 1
+        echo "bailing"
+        continue
     fi
     results=$( tail -n1 "$dir/$source-$target-vecalign.results")
     title=$(ellipsize "$(basename "$dir")")

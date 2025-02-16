@@ -103,12 +103,14 @@ class Film:
         offsets = []
         count = 0
         for alignment in self.alignments.alignments[start:start+20]:
-            source_min = min([sub.start for sub in alignment.source_subs])
-            source_max = max([sub.start for sub in alignment.source_subs])
-            target_min = min([sub.start for sub in alignment.target_subs])
-            target_max = max([sub.start for sub in alignment.target_subs])
-            source_length = source_max - source_min
-            target_length = target_max - target_min
+            source_subs = [sub.start for sub in alignment.source_subs]
+            target_subs = [sub.start for sub in alignment.target_subs]
+            if len(source_subs) == 0 or len(target_subs) == 0:
+                continue
+            source_min = min(source_subs)
+            source_max = max(source_subs)
+            target_min = min(target_subs)
+            target_max = max(target_subs)
             start_diff = abs(target_min - source_min)
             end_diff = abs(target_max - source_max)
             offset = (start_diff + end_diff) / 2.0
