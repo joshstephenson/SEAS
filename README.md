@@ -3,6 +3,9 @@
 ## About
 Applying state-of-the-art sentence alignment tools to subtitle extraction and alignment, achieving a substantial improvement in subtitle alignment quality. Leveraging sentence embeddings, dynamic programming, cosine similarity, and partitioning we attained F1 scores exceeding 93\% and estimate an overall improvement of 31\% based on other subtitle alignment techniques.
 
+## Scripts for preprocessing and aligning subtitles
+The directory `scripts` has all the necessary scripts to import subtitles from a directory structure provided by OpenSubtitles, align sentences, run evaluation, etc. See README in `scripts` directory for more info.
+
 ## Gold Standard Subtitle Alignments
 There are gold alignments for 5 titles in the `gold` directory. The alignments can be found within each subdirectory with names like `eng-spa-gold.txt` and `eng-ger-gold.txt`. The subtitles themselves are in the sub-sub dirs `eng`, `spa`, `ger`, etc.
 
