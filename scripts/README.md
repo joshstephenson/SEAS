@@ -13,7 +13,7 @@ In your environment set the following variables:
 Use `import_from_opensubtitles.py`. This is most likely the first thing you will do.
 
 #### To generate a corpus of alignments between source and target languages
-Use `corpus_generator.py`. Will need to pass directory of year imported from `import_from_opensubtitles.py` as well as a source and target file.
+Use `corpus_generator.py`. Will need to pass directory of year imported from `import_from_opensubtitles.py` as well as a source and target file. For example if you have a directory `./data/2024` with titles from 2024 and you want to generate alignments between English and German you would run `corpus_generator.py data/2024 eng ger` and the alignments would be put into `data/2024/all.eng` and `data/2024/all.ger`. Sentences (utterances) will be on the same line number as their counterpart, so the first line in all.eng aligns with the first line in all.ger, etc...
 
 #### You want to generate alignments for a single title using vector embeddings
 This is a multi-step process that involves quite a few things but you can use this script to facilitate all of that: `run_vecalign.py`. That script will run:
