@@ -8,12 +8,34 @@ In your environment set the following variables:
 - PYTHONPATH -> Path to root of this repository
 - LASER -> Path to LASER
 
+## Which script should you use for a given task?
+#### You have a dump of subtitles from OpenSubtitles and you need to organize them by year to later generate alignments
+Use `import_from_opensubtitles.py`. This is most likely the first thing you will do.
+
+#### To generate a corpus of alignments between source and target languages
+Use `corpus_generator.py`. Will need to pass directory of year imported from `import_from_opensubtitles.py` as well as a source and target file.
+
+#### You want to generate alignments for a single title using vector embeddings
+This is a multi-step process that involves quite a few things but you can use this script to facilitate all of that: `run_vecalign.py`. That script will run:
+- either `srt2overlap.py` if partitioning is enabled or `srt2sent.py` if not
+- `sent2path.sh` which leverages vecalign
+- `path2align.py` which takes the path output from vecalign and creates the alignments which will be placed into a file like `eng-ger-vecalign.txt` which for each alignment will place the english on one line, the german on the next and a subsequent empty line.
+
+#### You want to generate alignments for a single title using timecodes
+Use `run_chronos.py`.
+
+#### You want to evaluate the alignments generated earlier against gold standard alignments
+Use `evaluate_alignments.py`.
+
+#### You want to annotate gold labels
+Use `annotator.py`. This essentially runs vector embeddings as a best first guess on the alignments and then allows an annotator to walk through them one by one editing them to generate the gold labeled data. This is much faster than manually doing it but still has the same quality.
+
 ## Script Overview
 | Script | Description |
 |--------|-------------|
 | **annotator.py** | File to leverage vector embeddings to annotate gold labels. Run this file with arguments: -s SOURCE -t TARGET where SOURCE is the path to the source language subtitle file and TARGET is the path to the target language subtitle file. Use -i to ignore empty alignments (when no alignment possibility can be found). |
 | cleanup.py | Script used to cleanup files generated during the alignment process. This includes .emb, .path, .sent and .txt files within each title directory. |
-| corpus_generator.py | *Unclear if this is current or not* |
+| **corpus_generator.py** | This is the script you would want to use to generate a lot of alignments from subtitle files. |
 | evaluate_alignments.py | Use -g GOLD_FILE, -a ALIGNMENTS_FILE where GOLD_FILE is the path to the gold labeled data (probably in `gold` directory) and ALIGNMENTS_FILE is the file output by `run_vecalign.py` |
 | **evaluate_all.py** | Evaluates all titles in `gold` subdirectory, printing true positives, false negatives, false positives, recall, precision, and F1 scores when done. |
 | filter_alignments_by_length.py | For any alignments generated it will filter out any longer than given length. |
