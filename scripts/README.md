@@ -11,17 +11,29 @@ Set the following in your environment:
 
 - **PYTHONPATH** → Path to the root of this repository  
 - **LASER** → Path to LASER
+- **SUBTITLE_DATA** → Path to OpenSubtitles dump
 
 ---
 
 # Which Script Should You Use?
 
 ### Organize OpenSubtitles dump by year
-**Script:** `import_from_opensubtitles.py`  
+**Script:** `import_from_opensubtitles.sh`  
 **When:** First step when working with OpenSubtitles data.
+**Assumptions:**
+- there is a directory of subtitles at the same level as this repository's root.
+- the subtitle directory
+
+What I received from OpenSubtitles contained a file `export.txt` which was a CSV file containing all the information about the subtitles that were provided. That is expected to be in the root of wherever **SUBTITLE_DATA** points.
+**Usage:**
+To import all subtitles for the year 2024:
+```bash
+./import_from_opensubtitles.sh 2024
+```
+This would import files from opensubtitles which are in a sharded directory structure (e.g. 1/5/4/9/154923432.gz) to a more human readable directory structure (e.g. YEAR/TITLE/LANGCODE/154923432.srt). At this time there is no other way to import files other than by year.
 
 ### Generate a corpus of alignments between two languages
-**Script:** `corpus_generator.py`  
+**Script:** `corpus_generator.sh`  
 **Usage:**  
 ```bash
 corpus_generator.py data/2024 eng ger
