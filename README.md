@@ -23,3 +23,7 @@ There is a curses and python implementation of an annotation tool. You must firs
 |p| Move to **P**revious alignment.|
 
 <img width="1286" alt="Captura de pantalla 2024-11-10 a la(s) 11 34 29" src="https://github.com/user-attachments/assets/07404f61-ebf1-4003-abfa-0b28455bc102">
+
+## What alignments look like
+Once alignments are generated they will look like the following (2 separate files where the line numbers correspond):
+<img width="1418" height="982" alt="Captura de pantalla 2025-08-18 a la(s) 09 41 20" src="https://github.com/user-attachments/assets/f4889691-3b20-48ec-b9b1-69c584f03aba" />
